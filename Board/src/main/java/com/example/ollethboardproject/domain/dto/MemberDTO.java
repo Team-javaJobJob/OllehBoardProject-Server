@@ -13,7 +13,7 @@ import java.util.Collection;
 
 @Getter
 @AllArgsConstructor
-public class MemberDTO implements UserDetails {
+public class MemberDTO {
     private Long id;
     private String userName;
     private String password;
@@ -23,41 +23,11 @@ public class MemberDTO implements UserDetails {
     public static MemberDTO fromEntity(Member member) {
         return new MemberDTO(
                 member.getId(),
-                member.getUserName(),
+                member.getUsername(),
                 member.getPassword(),
                 member.getNickName(),
                 member.getGender()
         );
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.userName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 
 }

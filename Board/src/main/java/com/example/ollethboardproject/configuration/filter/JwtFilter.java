@@ -1,6 +1,7 @@
 package com.example.ollethboardproject.configuration.filter;
 
 import com.example.ollethboardproject.domain.dto.MemberDTO;
+import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.service.MemberService;
 import com.example.ollethboardproject.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,10 +25,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
+
     public static final String BEARER = "Bearer ";
     private final MemberService memberService;
     private final String secretKey;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -58,10 +60,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
             // userName 검증 후 User 객체 생성
             //TODO: loadUserByUserName ? loadMemberByMemberName
-            MemberDTO memberDTO = memberService.loadMemberByName(userName);
+            Member member = (Member) memberService.loadUserByUsername(userName);
 
             // Security Context 에 담을 authenticationToken 생성
-            saveAuthentication(request, memberDTO);
+            saveAuthentication(request, member);
 
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT Token", e);
@@ -84,10 +86,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     }
 
-    private static void saveAuthentication(HttpServletRequest request, MemberDTO memberDTO) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberDTO,
-                null, memberDTO.getAuthorities());
+    private static void saveAuthentication(HttpServletRequest request, Member member) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(member,
+                null, member.getAuthorities());
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
+
 }

@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Table(name = "post")
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

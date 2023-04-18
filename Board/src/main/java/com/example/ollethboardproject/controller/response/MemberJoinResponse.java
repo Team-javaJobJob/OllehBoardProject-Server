@@ -15,7 +15,7 @@ public class MemberJoinResponse {
 
     public static MemberJoinResponse fromUserDTO(MemberDTO memberDTO) {
         return new MemberJoinResponse(
-                memberDTO.getUsername(),
+                memberDTO.getUserName(),
                 memberDTO.getNickName(),
                 memberDTO.getGender()
         );

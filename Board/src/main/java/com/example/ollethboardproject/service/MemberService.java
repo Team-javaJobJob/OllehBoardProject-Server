@@ -10,15 +10,20 @@ import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.utils.JwtTokenUtil;
 import com.example.ollethboardproject.utils.TokenInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class MemberService {
+public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder encoder;
     @Value("${jwt.token.secret}")
@@ -39,6 +44,7 @@ public class MemberService {
         Member member = Member.of(encodePassword(memberJoinRequest));
         //member 엔티티 저장
         Member savedMember = memberRepository.save(member);
+        log.info("saveMember : {}",savedMember);
         //entity -> DTO 로 변환후 return
         return MemberDTO.fromEntity(savedMember);
     }
@@ -55,14 +61,9 @@ public class MemberService {
 
         // 토큰 발급 (엑세스 , 리프레시)
         //TODO: 각 토큰들에 대한 세부 설정
-        String accessToken = JwtTokenUtil.createAccessToken(member.getUserName(), key, accessExpiredTimeMs);
-        String refreshToken = JwtTokenUtil.createRefreshToken(member.getUserName(), key, refreshExpiredTimeMs);
+        String accessToken = JwtTokenUtil.createAccessToken(member.getUsername(), key, accessExpiredTimeMs);
+        String refreshToken = JwtTokenUtil.createRefreshToken(member.getUsername(), key, refreshExpiredTimeMs);
         return TokenInfo.generateTokens(accessToken, refreshToken);
-    }
-
-    public MemberDTO loadMemberByName(String userName) {
-        return memberRepository.findByUserName(userName).map(MemberDTO::fromEntity).orElseThrow(() ->
-                new BoardException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userName)));
     }
 
     private MemberJoinRequest encodePassword(MemberJoinRequest memberJoinRequest) {
@@ -70,5 +71,11 @@ public class MemberService {
         String encodePassword = encoder.encode(memberJoinRequest.getPassword());
         memberJoinRequest.encode(encodePassword);
         return memberJoinRequest;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return memberRepository.findByUserName(username).orElseThrow(() ->
+                new BoardException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", username)));
     }
 }

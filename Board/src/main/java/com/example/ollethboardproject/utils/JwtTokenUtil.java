@@ -18,6 +18,7 @@ public class JwtTokenUtil {
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
+                // TODO: deprecated - signWith 원인 해결
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
 
@@ -30,6 +31,7 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
+                // TODO: deprecated - signWith 원인 해결
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
@@ -43,6 +45,7 @@ public class JwtTokenUtil {
     }
 
     private static Claims extractClaim(String token, String secretKey) {
+        // TODO: deprecated - setSigningKey 원인 해결
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 }
