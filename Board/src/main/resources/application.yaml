@@ -12,7 +12,13 @@ spring:
       hibernate:
         #        show_sql: true
         format_sql: true
+jwt:
+  token:
+    secret: "secretKey2G312A3E224A78H51R6dfvnjhgSf3asD3N5KE23Lq"
+  access-expired: 3600000    #3600000 1시간
+  refresh-expired: 86400000   # 1 day
 
 logging.level:
   org.hibernate.SQL: debug
+
 #  org.hibernate.type: trace
