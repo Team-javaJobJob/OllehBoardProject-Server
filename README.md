@@ -52,8 +52,8 @@
 - Redis
 - Jenkins
 - Docker
-- 
-**TOOL**
+
+🔧TOOL
 -------------
 
 - IntelliJ
