@@ -52,7 +52,9 @@
 - Redis
 - Jenkins
 - Docker
-**🔧그 외의 TOOL**
+- 
+**TOOL**
+-------------
 
 - IntelliJ
 - Git hub
