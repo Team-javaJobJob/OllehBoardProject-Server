@@ -37,31 +37,27 @@
 - 더 효율적인 깃 헙 사용을 위해 외부 툴인 Git Kraken을 활용하여 브랜치 관리를 합니다.
 
 
-사용 기술 및 환경
+🔧사용 기술 및 환경
 -------------
-<img width="572" alt="스크린샷 2023-04-27 123152" src="https://user-images.githubusercontent.com/124491136/234752834-b817d660-9a06-4295-ae64-7ab71b612cb5.png">
 
 
+
+<img width="620" alt="스크린샷 2023-04-27 123612" src="https://user-images.githubusercontent.com/124491136/234753405-9cf41f54-ef99-400c-a7d9-f3b1be231f8c.png">
 
 - Java 11
 - Spring boot
 - Spring Data JPA
-- Spring Security
-- JWT
 - Gradle
 - MySQL
 - Redis
-- Junit5
 - Jenkins
 - Docker
-- React
-- Axios
+**🔧그 외의 TOOL**
+
 - IntelliJ
-- VisualStudioCode
 - Git hub
 - Git Kraken
 - Slack
-
 
 
 프로젝트 목표
