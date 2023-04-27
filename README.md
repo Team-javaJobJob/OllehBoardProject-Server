@@ -44,14 +44,6 @@
 
 <img width="620" alt="스크린샷 2023-04-27 123612" src="https://user-images.githubusercontent.com/124491136/234753405-9cf41f54-ef99-400c-a7d9-f3b1be231f8c.png">
 
-- Java 11
-- Spring boot
-- Spring Data JPA
-- Gradle
-- MySQL
-- Redis
-- Jenkins
-- Docker
 
 🔧TOOL
 -------------
