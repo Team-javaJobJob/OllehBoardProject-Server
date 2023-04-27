@@ -1,4 +1,4 @@
-👨‍👩‍👧‍👦올래말래?
+👨‍👩‍👧‍👦동네로 올래?
 =============
 동네 친구 매칭 플랫폼
 
@@ -39,6 +39,10 @@
 
 사용 기술 및 환경
 -------------
+<img width="572" alt="스크린샷 2023-04-27 123152" src="https://user-images.githubusercontent.com/124491136/234752834-b817d660-9a06-4295-ae64-7ab71b612cb5.png">
+
+
+
 - Java 11
 - Spring boot
 - Spring Data JPA
