@@ -2,9 +2,31 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+<<<<<<< Updated upstream
     url: jdbc:mysql://localhost:3306/
     username: root
     password: 1226
+=======
+#<<<<<<< Updated upstream:BoardSE/src/main/resources/application.yaml
+    url: jdbc:mysql://localhost:3306/narae
+    username: root
+    password: 1226
+#=======
+#<<<<<<< Updated upstream
+#    url: jdbc:mysql://localhost:3306/board
+#    username: root
+#    password: system
+#=======
+#    url: jdbc:mysql://localhost:3306/olleh
+#    username: root
+#    password: zhtanf5246150!
+
+  #>>>>>>> Stashed changes
+#>>>>>>> Stashed changes:Board/src/main/resources/application.yaml
+
+#
+#>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
   jpa:
     hibernate:

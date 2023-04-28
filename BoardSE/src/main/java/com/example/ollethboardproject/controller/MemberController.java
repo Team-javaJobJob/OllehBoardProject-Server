@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/members")
+<<<<<<< Updated upstream
+=======
+//@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
+>>>>>>> Stashed changes
 @RequiredArgsConstructor
 public class MemberController {
 
