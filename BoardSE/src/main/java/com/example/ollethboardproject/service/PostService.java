@@ -16,8 +16,6 @@ import com.example.ollethboardproject.repository.PostCountRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,19 +32,11 @@ public class PostService {
     private final OllehRepository ollehRepository;
     private final MemberRepository memberRepository;
 
-    public Page<Post> findAllBoards(Pageable pageable) {
-        return postRepository.findAll(pageable);
+    public List<PostDTO> findAllBoards() {
+        //TODO: LIST -> pageable
+        List<Post> posts = postRepository.findAll();
+        return posts.stream().map(this::mapToPostDto).collect(Collectors.toList());
     }
-
-//    public Page<PostDTO> findAllBoards(Pageable pageable) {
-//        Page<Post> posts = postRepository.findAll(pageable);
-//        return posts.map(this::mapToPostDto);
-//    }
-
-
-
-
-
 
     public PostCountDTO findBoardById(Long postId, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
@@ -112,7 +102,6 @@ public class PostService {
         return PostCountDTO.of(countByBoard, postCount);
     }
 
-//<<<<<<< Updated upstream
     //Olleh(좋아요)
 
     private Member getMemberByMemberName(String userName){ //userName 을 인자로 받아 member 를 조회하고 존재하지 않으면 BoardException 발생
@@ -148,9 +137,4 @@ public class PostService {
         Post post = getPostById(postId); //postId 에 해당하는 post 객체를 가져옴
         return ollehRepository.countByPost(post); //post 객체와 연관된 Olleh 객체의 개수 반환
     }
-//=======
-
-
-
-//>>>>>>> Stashed changes
 }

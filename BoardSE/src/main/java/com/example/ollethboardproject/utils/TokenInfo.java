@@ -1,9 +1,9 @@
 package com.example.ollethboardproject.utils;
 
 import lombok.Getter;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Getter
+
 public class TokenInfo {
     public String accessToken;
     public String refreshToken;

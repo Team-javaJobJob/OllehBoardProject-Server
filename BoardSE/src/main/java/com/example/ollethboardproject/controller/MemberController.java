@@ -13,22 +13,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/members")
-@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
-
-
     //회원가입
-
     @PostMapping("/join")
     public Response<MemberJoinResponse> join(@RequestBody MemberJoinRequest memberJoinRequest) {
         MemberDTO memberDTO = memberService.join(memberJoinRequest);
         return Response.success(MemberJoinResponse.fromUserDTO(memberDTO));
     }
     //로그인
-
     @PostMapping("/login")
     public Response<MemberLoginResponse> login(@RequestBody MemberLoginRequest memberLoginRequest) {
         TokenInfo tokens = memberService.login(memberLoginRequest);

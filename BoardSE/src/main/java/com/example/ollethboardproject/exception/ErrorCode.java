@@ -7,13 +7,16 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND,"user not found"),
-    DUPLICATED_USERNAME(HttpStatus.CONFLICT,"username is duplicated"),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "user not found"),
+    DUPLICATED_USERNAME(HttpStatus.CONFLICT, "username is duplicated"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "token is invalid"),
-    POST_DOES_NOT_EXIST(HttpStatus.NOT_FOUND,"post does not exist"),
-    HAS_NOT_PERMISSION_TO_ACCESS(HttpStatus.UNAUTHORIZED,"has not permission to access");
+    POST_DOES_NOT_EXIST(HttpStatus.NOT_FOUND, "post does not exist"),
+    COMMENT_DOES_NOT_EXIST(HttpStatus.NOT_FOUND, "comment does not exist"),
+    HAS_NOT_PERMISSION_TO_ACCESS(HttpStatus.UNAUTHORIZED, "has not permission to access"),
+    REPLY_DOES_NOT_EXIST(HttpStatus.NOT_FOUND, "reply does not exist"),
+    REPLY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "reply already exists"),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "unauthorized");
 
     private final HttpStatus httpStatus;
     private final String message;
-
 }

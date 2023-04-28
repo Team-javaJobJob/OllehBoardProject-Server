@@ -15,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -38,6 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
         //토큰 정보 가져오기(Header의 Authorization)
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("authorization : {}", authorization);
+
         // 토큰이 null 또는 Bearer이 아닐 경우 메서드 종료
         if (authorization == null || !authorization.startsWith(BEARER)) {
             filterChain.doFilter(request, response);
