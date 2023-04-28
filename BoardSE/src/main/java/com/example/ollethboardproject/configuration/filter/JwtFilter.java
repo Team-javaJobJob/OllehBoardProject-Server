@@ -60,7 +60,6 @@ public class JwtFilter extends OncePerRequestFilter {
             log.info("username : {}", userName);
 
             // userName 검증 후 User 객체 생성
-            //TODO: loadUserByUserName ? loadMemberByMemberName
             Member member = (Member) memberService.loadUserByUsername(userName);
 
             // Security Context 에 담을 authenticationToken 생성

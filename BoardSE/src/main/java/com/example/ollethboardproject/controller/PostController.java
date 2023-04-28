@@ -2,6 +2,7 @@ package com.example.ollethboardproject.controller;
 
 import com.example.ollethboardproject.controller.request.PostCreateRequest;
 import com.example.ollethboardproject.controller.request.PostUpdateRequest;
+import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.PostCountDTO;
 import com.example.ollethboardproject.domain.dto.PostDTO;
 import com.example.ollethboardproject.service.PostService;
@@ -57,6 +58,20 @@ public class PostController {
         log.info("DELETE /api/v1/boards/{}", id);
         postService.deleteBoard(id, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //좋아요(=올래)
+    @PostMapping("/{postId}/olleh")
+    public Response<Void> olleh(@PathVariable Long postId, Authentication authentication){
+        postService.addOlleh(authentication.getName(), postId);
+        return Response.success();
+    }
+
+    //좋아요수
+    @GetMapping("/{postId}/olleh")
+    public Response<Integer> olleh(@PathVariable Long postId){
+        Integer ollehCount = postService.ollehCount(postId); //postService 의 ollehCount 메소드를 호출 postId에 해당하는 Post 객체의 Olleh 개수 가져옴
+        return Response.success(ollehCount); //ollehCount 값을 Response 객체에 담아서 반환
     }
 }
 

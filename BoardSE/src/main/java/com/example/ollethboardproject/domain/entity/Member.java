@@ -43,7 +43,7 @@ public class Member implements UserDetails {
     private Role roles;
 
     //외부에서 new 생성자로 entity 객체 만들지않게 하기 위함
-    private Member(String userName, String password, String nickName, Gender gender, Role roles) {
+    public Member(String userName, String password, String nickName, Gender gender, Role roles) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;

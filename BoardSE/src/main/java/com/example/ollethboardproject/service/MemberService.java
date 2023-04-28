@@ -7,6 +7,8 @@ import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.exception.BoardException;
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.repository.MemberRepository;
+import com.example.ollethboardproject.repository.PostRepository;
+import com.example.ollethboardproject.repository.OllehRepository;
 import com.example.ollethboardproject.utils.JwtTokenUtil;
 import com.example.ollethboardproject.utils.TokenInfo;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
     private final BCryptPasswordEncoder encoder;
+    private final OllehRepository ollehRepository;
+    private final PostService postService;
+
     @Value("${jwt.token.secret}")
     private String key;
     @Value("${jwt.access-expired}")

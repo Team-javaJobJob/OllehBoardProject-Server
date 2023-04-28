@@ -15,11 +15,8 @@ import lombok.Setter;
 public class MemberJoinRequest {
     private String userName;
     private String password;
-
     private String nickName;
-
     private Gender gender;
-
     private Role roles;
 
     public void encode(String encodePassword) {
