@@ -82,6 +82,13 @@ public class MemberService implements UserDetailsService {
         return TokenInfo.generateTokens(accessToken, refreshToken);
     }
 
+//    private MemberJoinRequest encodePassword(MemberJoinRequest memberJoinRequest) {
+//        //비밀번호 암호화
+//        String encodePassword = encoder.encode(memberJoinRequest.getPassword());
+//        memberJoinRequest.encode(encodePassword);
+//        return memberJoinRequest;
+//    }
+
     private PwEncodeRequest encodePassword(PwEncodeRequest pwEncodeRequest) {
         //비밀번호 암호화
         String encodePassword = encoder.encode(pwEncodeRequest.getPassword());

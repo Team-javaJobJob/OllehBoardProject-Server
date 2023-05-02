@@ -2,6 +2,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     url: jdbc:mysql://localhost:3306/
     username: root
@@ -27,6 +28,11 @@ spring:
 #
 #>>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+    url: jdbc:mysql://localhost:3306/board
+    username: root
+    password: system
+>>>>>>> main
 
   jpa:
     hibernate:
@@ -41,7 +47,7 @@ jwt:
   access-expired: 3600000    #3600000 1시간
   refresh-expired: 86400000   # 1 day
 
-logging.level:
-  org.hibernate.SQL: debug
+server:
+  port: 8081
 
 #  org.hibernate.type: trace
