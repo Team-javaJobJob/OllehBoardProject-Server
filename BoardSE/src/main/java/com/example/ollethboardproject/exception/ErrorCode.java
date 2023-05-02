@@ -15,7 +15,9 @@ public enum ErrorCode {
     HAS_NOT_PERMISSION_TO_ACCESS(HttpStatus.UNAUTHORIZED, "has not permission to access"),
     REPLY_DOES_NOT_EXIST(HttpStatus.NOT_FOUND, "reply does not exist"),
     REPLY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "reply already exists"),
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "unauthorized");
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "unauthorized"),
+    COMMUNITY_DOES_NOT_EXIST(HttpStatus.NOT_FOUND, "community does not exist"),
+    COMMUNITY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "community already exists");
 
     private final HttpStatus httpStatus;
     private final String message;

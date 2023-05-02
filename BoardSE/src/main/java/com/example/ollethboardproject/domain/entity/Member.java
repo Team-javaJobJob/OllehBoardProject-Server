@@ -1,6 +1,8 @@
 package com.example.ollethboardproject.domain.entity;
 
+import com.example.ollethboardproject.controller.request.MemberUpdateRequest;
 import com.example.ollethboardproject.controller.request.MemberJoinRequest;
+import com.example.ollethboardproject.controller.request.PwEncodeRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
 import lombok.AccessLevel;
@@ -61,6 +63,23 @@ public class Member implements UserDetails {
         );
     }
 
+    public static Member toPw(PwEncodeRequest pwEncodeRequest) {
+        return new Member(
+                pwEncodeRequest.getUserName(),
+                pwEncodeRequest.getPassword(),
+                pwEncodeRequest.getNickName(),
+                pwEncodeRequest.getGender(),
+                pwEncodeRequest.getRoles()
+        );
+    }
+
+    public void update(Member memberUpdateRequest) {
+        this.userName = memberUpdateRequest.getUsername();
+        this.password = memberUpdateRequest.getPassword();
+        this.nickName = memberUpdateRequest.getNickName();
+        this.gender = memberUpdateRequest.getGender();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -92,4 +111,5 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
 }
