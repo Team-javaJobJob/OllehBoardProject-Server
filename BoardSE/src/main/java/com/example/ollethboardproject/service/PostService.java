@@ -16,6 +16,8 @@ import com.example.ollethboardproject.repository.PostCountRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,7 @@ public class PostService {
 
     public List<PostDTO> findAllBoards() {
         //TODO: LIST -> pageable
+        Pageable pageable = PageRequest.ofSize(findAllBoards().size());
         List<Post> posts = postRepository.findAll();
         return posts.stream().map(this::mapToPostDto).collect(Collectors.toList());
     }

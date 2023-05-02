@@ -63,7 +63,9 @@ public class JwtFilter extends OncePerRequestFilter {
             Member member = (Member) memberService.loadUserByUsername(userName);
 
             // Security Context 에 담을 authenticationToken 생성
-            saveAuthentication(request, member);
+
+            JwtFilter.saveAuthentication(request, member);
+
 
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT Token", e);
@@ -86,7 +88,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     }
 
-    private static void saveAuthentication(HttpServletRequest request, Member member) {
+    public static void saveAuthentication(HttpServletRequest request, Member member) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(member,
                 null, member.getAuthorities());
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

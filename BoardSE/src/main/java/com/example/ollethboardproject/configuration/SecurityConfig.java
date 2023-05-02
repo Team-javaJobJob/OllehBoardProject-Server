@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.Filter;
+
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,18 +31,68 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/members/join", "/api/v1/members/login").permitAll()
+//<<<<<<< Updated upstream
+                .antMatchers("/api/v1/**", "/api/v1/members/login","/api/v1/main").permitAll()
 //                .antMatchers("/api/v1/**").authenticated()
                // .antMatchers(HttpMethod.GET, "/api/v1/reviews").hasRole("VIP")
-                .antMatchers("/api/v1/**").authenticated()
+                .antMatchers("/api/v1/loginAfter/**").authenticated()
+//=======
+
+//                .antMatchers(HttpMethod.GET, "/api/v1/loginAfter/**").authenticated()
+//                .antMatchers(HttpMethod.POST, "/api/v1/loginAfter/**").authenticated()
+//                .antMatchers(HttpMethod.PUT, "/api/v1/loginAfter/**").authenticated()
+//                .antMatchers(HttpMethod.DELETE, "/api/v1/loginAfter/**").authenticated()
+//                .antMatchers("/api/v1/**").authenticated()
+//>>>>>>> Stashed changes
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class) 박규수정
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
                 .build();
     }
+
+    @Bean       // 박규현
+    public JwtFilter jwtFilter(){
+        return new JwtFilter(memberService, secretKey);
+    }
+
+
 }
+//<<<<<<< Updated upstream
+//=======
+
+
+
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("*")); // 허용할 도메인 설정
+//        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE")); // 허용할 HTTP 메소드 설정
+//        configuration.setAllowedHeaders(Arrays.asList("*")); // 허용할 헤더 설정
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer(){
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry){
+//                registry.addMapping("/**")
+//                        .allowedOrigins("http://localhost:3000") // 허용할 Origin 지정
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
+//                        .allowCredentials(true);
+//            }
+//        };
+//    }
+
+
+//>>>>>>> Stashed changes
+
