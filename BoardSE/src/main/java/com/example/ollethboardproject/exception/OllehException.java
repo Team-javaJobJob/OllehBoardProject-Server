@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class BoardException extends RuntimeException {
+public class OllehException extends RuntimeException {
     private ErrorCode errorCode;
     private String message;
 
-    public BoardException(ErrorCode errorCode) {
+    public OllehException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 

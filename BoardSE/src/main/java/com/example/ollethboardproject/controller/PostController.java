@@ -1,7 +1,7 @@
 package com.example.ollethboardproject.controller;
 
-import com.example.ollethboardproject.controller.request.PostCreateRequest;
-import com.example.ollethboardproject.controller.request.PostUpdateRequest;
+import com.example.ollethboardproject.controller.request.post.PostCreateRequest;
+import com.example.ollethboardproject.controller.request.post.PostUpdateRequest;
 import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.PostCountDTO;
 import com.example.ollethboardproject.domain.dto.PostDTO;

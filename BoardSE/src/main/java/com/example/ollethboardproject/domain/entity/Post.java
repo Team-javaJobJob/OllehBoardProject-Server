@@ -1,7 +1,7 @@
 package com.example.ollethboardproject.domain.entity;
 
-import com.example.ollethboardproject.controller.request.PostCreateRequest;
-import com.example.ollethboardproject.controller.request.PostUpdateRequest;
+import com.example.ollethboardproject.controller.request.post.PostCreateRequest;
+import com.example.ollethboardproject.controller.request.post.PostUpdateRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,10 +25,12 @@ public class Post {
     @Column(name = "content", columnDefinition = "text")
     private String content;
 
-    //TODO: 회의를 통해 ManyToOne 에 대한 fetch 타입 지정 (JPA N+1 문제)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;     // 단방향 매핑 ( 양방향 매핑에 대한 근거부족으로 인한 )
+    private Member member;
+
+    @OneToMany(mappedBy = "post")
+    private List<Olleh> ollehsList = new ArrayList<>();
 
     public Post(String title, String content, Member member) {
         this.title = title;
@@ -45,7 +47,4 @@ public class Post {
         this.content = postUpdateRequest.getContent();
         this.member = member;
     }
-
-    @OneToMany(mappedBy = "post")
-    private List<Olleh> ollehsList = new ArrayList<>();
 }

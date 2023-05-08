@@ -17,5 +17,4 @@ public class PostDTO {
     public static PostDTO fromEntity(Post post) {
         return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getMember(), post.getOllehsList().size());
     }
-
 }

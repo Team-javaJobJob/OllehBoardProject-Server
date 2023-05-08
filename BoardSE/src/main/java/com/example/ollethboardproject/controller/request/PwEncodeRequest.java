@@ -14,12 +14,11 @@ public class PwEncodeRequest {
     private Gender gender;
     private Role roles;
 
-    public PwEncodeRequest(String userName, String password, String nickName, Gender gender, Role role) {
+    public PwEncodeRequest(String userName, String password, String nickName, Gender gender) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
         this.gender = gender;
-        this.roles = role;
     }
 
     public void encode(String encodePassword) {

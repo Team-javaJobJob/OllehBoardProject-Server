@@ -1,4 +1,4 @@
-package com.example.ollethboardproject.controller.request;
+package com.example.ollethboardproject.controller.request.reply;
 
 import com.example.ollethboardproject.domain.entity.Member;
 

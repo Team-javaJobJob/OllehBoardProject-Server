@@ -1,4 +1,4 @@
-package com.example.ollethboardproject.controller.request;
+package com.example.ollethboardproject.controller.request.member;
 
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
@@ -17,7 +17,6 @@ public class MemberJoinRequest {
     private String password;
     private String nickName;
     private Gender gender;
-    private Role roles;
 
     public void encode(String encodePassword) {
         this.password = encodePassword;

@@ -1,4 +1,4 @@
-package com.example.ollethboardproject.controller.request;
+package com.example.ollethboardproject.controller.request.reply;
 
 import lombok.Getter;
 import lombok.Setter;

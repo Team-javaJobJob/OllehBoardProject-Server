@@ -1,7 +1,7 @@
 package com.example.ollethboardproject.controller.response;
 
-import com.example.ollethboardproject.controller.request.CommentCreateRequest;
-import com.example.ollethboardproject.controller.request.CommentUpdateRequest;
+import com.example.ollethboardproject.controller.request.comment.CommentCreateRequest;
+import com.example.ollethboardproject.controller.request.comment.CommentUpdateRequest;
 import com.example.ollethboardproject.domain.dto.CommentDTO;
 import com.example.ollethboardproject.service.CommentService;
 import lombok.RequiredArgsConstructor;

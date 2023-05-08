@@ -1,4 +1,4 @@
-package com.example.ollethboardproject.controller.request;
+package com.example.ollethboardproject.controller.request.member;
 
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;

@@ -1,7 +1,7 @@
 package com.example.ollethboardproject.domain.entity;
 
-import com.example.ollethboardproject.controller.request.CommunityCreateRequest;
-import com.example.ollethboardproject.controller.request.CommunityUpdateRequest;
+import com.example.ollethboardproject.controller.request.community.CommunityCreateRequest;
+import com.example.ollethboardproject.controller.request.community.CommunityUpdateRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,18 +17,19 @@ public class Community {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "community_name")
-    private String communityName;
     @Column(name = "region")
     private String region;
 
     @Column(name = "interest")
     private String interest;
 
+    @Column(name = "community_name")
+    private String communityName;
+
     @Column(name = "info", columnDefinition = "text")
     private String info;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -36,8 +37,8 @@ public class Community {
         this.region = region;
         this.interest = interest;
         this.info = info;
-        this.member = member;
         this.communityName = communityName;
+        this.member = member;
     }
 
     public static Community of(CommunityCreateRequest communityCreateRequest, Member member) {
@@ -56,5 +57,6 @@ public class Community {
         this.communityName = communityUpdateRequest.getCommunityName();
         this.member = member;
     }
+
 
 }
