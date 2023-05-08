@@ -1,25 +1,22 @@
-package com.example.ollethboardproject.controller.request;
+package com.example.ollethboardproject.controller.request.member;
 
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
+import com.example.ollethboardproject.domain.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
-public class PwEncodeRequest {
+public class MemberJoinRequest {
     private String userName;
     private String password;
     private String nickName;
     private Gender gender;
-    private Role roles;
-
-    public PwEncodeRequest(String userName, String password, String nickName, Gender gender) {
-        this.userName = userName;
-        this.password = password;
-        this.nickName = nickName;
-        this.gender = gender;
-    }
 
     public void encode(String encodePassword) {
         this.password = encodePassword;

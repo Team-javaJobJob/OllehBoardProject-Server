@@ -1,12 +1,12 @@
 package com.example.ollethboardproject.service;
 
-import com.example.ollethboardproject.controller.request.CommentCreateRequest;
-import com.example.ollethboardproject.controller.request.CommentUpdateRequest;
+import com.example.ollethboardproject.controller.request.comment.CommentCreateRequest;
+import com.example.ollethboardproject.controller.request.comment.CommentUpdateRequest;
 import com.example.ollethboardproject.domain.dto.CommentDTO;
 import com.example.ollethboardproject.domain.entity.Comment;
 import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.domain.entity.Post;
-import com.example.ollethboardproject.exception.BoardException;
+import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.repository.CommentRepository;
 import com.example.ollethboardproject.repository.PostRepository;
@@ -28,7 +28,7 @@ public class CommentService {
         Member member = (Member) authentication.getPrincipal();
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new BoardException(ErrorCode.POST_DOES_NOT_EXIST));
+                .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
 
         Comment comment = new Comment();
         comment.setContent(commentCreateRequest.getContent());
@@ -41,13 +41,13 @@ public class CommentService {
 
     public CommentDTO getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new BoardException(ErrorCode.COMMENT_DOES_NOT_EXIST));
+                .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
         return CommentDTO.fromEntity(comment);
     }
 
     public CommentDTO updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new BoardException(ErrorCode.COMMENT_DOES_NOT_EXIST));
+                .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
         comment.setContent(commentUpdateRequest.getContent());
         commentRepository.save(comment);
@@ -57,14 +57,14 @@ public class CommentService {
 
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new BoardException(ErrorCode.COMMENT_DOES_NOT_EXIST));
+                .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
         commentRepository.delete(comment);
     }
 
     public List<CommentDTO> getCommentsByPostId(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new BoardException(ErrorCode.POST_DOES_NOT_EXIST));
+                .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
 
         List<Comment> comments = commentRepository.findByPost(post);
 
@@ -77,7 +77,7 @@ public class CommentService {
 
     public List<CommentDTO> getCommentByPost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new BoardException(ErrorCode.POST_DOES_NOT_EXIST));
+                .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
 
         List<Comment> comments = commentRepository.findByPost(post);
 
