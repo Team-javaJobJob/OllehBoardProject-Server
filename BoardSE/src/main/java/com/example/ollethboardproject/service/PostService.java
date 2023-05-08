@@ -34,12 +34,11 @@ public class PostService {
     private final OllehRepository ollehRepository;
     private final MemberRepository memberRepository;
 
-    public List<PostDTO> findAllBoards() {
-        //TODO: LIST -> pageable
-        Pageable pageable = PageRequest.ofSize(findAllBoards().size());
-        List<Post> posts = postRepository.findAll();
+    public List<PostDTO> findAllBoards(Pageable pageable) {
+        List<Post> posts = postRepository.findAll(pageable).getContent();
         return posts.stream().map(this::mapToPostDto).collect(Collectors.toList());
     }
+
 
     public PostCountDTO findBoardById(Long postId, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
@@ -140,4 +139,5 @@ public class PostService {
         Post post = getPostById(postId); //postId 에 해당하는 post 객체를 가져옴
         return ollehRepository.countByPost(post); //post 객체와 연관된 Olleh 객체의 개수 반환
     }
+
 }

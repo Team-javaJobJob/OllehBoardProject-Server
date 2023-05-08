@@ -50,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
         //토큰 만료기간 확인
         try {
             if (JwtTokenUtil.isExpired(accessToken, secretKey)) {
-                log.error("token is invalid");
+                log.error("token is expired");
                 filterChain.doFilter(request, response);
                 return;
             }

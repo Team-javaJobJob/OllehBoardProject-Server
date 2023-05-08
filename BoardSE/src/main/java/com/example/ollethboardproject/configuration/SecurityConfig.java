@@ -31,39 +31,27 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-//<<<<<<< Updated upstream
-                .antMatchers("/api/v1/**", "/api/v1/members/login","/api/v1/main").permitAll()
+                .antMatchers("/api/v1/members/join", "/api/v1/members/login","api/v1/**").permitAll()
 //                .antMatchers("/api/v1/**").authenticated()
-               // .antMatchers(HttpMethod.GET, "/api/v1/reviews").hasRole("VIP")
-                .antMatchers("/api/v1/loginAfter/**").authenticated()
-//=======
-
-//                .antMatchers(HttpMethod.GET, "/api/v1/loginAfter/**").authenticated()
-//                .antMatchers(HttpMethod.POST, "/api/v1/loginAfter/**").authenticated()
-//                .antMatchers(HttpMethod.PUT, "/api/v1/loginAfter/**").authenticated()
-//                .antMatchers(HttpMethod.DELETE, "/api/v1/loginAfter/**").authenticated()
-//                .antMatchers("/api/v1/**").authenticated()
-//>>>>>>> Stashed changes
+                // .antMatchers(HttpMethod.GET, "/api/v1/reviews").hasRole("VIP")
+                .antMatchers("/api/v1/random/**").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-//                .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class) 박규수정
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
-
+                .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
                 .build();
     }
-
-    @Bean       // 박규현
-    public JwtFilter jwtFilter(){
-        return new JwtFilter(memberService, secretKey);
-    }
-
-
 }
+//    @Bean       // 박규현
+//    public JwtFilter jwtFilter(){
+//        return new JwtFilter(memberService, secretKey);
+//    }
+
+
 //<<<<<<< Updated upstream
 //=======
 

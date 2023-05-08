@@ -17,7 +17,6 @@ public class MainController {
 
     private final MemberService memberService;
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/api/v1/main")
     public ResponseEntity<String> mainPage() {
         HttpHeaders headers = new HttpHeaders();
@@ -25,8 +24,7 @@ public class MainController {
         return new ResponseEntity<>("{\"message\":\"Hello, World!\"}", headers, HttpStatus.OK);
     }
 
-
-    @CrossOrigin(origins = "http://localhost:3000")
+    
     @PostMapping("/api/v1/loginAfter/{id}")
     public ResponseEntity<String> loginAfter() {
         HttpHeaders headers = new HttpHeaders();

@@ -1,5 +1,6 @@
 package com.example.ollethboardproject.domain.entity;
 
+import com.example.ollethboardproject.domain.dto.MemberDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "olleh")
 public class Olleh {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //primary key 자동생성
     private Long id;
