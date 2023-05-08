@@ -2,9 +2,9 @@
 <<<<<<< Updated upstream
 package com.example.ollethboardproject.controller;
 
-import com.example.ollethboardproject.controller.request.MemberUpdateRequest;
-import com.example.ollethboardproject.controller.request.MemberJoinRequest;
-import com.example.ollethboardproject.controller.request.MemberLoginRequest;
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
+import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
+import com.example.ollethboardproject.controller.request.member.MemberLoginRequest;
 import com.example.ollethboardproject.controller.response.MemberJoinResponse;
 import com.example.ollethboardproject.controller.response.MemberLoginResponse;
 import com.example.ollethboardproject.controller.response.Response;

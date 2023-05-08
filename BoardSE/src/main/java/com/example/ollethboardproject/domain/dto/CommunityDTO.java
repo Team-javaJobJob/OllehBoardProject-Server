@@ -18,7 +18,7 @@ public class CommunityDTO {
     public static CommunityDTO fromEntity(Community community) {
         return new CommunityDTO(
                 community.getId(),
-                community.getCommunityName(),
+                community.getRegion(),
                 community.getInterest(),
                 community.getInfo(),
                 community.getCommunityName(),

@@ -2,11 +2,11 @@
 <<<<<<< Updated upstream
 package com.example.ollethboardproject.domain.entity;
 
-import com.example.ollethboardproject.controller.request.MemberUpdateRequest;
-import com.example.ollethboardproject.controller.request.MemberJoinRequest;
+import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.controller.request.PwEncodeRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +32,7 @@ public class Member implements UserDetails {
     @Column(name = "userName")
     private String userName;
 
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
@@ -44,15 +45,14 @@ public class Member implements UserDetails {
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private Role roles;
+    private Role roles = Role.ROLE_USER;
 
     //외부에서 new 생성자로 entity 객체 만들지않게 하기 위함
-    public Member(String userName, String password, String nickName, Gender gender, Role roles) {
+    public Member(String userName, String password, String nickName, Gender gender) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
         this.gender = gender;
-        this.roles = roles;
     }
 
     public static Member of(MemberJoinRequest memberJoinRequest) {
@@ -60,9 +60,8 @@ public class Member implements UserDetails {
                 memberJoinRequest.getUserName(),
                 memberJoinRequest.getPassword(),
                 memberJoinRequest.getNickName(),
-                memberJoinRequest.getGender(),
-                memberJoinRequest.getRoles()
-        );
+                memberJoinRequest.getGender()
+                );
     }
 
     public static Member toPw(PwEncodeRequest pwEncodeRequest) {
@@ -70,8 +69,7 @@ public class Member implements UserDetails {
                 pwEncodeRequest.getUserName(),
                 pwEncodeRequest.getPassword(),
                 pwEncodeRequest.getNickName(),
-                pwEncodeRequest.getGender(),
-                pwEncodeRequest.getRoles()
+                pwEncodeRequest.getGender()
         );
     }
 

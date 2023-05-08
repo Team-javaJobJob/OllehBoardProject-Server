@@ -2,16 +2,14 @@
 <<<<<<< Updated upstream
 package com.example.ollethboardproject.service;
 
-import com.example.ollethboardproject.controller.request.MemberUpdateRequest;
-import com.example.ollethboardproject.controller.request.MemberJoinRequest;
-import com.example.ollethboardproject.controller.request.MemberLoginRequest;
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
+import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
+import com.example.ollethboardproject.controller.request.member.MemberLoginRequest;
 import com.example.ollethboardproject.controller.request.PwEncodeRequest;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
 import com.example.ollethboardproject.domain.entity.Member;
-import com.example.ollethboardproject.domain.entity.Post;
-import com.example.ollethboardproject.exception.BoardException;
+import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.exception.ErrorCode;
-import com.example.ollethboardproject.repository.CommunityRepository;
 import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.repository.OllehRepository;
@@ -51,13 +49,13 @@ public class MemberService implements UserDetailsService {
         // 회원가입 중복 체크
         memberRepository.findByUserName(memberJoinRequest.getUserName())
                 .ifPresent(member -> {
-                    throw new BoardException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", memberJoinRequest.getUserName()));
+                    throw new OllehException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", memberJoinRequest.getUserName()));
                 });
         //TODO: 비밀번호 제약조건 설정 여부
         //비밀번호 암호화를 위해 pwEncodeRequest 타입으로 변환
         PwEncodeRequest pwEncodeRequest = new PwEncodeRequest(
-                memberJoinRequest.getUserName(), memberJoinRequest.getNickName(), memberJoinRequest.getPassword(),
-                memberJoinRequest.getGender(), memberJoinRequest.getRoles());
+                memberJoinRequest.getUserName(), memberJoinRequest.getPassword(), memberJoinRequest.getNickName(),
+                memberJoinRequest.getGender());
 
         //비밀번호 암호화 후 member 타입으로 객체 생성
         Member member = Member.toPw(encodePassword(pwEncodeRequest));
@@ -66,15 +64,16 @@ public class MemberService implements UserDetailsService {
         //entity -> DTO 로 변환후 return
         return MemberDTO.fromEntity(savedMember);
     }
+
     @Transactional(readOnly = true)
     public TokenInfo login(MemberLoginRequest memberLoginRequest) {
         //아이디 체크
         Member member = memberRepository.findByUserName(memberLoginRequest.getUserName())
-                .orElseThrow(() -> new BoardException(ErrorCode.USER_NOT_FOUND, String.format("%s is not found", memberLoginRequest.getUserName())));
+                .orElseThrow(() -> new OllehException(ErrorCode.USER_NOT_FOUND, String.format("%s is not found", memberLoginRequest.getUserName())));
 
         //패스워드 확인
         if (!encoder.matches(memberLoginRequest.getPassword(), member.getPassword())) {
-            throw new BoardException(ErrorCode.INVALID_TOKEN, String.format("password is invalid"));
+            throw new OllehException(ErrorCode.INVALID_PASSWORD, String.format("password is invalid"));
         }
 
         // 토큰 발급 (엑세스 , 리프레시)
@@ -109,8 +108,8 @@ public class MemberService implements UserDetailsService {
         passwordMatches(member, password);
         //수정된 비밀번호 암호화
         PwEncodeRequest pwEncodeRequest = new PwEncodeRequest(
-                memberUpdateRequest.getUserName(), memberUpdateRequest.getNickName(), memberUpdateRequest.getPassword(),
-                memberUpdateRequest.getGender(), memberUpdateRequest.getRole());
+                memberUpdateRequest.getUserName(), memberUpdateRequest.getPassword(), memberUpdateRequest.getNickName(),
+                memberUpdateRequest.getGender());
         //암화화된 비밀번호가 포함된 정보를 member 타입으로 객체화
         Member updatedMember = Member.toPw(encodePassword(pwEncodeRequest));
         //회원 정보 수정 (Setter 를 사용하지 않기 위함)
@@ -134,20 +133,20 @@ public class MemberService implements UserDetailsService {
         //비교할 password 암호화
         String encodePassword = encoder.encode(password);
         if (encoder.matches(encodePassword, member.getPassword())) {
-            throw new BoardException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
+            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
         }
     }
 
     //수정된 회원 정보 중복 검증 메서드
     private void duplicationMatches(String updaterName) {
         memberRepository.findByUserName(updaterName).orElseThrow(() ->
-                new BoardException(ErrorCode.DUPLICATED_USERNAME, String.format("%s not found", updaterName)));
+                new OllehException(ErrorCode.DUPLICATED_USERNAME, String.format("%s not found", updaterName)));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return memberRepository.findByUserName(username).orElseThrow(() ->
-                new BoardException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", username)));
+                new OllehException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", username)));
     }
 
 }
