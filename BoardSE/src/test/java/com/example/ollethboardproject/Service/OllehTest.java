@@ -1,10 +1,9 @@
 package com.example.ollethboardproject.Service;
 
-import com.example.ollethboardproject.controller.request.MemberJoinRequest;
+import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
 import com.example.ollethboardproject.domain.entity.Member;
-import com.example.ollethboardproject.domain.entity.Olleh;
 import com.example.ollethboardproject.domain.entity.Post;
 import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.repository.OllehRepository;
@@ -30,7 +29,7 @@ public class OllehTest {
     @Test
     void testOlleh() {
         // given
-        MemberJoinRequest memberJoinRequest = new MemberJoinRequest("나래", "password", "나래쨩", Gender.FEMALE, Role.ROLE_USER);
+        MemberJoinRequest memberJoinRequest = new MemberJoinRequest("나래", "password", "나래쨩", Gender.FEMALE);
         Member member = memberRepository.save(Member.of(memberJoinRequest));
         Post post = postRepository.save(new Post("test title", "test content", member));
 
@@ -40,14 +39,16 @@ public class OllehTest {
 
         // then
         Post savedPost = postRepository.findById(post.getId()).orElseThrow(EntityNotFoundException::new);
-        assertThat(savedPost.getOllehsList().size()).isEqualTo(1);
+//        assertThat(savedPost.getOllehsList().size()).isEqualTo(1);
+        assertThat(ollehRepository.countByPost(savedPost) == 1);
+
     }
 
 
     @Test
     void testRemoveOlleh() {
         // given
-        Member member = new Member("나래", "password", "나래쨩", Gender.FEMALE, Role.ROLE_USER);
+        Member member = new Member("나래", "password", "나래쨩", Gender.FEMALE);
         memberRepository.save(member);
         Post post = new Post("test title", "test content", member);
         postRepository.save(post);

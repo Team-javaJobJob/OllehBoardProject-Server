@@ -1,6 +1,6 @@
 package com.example.ollethboardproject.domain.entity;
 
-import com.example.ollethboardproject.controller.request.ReplyCreateRequest;
+import com.example.ollethboardproject.controller.request.reply.ReplyCreateRequest;
 import lombok.Getter;
 import lombok.Setter;
 

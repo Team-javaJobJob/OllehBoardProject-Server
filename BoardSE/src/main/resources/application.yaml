@@ -3,6 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     url: jdbc:mysql://localhost:3306/
     username: root
@@ -34,12 +35,20 @@ spring:
     password: system
 >>>>>>> main
 
+=======
+    url: jdbc:mysql://localhost:3306/ollehboard
+    username: root
+    password: 0903
+#  cors:
+#    allowed-origins:
+#      - "http://localhost:3000"
+>>>>>>> main
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
-        #        show_sql: true
+        show_sql: true
         format_sql: true
 jwt:
   token:
@@ -47,7 +56,8 @@ jwt:
   access-expired: 3600000    #3600000 1시간
   refresh-expired: 86400000   # 1 day
 
-server:
-  port: 8081
+
+#server:
+#  port: 8081
 
 #  org.hibernate.type: trace
