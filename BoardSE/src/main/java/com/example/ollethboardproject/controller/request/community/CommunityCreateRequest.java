@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberLoginRequest {
-    private String userName;
-    private String password;
+public class CommunityCreateRequest {
+    private String region;
+    private String interest;
+    private String info;
+    private String communityName;
 }
