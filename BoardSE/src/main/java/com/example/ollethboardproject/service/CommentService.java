@@ -6,10 +6,16 @@ import com.example.ollethboardproject.domain.dto.CommentDTO;
 import com.example.ollethboardproject.domain.entity.Comment;
 import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.domain.entity.Post;
+<<<<<<< Updated upstream
 import com.example.ollethboardproject.exception.OllehException;
+=======
+import com.example.ollethboardproject.domain.entity.Reply;
+import com.example.ollethboardproject.exception.BoardException;
+>>>>>>> Stashed changes
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.repository.CommentRepository;
 import com.example.ollethboardproject.repository.PostRepository;
+import com.example.ollethboardproject.repository.ReplyRepository;
 import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +29,8 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final ReplyRepository replyRepository;
+
 
     public CommentDTO createComment(Long postId, CommentCreateRequest commentCreateRequest, Authentication authentication) {
         Member member = (Member) authentication.getPrincipal();
@@ -55,10 +63,23 @@ public class CommentService {
         return CommentDTO.fromEntity(comment);
     }
 
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long commentId, Member user) {
         Comment comment = commentRepository.findById(commentId)
+<<<<<<< Updated upstream
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
+=======
+                .orElseThrow(() -> new BoardException(ErrorCode.COMMENT_DOES_NOT_EXIST));
+        
+        // 댓글에 속 답글들을 조회
+        List<Reply> replies = replyRepository.findByParentComment(comment);
+
+        // 답글들 삭제
+        for (Reply reply : replies) {
+            replyRepository.delete(reply);
+        }
+        // 댓글 삭제
+>>>>>>> Stashed changes
         commentRepository.delete(comment);
     }
 

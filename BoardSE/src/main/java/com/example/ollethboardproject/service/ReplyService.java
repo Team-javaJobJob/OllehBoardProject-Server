@@ -50,11 +50,22 @@ public class ReplyService {
         return ReplyDTO.fromEntity(updatedReply);
     }
 
-    public void deleteReply(Long replyId) {
+    public void deleteReply(Long replyId, Member user) {
         Optional<Reply> replyOptional = replyRepository.findById(replyId);
+<<<<<<< Updated upstream
         Reply reply = replyOptional.orElseThrow(() -> new OllehException(ErrorCode.REPLY_DOES_NOT_EXIST));
+=======
+        Reply reply = replyOptional.orElseThrow(() -> new BoardException(ErrorCode.REPLY_DOES_NOT_EXIST));
+
+        // 대댓글 작성자 삭제를 요청 사용자가 일치하는지 확인
+        if (!reply.getMember().equals(user)) {
+            throw new BoardException(ErrorCode.PERMISSION_DENIED);
+        }
+
+>>>>>>> Stashed changes
         replyRepository.delete(reply);
     }
+
 
     public ReplyDTO getReply(Long replyId) {
         Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new OllehException(ErrorCode.REPLY_DOES_NOT_EXIST));

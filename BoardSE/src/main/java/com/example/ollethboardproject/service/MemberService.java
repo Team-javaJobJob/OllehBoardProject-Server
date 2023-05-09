@@ -53,7 +53,11 @@ public class MemberService implements UserDetailsService {
         //비밀번호 암호화를 위해 pwEncodeRequest 타입으로 변환
         PwEncodeRequest pwEncodeRequest = new PwEncodeRequest(
                 memberJoinRequest.getUserName(), memberJoinRequest.getPassword(), memberJoinRequest.getNickName(),
+<<<<<<< Updated upstream
                 memberJoinRequest.getGender());
+=======
+                memberJoinRequest.getGender(), memberJoinRequest.getRoles());
+>>>>>>> Stashed changes
 
         //비밀번호 암호화 후 member 타입으로 객체 생성
         Member member = Member.toPw(encodePassword(pwEncodeRequest));
@@ -107,7 +111,11 @@ public class MemberService implements UserDetailsService {
         //수정된 비밀번호 암호화
         PwEncodeRequest pwEncodeRequest = new PwEncodeRequest(
                 memberUpdateRequest.getUserName(), memberUpdateRequest.getPassword(), memberUpdateRequest.getNickName(),
+<<<<<<< Updated upstream
                 memberUpdateRequest.getGender());
+=======
+                memberUpdateRequest.getGender(), memberUpdateRequest.getRole());
+>>>>>>> Stashed changes
         //암화화된 비밀번호가 포함된 정보를 member 타입으로 객체화
         Member updatedMember = Member.toPw(encodePassword(pwEncodeRequest));
         //회원 정보 수정 (Setter 를 사용하지 않기 위함)
