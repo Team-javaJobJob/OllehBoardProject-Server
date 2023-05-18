@@ -51,8 +51,6 @@ public class CommunityService {
         communityRepository.save(community);
         //로컬 커뮤니티 생성
         LocalCommunity localCommunity = LocalCommunity.of(community, member);
-        //커뮤니티 생성자는 절차없이 바로 승인된다.
-        localCommunity.hasApprove();
         localCommunityRepository.save(localCommunity);
         return mapToCommunityDto(community);
     }
@@ -95,33 +93,14 @@ public class CommunityService {
         return LocalCommunityDTO.fromEntity(localCommunityRepository.save(LocalCommunity.of(community, member)));
     }
 
-    @Transactional
-    public LocalCommunityDTO approveCommunityMember(Long communityId, Long memberId, Authentication authentication) {
-        Community community = getCommunityByIdOrException(communityId);
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
-        //커뮤니티 멤버인지 확인한다.
-        LocalCommunity localCommunity = findLocalCommunityByCommunityAndMember(community, member);
-        //커뮤니티 생성자만 멤버 승인 권한을 가진다.
-        if (isNotCreator(community, localCommunity.getMember())) {
-            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
-        }
-        //커뮤니티 가입 승인을 한다.
-        LocalCommunityDTO localCommunityDTO = join(memberId, community);
-        return localCommunityDTO;
-    }
-
     @Transactional(readOnly = true)
     public List<LocalCommunityDTO> selectCommunity(Long communityId, Authentication authentication, Pageable pageable) {
+        //커뮤니티 멤버만 조회 커뮤니티 조회할 수 있다.
         LocalCommunity localCommunity = getLocalCommunity(communityId,
                 ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get());
-        // 승인되지 않은 멤버는 해당 커뮤니티를 조회할 수 없다.
-        if (!localCommunity.isApprove()) {
-            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
-        }
         //승인되지 않은 멤버는 조회되지 않는다.
         return localCommunityRepository.findByCommunity(localCommunity.getCommunity(), pageable)
                 .stream()
-                .filter(localCommunities -> localCommunities.isApprove() == true)
                 .map(LocalCommunityDTO::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -129,15 +108,6 @@ public class CommunityService {
     private LocalCommunity getLocalCommunity(Long communityId, Member member) {
         Community community = getCommunityByIdOrException(communityId);
         return findLocalCommunityByCommunityAndMember(community, member);
-    }
-
-    private LocalCommunityDTO join(Long memberId, Community community) {
-        // 멤버 아이디를 입력하여 커뮤니티 가입 승인을 한다.(1.멤버 조회)
-        Member memberForJoin = getMemberByIdOrException(memberId);
-        // 멤버 아이디를 입력하여 커뮤니티 가입 승인을 한다.(2.멤버가 커뮤니티 가입 희망자라면 승인 수락)
-        LocalCommunity localCommunity = approveJoin(community, memberForJoin);
-        // 멤버 아이디를 입력하여 커뮤니티 가입 승인을 한다.(3.DTO 객체 변환 및 반환 )
-        return LocalCommunityDTO.fromEntity(localCommunityRepository.save(localCommunity));
     }
 
     private LocalCommunity findLocalCommunityByCommunityAndMember(Community community, Member member) {
@@ -154,18 +124,8 @@ public class CommunityService {
         return member.getId() != community.getMember().getId();
     }
 
-    private LocalCommunity approveJoin(Community community, Member memberForJoin) {
-        return localCommunityRepository.findByCommunityAndMember(community, memberForJoin)
-                .map(LocalCommunity::hasApprove).orElseThrow(() ->
-                        new OllehException(ErrorCode.USER_NOT_FOUND));
-    }
-
     private Community getCommunityByIdOrException(Long communityId) {
         return communityRepository.findById(communityId).orElseThrow(() -> new OllehException(ErrorCode.COMMUNITY_DOES_NOT_EXIST));
-    }
-
-    private Member getMemberByIdOrException(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new OllehException(ErrorCode.USER_NOT_FOUND));
     }
 
     private void validateMatches(Community community, Member member) {

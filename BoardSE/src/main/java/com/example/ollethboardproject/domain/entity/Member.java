@@ -4,6 +4,11 @@ package com.example.ollethboardproject.domain.entity;
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
+<<<<<<< HEAD
+=======
+import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+>>>>>>> main
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +25,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member implements UserDetails {
+public class Member extends AuditEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

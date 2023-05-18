@@ -2,6 +2,7 @@ package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.post.PostCreateRequest;
 import com.example.ollethboardproject.controller.request.post.PostUpdateRequest;
+import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @Table(name = "post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
