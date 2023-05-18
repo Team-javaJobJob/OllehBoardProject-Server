@@ -31,7 +31,10 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/**", "/api/v1/members/login","/api/v1/main","/ws/chat","/chat").permitAll()
+                .antMatchers("/api/v1/**", "/api/v1/members/login","/api/v1/main").permitAll()
+                .antMatchers(HttpMethod.GET, "api/v1/chats","/stomp/chat").permitAll()
+                .antMatchers(HttpMethod.POST, "api/v1/chats","/stomp/chat").permitAll()
+
 //                .antMatchers("/api/v1/**").authenticated()
                // .antMatchers(HttpMethod.GET, "/api/v1/reviews").hasRole("VIP")
                 .antMatchers("/api/v1/loginAfter/**").authenticated()

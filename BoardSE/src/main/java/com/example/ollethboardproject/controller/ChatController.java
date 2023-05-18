@@ -49,7 +49,7 @@ public class ChatController {
 
         ChatRoomDTO createdChatRoomDTO = chatService.createChatRoomDTO(chatRoomRequest.getRoomName(), authentication);
 
-        log.info("GET /api/v1/chats/create"  );
+        log.info("POST /api/v1/chats/create"  );
         log.info("# Create Chat Room , name: "  );
 
 //        chatService.createChatRoomDTO(createdChatRoomDTO.getName(), authentication);

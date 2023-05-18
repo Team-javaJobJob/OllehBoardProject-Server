@@ -1,6 +1,7 @@
 package com.example.ollethboardproject.domain.entity;
 
 
+import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Table(name = "chatRoom_table")
-public class ChatRoomEntity {
+public class ChatRoomEntity extends AuditEntity {
 
 
     @Id
