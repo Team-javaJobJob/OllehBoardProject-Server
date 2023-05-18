@@ -48,8 +48,15 @@ public class MemberService implements UserDetailsService {
                     throw new OllehException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", memberJoinRequest.getUserName()));
                 });
         //TODO: 비밀번호 제약조건 설정 여부
+<<<<<<< HEAD
         //member 비밀번호 암호화 후 엔티티 생성
         Member member = Member.of(encodePassword(memberJoinRequest));
+=======
+        //비밀번호 암호화
+        memberJoinRequest.encode(encodePassword(memberJoinRequest.getPassword()));
+        //비밀번호 암호화 후 member 타입으로 객체 생성
+        Member member = Member.of(memberJoinRequest);
+>>>>>>> main
         //member 엔티티 저장
         Member savedMember = memberRepository.save(member);
         log.info("saveMember : {}",savedMember);
@@ -74,11 +81,70 @@ public class MemberService implements UserDetailsService {
         return TokenInfo.generateTokens(accessToken, refreshToken);
     }
 
+<<<<<<< HEAD
     private MemberJoinRequest encodePassword(MemberJoinRequest memberJoinRequest) {
         //비밀번호 암호화
         String encodePassword = encoder.encode(memberJoinRequest.getPassword());
         memberJoinRequest.encode(encodePassword);
         return memberJoinRequest;
+=======
+    private String encodePassword(String password) {
+        //비밀번호 암호화
+        return encoder.encode(password);
+    }
+
+    public MemberDTO findMemberByPassword(String requestPw, Authentication authentication) {
+        //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        //비밀번호가 일치하는 회원 정보를 조회할 수 있다.
+        passwordMatches(member, requestPw);
+        //entity -> DTO 로 변환후 return
+        return MemberDTO.fromEntity(member);
+    }
+
+    public MemberDTO updateMember(MemberUpdateRequest memberUpdateRequest, Authentication authentication) {
+        //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        //수정할 회원 정보 중복 검증
+        duplicationMatches(memberUpdateRequest.getUserName());
+        //비밀번호가 일치하는 회원만 회원 정보를 수정할 수 있다.
+        passwordMatches(member, memberUpdateRequest.getRequestPw());
+        //수정할 비밀번호 암호화
+        memberUpdateRequest.encode(encodePassword(memberUpdateRequest.getPassword()));
+        //비밀번호 암호화 후 member 타입으로 객체 생성
+        Member updatedMember = Member.toPw(memberUpdateRequest);
+        //회원 정보 수정 (Setter 를 사용하지 않기 위함)
+        member.update(updatedMember);
+        //수정된 회원 정보 저장
+        memberRepository.save(member);
+        return MemberDTO.fromEntity(updatedMember);
+    }
+
+    public void deleteMember(String requestPw, Authentication authentication) {
+        //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        //비밀번호가 일치하는 회원만 회원 정보를 삭제할 수 있다.
+        passwordMatches(member, requestPw);
+        //회원 정보 삭제
+        memberRepository.deleteById(member.getId());
+    }
+
+    //비밀번호 일치 검증 메서드
+    private void passwordMatches(Member member, String password) {
+        //비교할 password 암호화
+        String encodePassword = encoder.encode(password);
+        if (encoder.matches(encodePassword, member.getPassword())) {
+            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
+        }
+    }
+
+    //수정된 회원 정보 중복 검증 메서드
+    private void duplicationMatches(String updaterName) {
+        memberRepository.findByUserName(updaterName).ifPresent(name->{
+            throw new OllehException(ErrorCode.DUPLICATED_USERNAME);
+        });
+
+>>>>>>> main
     }
 
     @Override

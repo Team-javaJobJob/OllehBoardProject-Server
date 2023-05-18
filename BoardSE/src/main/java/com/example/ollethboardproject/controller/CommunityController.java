@@ -45,7 +45,7 @@ public class CommunityController {
 
     //커뮤니티 정보 수정
     //TODO: LIST -> id 외 조회 기준 추가
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<CommunityDTO> updateCommunity(@PathVariable Long id, @RequestBody CommunityUpdateRequest communityUpdateRequest, Authentication authentication) {
         log.info("PUT /api/v1/communities/{}", id);
         CommunityDTO updatedCommunityDTO = communityService.updateCommunity(id, communityUpdateRequest, authentication);
@@ -54,10 +54,10 @@ public class CommunityController {
 
     //커뮤니티 삭제
     //TODO: LIST -> id 외 조회 기준 추가
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id, Authentication authentication) {
         log.info("DELETE /api/v1/communities/{}", id);
-        communityService.deletePost(id, authentication);
+        communityService.deleteCommunity(id, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

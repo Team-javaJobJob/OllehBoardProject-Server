@@ -2,6 +2,11 @@
 package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
+<<<<<<< HEAD
+=======
+import com.example.ollethboardproject.controller.request.PwEncodeRequest;
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
+>>>>>>> main
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
 
@@ -61,6 +66,18 @@ public class Member extends AuditEntity implements UserDetails {
                 memberJoinRequest.getPassword(),
                 memberJoinRequest.getNickName(),
                 memberJoinRequest.getGender()
+<<<<<<< HEAD
+=======
+                );
+    }
+
+    public static Member toPw(MemberUpdateRequest memberUpdateRequest) {
+        return new Member(
+                memberUpdateRequest.getUserName(),
+                memberUpdateRequest.getPassword(),
+                memberUpdateRequest.getNickName(),
+                memberUpdateRequest.getGender()
+>>>>>>> main
         );
     }
 

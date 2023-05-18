@@ -38,5 +38,29 @@ public class MemberController {
         TokenInfo tokens = memberService.login(memberLoginRequest);
         return Response.success(new MemberLoginResponse(tokens.getAccessToken(), tokens.getRefreshToken()));
     }
+<<<<<<< HEAD
+=======
+
+    //회원 정보 조회
+    @PostMapping("/myPage")
+    public ResponseEntity<MemberDTO> findMemberByPw(@RequestBody String requestPw, Authentication authentication) {
+        MemberDTO memberDTO = memberService.findMemberByPassword(requestPw, authentication);
+        return new ResponseEntity<>(memberDTO, HttpStatus.OK);
+    }
+
+    //회원 정보 수정
+    @PutMapping("/myPage/update")
+    public ResponseEntity<MemberDTO> updateMember(@RequestBody MemberUpdateRequest memberUpdateRequest , Authentication authentication) {
+        MemberDTO updatedMemberDTO = memberService.updateMember(memberUpdateRequest, authentication);
+        return new ResponseEntity<>(updatedMemberDTO, HttpStatus.OK);
+    }
+
+    //회원 정보 삭제
+    @PostMapping("/myPage/delete")
+    public ResponseEntity<Void> deleteMember(@RequestBody String requestPw, Authentication authentication) {
+        memberService.deleteMember(requestPw, authentication);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+>>>>>>> main
 }
 
