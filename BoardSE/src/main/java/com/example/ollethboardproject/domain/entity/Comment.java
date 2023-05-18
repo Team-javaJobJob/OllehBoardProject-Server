@@ -2,7 +2,8 @@ package com.example.ollethboardproject.domain.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +13,6 @@ import java.util.List;
 @Entity
 @Table(name = "comments")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Comment {
 
@@ -38,6 +38,7 @@ public class Comment {
     private LocalDateTime createdAt;
 
     public Comment(String content, Post post, Member member) {
+        this.id = null;
         this.content = content;
         this.post = post;
         this.member = member;
