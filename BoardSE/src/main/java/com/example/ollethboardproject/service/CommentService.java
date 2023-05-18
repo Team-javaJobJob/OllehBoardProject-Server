@@ -6,13 +6,16 @@ import com.example.ollethboardproject.domain.dto.CommentDTO;
 import com.example.ollethboardproject.domain.entity.Comment;
 import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.domain.entity.Post;
-import com.example.ollethboardproject.exception.OllehException;
+import com.example.ollethboardproject.domain.entity.Reply;
 import com.example.ollethboardproject.exception.ErrorCode;
+import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.repository.CommentRepository;
 import com.example.ollethboardproject.repository.PostRepository;
-import org.springframework.security.core.Authentication;
+import com.example.ollethboardproject.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,45 +26,59 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final ReplyRepository replyRepository;
 
+    @Transactional
     public CommentDTO createComment(Long postId, CommentCreateRequest commentCreateRequest, Authentication authentication) {
         Member member = (Member) authentication.getPrincipal();
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
 
-        Comment comment = new Comment();
-        comment.setContent(commentCreateRequest.getContent());
-        comment.setMember(member);
-        comment.setPost(post);
+        Comment comment = new Comment(
+                commentCreateRequest.getContent(),
+                post,
+                member
+        );
         commentRepository.save(comment);
 
         return CommentDTO.fromEntity(comment);
     }
 
+    @Transactional(readOnly = true)
     public CommentDTO getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
         return CommentDTO.fromEntity(comment);
     }
 
+    @Transactional
     public CommentDTO updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
-        comment.setContent(commentUpdateRequest.getContent());
-        commentRepository.save(comment);
 
         return CommentDTO.fromEntity(comment);
     }
 
-    public void deleteComment(Long commentId) {
+    @Transactional
+    public void deleteComment(Long commentId, Member user) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
+        // 댓글에 속한 답글들을 조회
+        List<Reply> replies = replyRepository.findByParentComment(comment);
+
+        // 답글들 삭제
+        for (Reply reply : replies) {
+            replyRepository.delete(reply);
+        }
+
+        // 댓글 삭제
         commentRepository.delete(comment);
     }
 
+    @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByPostId(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
@@ -75,6 +92,7 @@ public class CommentService {
         return commentDTOs;
     }
 
+    @Transactional(readOnly = true)
     public List<CommentDTO> getCommentByPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));

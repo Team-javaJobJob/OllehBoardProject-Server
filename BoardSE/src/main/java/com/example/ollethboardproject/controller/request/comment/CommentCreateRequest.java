@@ -8,10 +8,6 @@ public class CommentCreateRequest {
         return postId;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
     public String getContent() {
         return content;
     }

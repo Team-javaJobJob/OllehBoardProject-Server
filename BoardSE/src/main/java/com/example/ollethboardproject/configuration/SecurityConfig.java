@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/members/join", "/api/v1/members/login").permitAll()
+                .antMatchers("/api/v1/members/join", "/api/v1/members/login", "api/v1/members/**").permitAll()
 //                .antMatchers("/api/v1/**").authenticated()
                // .antMatchers(HttpMethod.GET, "/api/v1/reviews").hasRole("VIP")
                 .antMatchers("/api/v1/**").authenticated()
