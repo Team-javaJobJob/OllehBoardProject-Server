@@ -15,7 +15,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp/chat")
-                .addInterceptors(new HttpSessionHandshakeInterceptor())
+//                .addInterceptors(new HttpSessionHandshakeInterceptor())
                 .setAllowedOrigins("*")
                 .withSockJS();
 //                .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js");

@@ -19,7 +19,7 @@ import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/chats")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Log4j2
 public class ChatController {
