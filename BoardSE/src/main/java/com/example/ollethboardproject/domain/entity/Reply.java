@@ -3,13 +3,11 @@ package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.reply.ReplyCreateRequest;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 public class Reply {
 
     @Id
@@ -31,20 +29,29 @@ public class Reply {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
+    protected Reply() {
+        this.content = null;
+        this.member = null;
+        this.post = null;
+        this.parentComment = null;
+    }
+
+    private Reply(String content, Member member, Post post, Comment parentComment) {
+        this.content = content;
+        this.member = member;
+        this.post = post;
+        this.parentComment = parentComment;
+    }
+
     public static Reply of(ReplyCreateRequest request, Member member, Post post, Comment parentComment) {
-        Reply reply = new Reply();
-        reply.setContent(request.getContent());
-        reply.setMember(member);
-        reply.setPost(post);
-        reply.setParentComment(parentComment);
-        return reply;
+        return new Reply(request.getContent(), member, post, parentComment);
     }
 
-    public void update(String content) {
-        this.setContent(content);
+    public Reply update(String content) {
+        return new Reply(content, this.member, this.post, this.parentComment);
     }
 
-    public void setAuthor(Member author) {
-        this.member = author;
+    public Member getAuthor() {
+        return member;
     }
 }
