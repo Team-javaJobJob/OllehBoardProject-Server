@@ -31,12 +31,10 @@ public class SecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-//<<<<<<< Updated upstream
-                .antMatchers("/api/v1/**", "/api/v1/members/login","/api/v1/main").permitAll()
+                .antMatchers("/api/v1/**", "/api/v1/members/login","/api/v1/main","/ws/chat","/chat").permitAll()
 //                .antMatchers("/api/v1/**").authenticated()
                // .antMatchers(HttpMethod.GET, "/api/v1/reviews").hasRole("VIP")
                 .antMatchers("/api/v1/loginAfter/**").authenticated()
-//=======
 
 //                .antMatchers(HttpMethod.GET, "/api/v1/loginAfter/**").authenticated()
 //                .antMatchers(HttpMethod.POST, "/api/v1/loginAfter/**").authenticated()
@@ -64,9 +62,6 @@ public class SecurityConfig {
 
 
 }
-//<<<<<<< Updated upstream
-//=======
-
 
 
 
@@ -94,5 +89,4 @@ public class SecurityConfig {
 //    }
 
 
-//>>>>>>> Stashed changes
 
