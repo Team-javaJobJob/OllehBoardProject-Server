@@ -43,12 +43,6 @@ public class SecurityConfig {
                 .and()
                 .build();
     }
-<<<<<<< Updated upstream
-=======
-
-
-
-
 //    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
 //        CorsConfiguration configuration = new CorsConfiguration();
@@ -71,7 +65,4 @@ public class SecurityConfig {
 //            }
 //        };
 //    }
-
-
->>>>>>> Stashed changes
 }

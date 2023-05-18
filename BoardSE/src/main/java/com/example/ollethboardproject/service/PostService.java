@@ -104,24 +104,25 @@ public class PostService {
 
     //Olleh(좋아요)
 
-    private Member getMemberByMemberName(String userName){ //userName 을 인자로 받아 member 를 조회하고 존재하지 않으면 BoardException 발생
+    private Member getMemberByMemberName(String userName){ //userName 을 인자로 받아 member 를 조회하고 존재하지 않으면 OllehException 발생
         return memberRepository.findByUserName(userName).orElseThrow(()->
                 new OllehException(ErrorCode.USER_NOT_FOUND));
     }
 
-    private Post getPostById(Long postId){ //postId 을 인자로 받아 Post 를 조회하고 존재하지 않으면 BoardException 발생
+    private Post getPostById(Long postId){ //postId 을 인자로 받아 Post 를 조회하고 존재하지 않으면 OllehException 발생
         return postRepository.findById(postId).orElseThrow(() ->
                 new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
     }
 
     @Transactional //하나의 트랜잭션으로 묶어서 하나라도 실패하면 모두 롤백
-    public void addOlleh(String userName, Long postId){
+    public boolean addOlleh(String userName, Long postId){
         Member member = getMemberByMemberName(userName); //getMemberByMemberName 메서드 호출하여 userName 에 해당하는 member 를 가져옴
         Post post = getPostById(postId); //getPostById 메서드 호출하여 postI 에 해당하는 post 를 가져옴
 
-        if (removeOlleh(member, post)) return; //removeOlleh 호출-> member,post 인자로 받아서 Olleh 객체삭제 -> true 반환시 실행 중지
+        if (removeOlleh(member, post)) return false; //removeOlleh 호출-> member,post 인자로 받아서 Olleh 객체삭제 -> true 반환시 false 반환
 
         ollehRepository.save(Olleh.of(member, post));
+        return true; //Olleh 추가에 성공한 경우 true 반환
     }
 
     public boolean removeOlleh(Member member, Post post) {

@@ -16,13 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+
+//@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/members")
-<<<<<<< Updated upstream
-=======
-//@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
->>>>>>> Stashed changes
 @RequiredArgsConstructor
 public class MemberController {
 
