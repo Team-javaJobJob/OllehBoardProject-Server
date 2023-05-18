@@ -83,22 +83,22 @@ public class MemberService implements UserDetailsService {
         return encoder.encode(password);
     }
 
-    public MemberDTO findMemberByPassword(String password, Authentication authentication) {
+    public MemberDTO findMemberByPassword(String requestPw, Authentication authentication) {
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //비밀번호가 일치하는 회원 정보를 조회할 수 있다.
-        passwordMatches(member, password);
+        passwordMatches(member, requestPw);
         //entity -> DTO 로 변환후 return
         return MemberDTO.fromEntity(member);
     }
 
-    public MemberDTO updateMember(String password, MemberUpdateRequest memberUpdateRequest, Authentication authentication) {
+    public MemberDTO updateMember(MemberUpdateRequest memberUpdateRequest, Authentication authentication) {
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //수정할 회원 정보 중복 검증
         duplicationMatches(memberUpdateRequest.getUserName());
         //비밀번호가 일치하는 회원만 회원 정보를 수정할 수 있다.
-        passwordMatches(member, password);
+        passwordMatches(member, memberUpdateRequest.getRequestPw());
         //수정할 비밀번호 암호화
         memberUpdateRequest.encode(encodePassword(memberUpdateRequest.getPassword()));
         //비밀번호 암호화 후 member 타입으로 객체 생성
@@ -110,11 +110,11 @@ public class MemberService implements UserDetailsService {
         return MemberDTO.fromEntity(updatedMember);
     }
 
-    public void deleteMember(String password, Authentication authentication) {
+    public void deleteMember(String requestPw, Authentication authentication) {
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //비밀번호가 일치하는 회원만 회원 정보를 삭제할 수 있다.
-        passwordMatches(member, password);
+        passwordMatches(member, requestPw);
         //회원 정보 삭제
         memberRepository.deleteById(member.getId());
     }
@@ -130,8 +130,10 @@ public class MemberService implements UserDetailsService {
 
     //수정된 회원 정보 중복 검증 메서드
     private void duplicationMatches(String updaterName) {
-        memberRepository.findByUserName(updaterName).orElseThrow(() ->
-                new OllehException(ErrorCode.DUPLICATED_USERNAME, String.format("%s not found", updaterName)));
+        memberRepository.findByUserName(updaterName).ifPresent(name->{
+            throw new OllehException(ErrorCode.DUPLICATED_USERNAME);
+        });
+
     }
 
     @Override

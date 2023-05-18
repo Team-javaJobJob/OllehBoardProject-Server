@@ -111,7 +111,7 @@ public class MemberServiceTest {
         // 검증 대상 - 회원 정보 객체
         Member member = Member.of(new MemberJoinRequest("userName", "password", "nickName", Gender.MALE));
         // 수정할 회원 정보 객체
-        MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("userName1", "password1", "nickName1", Gender.FEMALE);
+        MemberUpdateRequest memberUpdateRequest = new MemberUpdateRequest("requestPW", "userName1", "password1", "nickName1", Gender.FEMALE);
         Member updatedMember = Member.toPw(memberUpdateRequest);
 
         // when
@@ -122,12 +122,12 @@ public class MemberServiceTest {
         when(encoder.matches(password, encoder.encode(member.getPassword())))
                 .thenReturn(true);
         // 수정된 회원 정보 MemberDTO 타입으로 반환
-        when(memberService.updateMember(any(String.class), any(MemberUpdateRequest.class), any(Authentication.class)))
+        when(memberService.updateMember(any(), any()))
                 .thenReturn(MemberDTO.fromEntity(updatedMember));
 
         // then
         Assertions.assertDoesNotThrow(() ->
-                memberService.updateMember(any(String.class), any(MemberUpdateRequest.class), any(Authentication.class)));
+                memberService.updateMember(any(), any()));
     }
 
     @Test

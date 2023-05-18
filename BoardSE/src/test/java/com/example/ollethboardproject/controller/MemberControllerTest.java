@@ -128,12 +128,12 @@ public class MemberControllerTest {
         // 반환 객체 세팅
         MemberDTO memberDTO = new MemberDTO(1L, "userName", "password", "nickName", Gender.FEMALE);
 
-        when(memberService.updateMember(anyString(), any(), any())).thenReturn(memberDTO);
+        when(memberService.updateMember(any(), any())).thenReturn(memberDTO);
 
         mockMvc.perform(put("/api/v1/members/password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(new FindByPwRequest("password")))
-                        .content(objectMapper.writeValueAsBytes(new MemberUpdateRequest("userName1", "password1", "nickName1", Gender.MALE)))
+                        .content(objectMapper.writeValueAsBytes(new MemberUpdateRequest("requestPw", "userName1", "password1", "nickName1", Gender.MALE)))
                 ).andDo(print())
                 .andExpect(status().isOk());
     }
