@@ -4,6 +4,7 @@ spring:
 
     url: jdbc:mysql://localhost:3306/narae
     username: root
+<<<<<<< HEAD
     password: 1226
 #=======
 #<<<<<<< Updated upstream
@@ -30,6 +31,9 @@ spring:
 #    username: root
 #    password: 0903
 
+=======
+    password: system
+>>>>>>> main
 #  cors:
 #    allowed-origins:
 #      - "http://localhost:3000"

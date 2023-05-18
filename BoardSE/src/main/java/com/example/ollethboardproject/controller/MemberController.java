@@ -40,26 +40,23 @@ public class MemberController {
     }
 
     //회원 정보 조회
-    @GetMapping("{password}")
-    public ResponseEntity<MemberDTO> findMemberById(@PathVariable String password, Authentication authentication) {
-        log.info("GET /api/v1/members/{}", password);
-        MemberDTO memberDTO = memberService.findMemberByPassword(password, authentication);
+    @PostMapping("/myPage")
+    public ResponseEntity<MemberDTO> findMemberByPw(@RequestBody String requestPw, Authentication authentication) {
+        MemberDTO memberDTO = memberService.findMemberByPassword(requestPw, authentication);
         return new ResponseEntity<>(memberDTO, HttpStatus.OK);
     }
 
     //회원 정보 수정
-    @PutMapping("{password}")
-    public ResponseEntity<MemberDTO> updateMember(@PathVariable String password, @RequestBody MemberUpdateRequest memberUpdateRequest , Authentication authentication) {
-        log.info("PUT /api/v1/members/{}", password);
-        MemberDTO updatedMemberDTO = memberService.updateMember(password, memberUpdateRequest, authentication);
+    @PutMapping("/myPage/update")
+    public ResponseEntity<MemberDTO> updateMember(@RequestBody MemberUpdateRequest memberUpdateRequest , Authentication authentication) {
+        MemberDTO updatedMemberDTO = memberService.updateMember(memberUpdateRequest, authentication);
         return new ResponseEntity<>(updatedMemberDTO, HttpStatus.OK);
     }
 
     //회원 정보 삭제
-    @DeleteMapping("{password}")
-    public ResponseEntity<Void> deleteMember(@PathVariable String password, Authentication authentication) {
-        log.info("DELETE /api/v1/members/{}", password);
-        memberService.deleteMember(password, authentication);
+    @PostMapping("/myPage/delete")
+    public ResponseEntity<Void> deleteMember(@RequestBody String requestPw, Authentication authentication) {
+        memberService.deleteMember(requestPw, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
