@@ -5,6 +5,7 @@ import com.example.ollethboardproject.controller.request.PwEncodeRequest;
 import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
+import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,7 +23,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member implements UserDetails {
+public class Member extends AuditEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

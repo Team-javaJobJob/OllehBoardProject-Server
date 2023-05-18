@@ -77,13 +77,6 @@ public class CommunityController {
         List<LocalCommunityResponse> localCommunityResponses = localCommunitiesDTO.stream().map(LocalCommunityResponse::fromLocalCommunityDTO).collect(Collectors.toList());
         return Response.success(localCommunityResponses);
     }
-    //커뮤니티  승인
-    @PutMapping("{communityId}/{memberId}")
-    public ResponseEntity<String> approveMember(@PathVariable Long communityId, @PathVariable Long memberId, Authentication authentication) {
-        log.info("POST /api/v1/communities/{}/approve", communityId);
-        LocalCommunityDTO localCommunityDTO = communityService.approveCommunityMember(communityId, memberId, authentication);
-        return new ResponseEntity<>(localCommunityDTO.getMember().getNickName(), HttpStatus.OK);
-    }
 
     //TODO: 커뮤니티 검색 (지역 Region , 관심사 interest )
 
