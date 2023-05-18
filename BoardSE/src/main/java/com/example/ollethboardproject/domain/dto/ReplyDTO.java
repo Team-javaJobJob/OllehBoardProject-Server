@@ -3,13 +3,12 @@ package com.example.ollethboardproject.domain.dto;
 import com.example.ollethboardproject.domain.entity.Reply;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class ReplyDTO {
     private Long id;
@@ -17,8 +16,8 @@ public class ReplyDTO {
 
     public static ReplyDTO fromEntity(Reply reply) {
         ReplyDTO replyDTO = new ReplyDTO();
-        replyDTO.setId(reply.getId());
-        replyDTO.setContent(reply.getContent());
+        replyDTO.id = reply.getId();
+        replyDTO.content = reply.getContent();
         return replyDTO;
     }
 

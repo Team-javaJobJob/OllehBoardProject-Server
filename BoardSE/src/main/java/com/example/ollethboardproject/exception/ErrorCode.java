@@ -19,11 +19,10 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "unauthorized"),
     COMMUNITY_DOES_NOT_EXIST(HttpStatus.NOT_FOUND, "community does not exist"),
     COMMUNITY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "community already exists"),
-<<<<<<< Updated upstream
-    ALREADY_REGISTER(HttpStatus.CONFLICT, "has already registered");
-=======
+
+    ALREADY_REGISTER(HttpStatus.CONFLICT, "has already registered"),
+
     PERMISSION_DENIED(HttpStatus.FORBIDDEN, "permission denied");
->>>>>>> Stashed changes
 
     private final HttpStatus httpStatus;
     private final String message;

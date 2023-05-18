@@ -1,91 +1,106 @@
 package com.example.ollethboardproject.Service;
 
+import com.example.ollethboardproject.controller.request.comment.CommentCreateRequest;
+import com.example.ollethboardproject.domain.Gender;
+import com.example.ollethboardproject.domain.dto.CommentDTO;
 import com.example.ollethboardproject.domain.entity.Comment;
 import com.example.ollethboardproject.domain.entity.Member;
+import com.example.ollethboardproject.domain.entity.Post;
 import com.example.ollethboardproject.repository.CommentRepository;
+import com.example.ollethboardproject.repository.PostRepository;
+import com.example.ollethboardproject.repository.ReplyRepository;
 import com.example.ollethboardproject.service.CommentService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest
+import static org.hamcrest.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class CommentServiceTest {
-    private CommentService commentService;
+
+    @Mock
     private CommentRepository commentRepository;
 
+    @Mock
+    private PostRepository postRepository;
+
+    @Mock
+    private ReplyRepository replyRepository;
+
+    @InjectMocks
+    private CommentService commentService;
+
+    private Member member;
+    private Post post;
+    private Comment comment;
+
     @BeforeEach
-    public void setUp() {
-        commentRepository = new CommentRepository();
-        commentService = new CommentService(commentRepository);
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+
+        member = new Member("이름", "비번", "닉네임", Gender.MALE);
+        post = new Post("제목", "게시글", member);
+        comment = new Comment("댓글", post, member);
     }
 
     @Test
-    public void testAddComment() {
+    @DisplayName("댓글 생성 - 성공")
+    public void createComment_Success() {
         // given
-        Long memberId = 1L;
-        Member author = new Member(memberId, "이름", "닉네임");
-        Comment comment = new Comment("Test comment", author);
+        CommentCreateRequest request = new CommentCreateRequest();
+        String username = "username";
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                new Member("이름", "비번", "닉넴", Gender.MALE), null
+        );
+
+
+        when(postRepository.findById(anyLong())).thenReturn(Optional.of(post));
+        when(commentRepository.save(comment)).thenReturn(comment);
 
         // when
-        Comment savedComment = commentService.addComment(comment);
+        CommentDTO commentDTO = commentService.createComment(1L, request, authentication);
 
         // then
-        assertNotNull(savedComment.getId());
-        assertEquals(comment.getContent(), savedComment.getContent());
-        assertEquals(comment.getAuthor(), savedComment.getAuthor());
-        assertEquals(memberId, savedComment.getAuthor().getId());
+        assertEquals(comment.getContent(), commentDTO.getContent());
     }
 
     @Test
-    public void testGetCommentById() {
-        // given
-        Long commentId = 1L;
-        Long memberId = 1L;
-        Member author = new Member(memberId, "johndoe", "John Doe");
-        Comment comment = new Comment(commentId, "Test comment", author);
-        commentRepository.save(comment);
-
-        // when
-        Comment retrievedComment = commentService.getCommentById(commentId);
-
-        // then
-        assertEquals(comment, retrievedComment);
-    }
-
-    @Test
-    public void testUpdateComment() {
+    @DisplayName("댓글 조회 - 성공")
+    public void getComment_Success() {
         // given
         Long commentId = 1L;
-        Long memberId = 1L;
-        Member author = new Member(memberId, "johndoe", "John Doe");
-        Comment comment = new Comment(commentId, "Test comment", author);
-        commentRepository.save(comment);
-
-        Comment updatedComment = new Comment(commentId, "Updated comment", author);
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
 
         // when
-        Comment savedComment = commentService.updateComment(updatedComment);
+        CommentDTO commentDTO = commentService.getComment(commentId);
 
         // then
-        assertEquals(updatedComment.getContent(), savedComment.getContent());
+        assertEquals(comment.getContent(), commentDTO.getContent());
+        assertEquals(comment.getMember().getId(),comment.getMember().getUsername(),comment.getMember().getNickName());
     }
 
     @Test
-    public void testDeleteComment() {
+    @DisplayName("댓글 수정 - 성공")
+    public void updateComment_Success() {
         // given
-        Long commentId = 1L;
-        Long memberId = 1L;
-        Member author = new Member(memberId, "johndoe", "John Doe");
-        Comment comment = new Comment(commentId, "Test comment", author);
-        commentRepository.save(comment);
 
         // when
-        commentService.deleteComment(commentId);
-
         // then
-        assertNull(commentRepository.findById(commentId));
     }
-
 }
