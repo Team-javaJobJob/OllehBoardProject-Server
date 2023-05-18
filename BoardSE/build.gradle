@@ -31,7 +31,7 @@ dependencies {
     //sockjs
     implementation 'org.webjars:sockjs-client:1.5.1'
     //stomp
-//    implementation 'org.webjars:stomp-websocket:2.3.4'
+    implementation 'org.webjars:stomp-websocket:2.3.4'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
