@@ -8,10 +8,14 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class MemberUpdateRequest {
+    private String requestPw;
     private String userName;
     private String password;
     private String nickName;
     private Gender gender;
-    private Role role;
+
+    public void encode(String encodePassword) {
+        this.password = encodePassword;
+    }
 
 }
