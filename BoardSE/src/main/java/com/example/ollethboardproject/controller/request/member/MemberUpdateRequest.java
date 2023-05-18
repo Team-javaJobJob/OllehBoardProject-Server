@@ -12,6 +12,9 @@ public class MemberUpdateRequest {
     private String password;
     private String nickName;
     private Gender gender;
-    private Role role;
+
+    public void encode(String encodePassword) {
+        this.password = encodePassword;
+    }
 
 }

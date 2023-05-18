@@ -1,7 +1,9 @@
 package com.example.ollethboardproject.controller;
 
+import com.example.ollethboardproject.controller.request.member.FindByPwRequest;
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.controller.request.member.MemberLoginRequest;
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
@@ -18,13 +20,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -97,5 +101,53 @@ public class MemberControllerTest {
                         .content(objectMapper.writeValueAsBytes(new MemberLoginRequest("userName", "password")))
                 ).andDo(print())
                 .andExpect(status().is(ErrorCode.INVALID_PASSWORD.getHttpStatus().value()));
+    }
+
+    @Test
+    @WithMockUser
+    void 비밀번호가_일치하면_회원정보_조회() throws Exception {
+        // 반환 객체 세팅
+        MemberDTO memberDTO = new MemberDTO(1L, "userName", "password", "nickName", Gender.FEMALE);
+
+        when(memberService.findMemberByPassword(anyString(), any())).thenReturn(memberDTO);
+
+        mockMvc.perform(post("/api/v1/members/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(new FindByPwRequest("password")))
+                ).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.userName").value("userName"))
+                .andExpect(jsonPath("$.nickName").value("nickName"))
+                .andExpect(jsonPath("$.gender").value("FEMALE"));
+    }
+
+    @Test
+    @WithMockUser
+    void 비밀번호가_일치하면_회원정보_수정() throws Exception {
+        // 반환 객체 세팅
+        MemberDTO memberDTO = new MemberDTO(1L, "userName", "password", "nickName", Gender.FEMALE);
+
+        when(memberService.updateMember(anyString(), any(), any())).thenReturn(memberDTO);
+
+        mockMvc.perform(put("/api/v1/members/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(new FindByPwRequest("password")))
+                        .content(objectMapper.writeValueAsBytes(new MemberUpdateRequest("userName1", "password1", "nickName1", Gender.MALE)))
+                ).andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void 비밀번호가_일치하면_계정_삭제() throws Exception {
+
+        doNothing().when(memberService).deleteMember(anyString(), any());
+
+        mockMvc.perform(delete("/api/v1/members/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(new FindByPwRequest("password")))
+                ).andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

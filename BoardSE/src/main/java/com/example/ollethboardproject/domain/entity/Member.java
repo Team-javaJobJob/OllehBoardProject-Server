@@ -2,6 +2,7 @@ package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.controller.request.PwEncodeRequest;
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -62,12 +63,12 @@ public class Member implements UserDetails {
                 );
     }
 
-    public static Member toPw(PwEncodeRequest pwEncodeRequest) {
+    public static Member toPw(MemberUpdateRequest memberUpdateRequest) {
         return new Member(
-                pwEncodeRequest.getUserName(),
-                pwEncodeRequest.getPassword(),
-                pwEncodeRequest.getNickName(),
-                pwEncodeRequest.getGender()
+                memberUpdateRequest.getUserName(),
+                memberUpdateRequest.getPassword(),
+                memberUpdateRequest.getNickName(),
+                memberUpdateRequest.getGender()
         );
     }
 

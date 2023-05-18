@@ -73,7 +73,7 @@ public class CommunityService {
     }
 
     @Transactional
-    public void deletePost(Long id, Authentication authentication) {
+    public void deleteCommunity(Long id, Authentication authentication) {
         Community community = getCommunityByIdOrException(id);
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //커뮤니티 생성자만 커뮤니티를 삭제할 수 있다.
