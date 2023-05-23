@@ -20,8 +20,13 @@ public enum ErrorCode {
     COMMUNITY_DOES_NOT_EXIST(HttpStatus.NOT_FOUND, "community does not exist"),
     COMMUNITY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "community already exists"),
     ALREADY_REGISTER(HttpStatus.CONFLICT, "has already registered"),
+<<<<<<< HEAD
     PERMISSION_DENIED(HttpStatus.FORBIDDEN, "permission denied");
     //HAS_NOT_PERMISSION_TO_DELETE(HttpStatus.UNAUTHORIZED,"has not permission to delete the post");
+=======
+    PERMISSION_DENIED(HttpStatus.FORBIDDEN, "permission denied"),
+    KEYWORD_DOES_NOT_EXIST(HttpStatus.NOT_FOUND,"keyword does not exist");
+>>>>>>> main
 
     private final HttpStatus httpStatus;
     private final String message;

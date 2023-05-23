@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LocalCommunity {
+public class CommunityMember {
     //커뮤니티 참여자를 관리하기 위한 엔티티 클래스
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,17 +25,12 @@ public class LocalCommunity {
 
     private boolean isApprove = false;
 
-    private LocalCommunity(Community community, Member member) {
+    private CommunityMember(Community community, Member member) {
         this.community = community;
         this.member = member;
     }
 
-    public static LocalCommunity of(Community community, Member member) {
-        return new LocalCommunity(community, member);
-    }
-
-    public LocalCommunity hasApprove() {
-        this.isApprove = true;
-        return this;
+    public static CommunityMember of(Community community, Member member) {
+        return new CommunityMember(community, member);
     }
 }
