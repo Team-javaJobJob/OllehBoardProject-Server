@@ -33,11 +33,19 @@ public class CommunityController {
         return new ResponseEntity<>(communityDTOList, HttpStatus.OK);
     }
 
+    //해시태그 검색을 통한 커뮤니티 조회
+    @GetMapping("/keyword/{keyword}")
+    public ResponseEntity<List<CommunityDTO>> findCommunitiesByKeyword(@PathVariable String keyword) {
+        log.info("GET /api/v1/communities/keyword/{}", keyword);
+        List<CommunityDTO> communityDTOList = communityService.findCommunitiesByKeyword(keyword);
+        return new ResponseEntity<>(communityDTOList, HttpStatus.OK);
+    }
+
     //커뮤니티 생성
     @PostMapping("")
     public ResponseEntity<CommunityDTO> createCommunity(@RequestBody CommunityCreateRequest communityCreateRequest, Authentication authentication) {
         log.info("POST /api/v1/communities");
-        log.info("CommunityCreateRequest & authentication: {}, {} ", communityCreateRequest, authentication);
+        log.info("CommunityCreateRequest & authentication : {}, {}", communityCreateRequest, authentication);
         CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, authentication);
         log.info("createdCommunityDTO : {}", createdCommunityDTO);
         return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);

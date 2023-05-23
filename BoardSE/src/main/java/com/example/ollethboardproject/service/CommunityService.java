@@ -5,11 +5,13 @@ import com.example.ollethboardproject.controller.request.community.CommunityUpda
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.LocalCommunityDTO;
 import com.example.ollethboardproject.domain.entity.Community;
+import com.example.ollethboardproject.domain.entity.Keyword;
 import com.example.ollethboardproject.domain.entity.LocalCommunity;
 import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.repository.CommunityRepository;
+import com.example.ollethboardproject.repository.KeywordRepository;
 import com.example.ollethboardproject.repository.LocalCommunityRepository;
 import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.utils.ClassUtil;
@@ -21,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,8 @@ public class CommunityService {
     private final LocalCommunityRepository localCommunityRepository;
     private final MemberRepository memberRepository;
 
+    private final KeywordRepository keywordRepository;
+
     @Transactional(readOnly = true)
     public List<CommunityDTO> findAllCommunities() {
         //TODO: LIST -> pageable
@@ -39,9 +44,27 @@ public class CommunityService {
         return communities.stream().map(this::mapToCommunityDto).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<CommunityDTO> findCommunitiesByKeyword(String keyword) {
+        log.info("keyword: {}", keyword);
+
+        List<Keyword> keywords = keywordRepository.findByKeyword(keyword);
+        List<CommunityDTO> communityDTOList = keywords.stream()
+                .map(Keyword::getCommunity)
+                .map(this::mapToCommunityDto)
+                .collect(Collectors.toList());
+
+        //조회된 커뮤니티가 없을 시 에러 발생
+        if(communityDTOList.isEmpty()){
+            throw new OllehException(ErrorCode.COMMUNITY_DOES_NOT_EXIST);
+        }
+
+        return communityDTOList;
+    }
+
     @Transactional
     public CommunityDTO createCommunity(CommunityCreateRequest communityCreateRequest, Authentication authentication) {
-        //커뮤니티 이름 중복 체크 메서드
+        //커뮤니티 이름 중복 체크
         if (communityRepository.findByCommunityName(communityCreateRequest.getCommunityName()).isPresent()) {
             throw new OllehException(ErrorCode.COMMUNITY_ALREADY_EXISTS);
         }
@@ -52,6 +75,15 @@ public class CommunityService {
         //로컬 커뮤니티 생성
         LocalCommunity localCommunity = LocalCommunity.of(community, member);
         localCommunityRepository.save(localCommunity);
+
+        //request에서 keywords 추출
+        String[] keywords = communityCreateRequest.getKeywords();
+        //키워드 저장
+        Arrays.stream(keywords).forEach(keyword -> {
+            Keyword savedKeyword = Keyword.of(keyword, community);
+            keywordRepository.save(savedKeyword);
+        });
+
         return mapToCommunityDto(community);
     }
 
