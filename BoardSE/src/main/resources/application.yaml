@@ -4,7 +4,7 @@ spring:
 
     url: jdbc:mysql://localhost:3306/ollehboard
     username: root
-    password: 0903
+    password: system
 #  cors:
 #    allowed-origins:
 #      - "http://localhost:3000"
