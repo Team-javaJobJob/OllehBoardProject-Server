@@ -2,10 +2,10 @@ package com.example.ollethboardproject.controller;
 
 import com.example.ollethboardproject.controller.request.community.CommunityCreateRequest;
 import com.example.ollethboardproject.controller.request.community.CommunityUpdateRequest;
-import com.example.ollethboardproject.controller.response.LocalCommunityResponse;
+import com.example.ollethboardproject.controller.response.CommunityMemberResponse;
 import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
-import com.example.ollethboardproject.domain.dto.LocalCommunityDTO;
+import com.example.ollethboardproject.domain.dto.CommunityMemberDTO;
 import com.example.ollethboardproject.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +33,19 @@ public class CommunityController {
         return new ResponseEntity<>(communityDTOList, HttpStatus.OK);
     }
 
+    //해시태그 검색을 통한 커뮤니티 조회
+    @GetMapping("/keyword/{keyword}")
+    public ResponseEntity<List<CommunityDTO>> findCommunitiesByKeyword(@PathVariable String keyword) {
+        log.info("GET /api/v1/communities/keyword/{}", keyword);
+        List<CommunityDTO> communityDTOList = communityService.findCommunitiesByKeyword(keyword);
+        return new ResponseEntity<>(communityDTOList, HttpStatus.OK);
+    }
+
     //커뮤니티 생성
     @PostMapping("")
     public ResponseEntity<CommunityDTO> createCommunity(@RequestBody CommunityCreateRequest communityCreateRequest, Authentication authentication) {
         log.info("POST /api/v1/communities");
-        log.info("CommunityCreateRequest & authentication: {}, {} ", communityCreateRequest, authentication);
+        log.info("CommunityCreateRequest & authentication : {}, {}", communityCreateRequest, authentication);
         CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, authentication);
         log.info("createdCommunityDTO : {}", createdCommunityDTO);
         return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
@@ -71,11 +79,11 @@ public class CommunityController {
 
     //가입된 멤버만 멤버들을 조회할 수 있다.
     @GetMapping("{communityId}")
-    public Response<List<LocalCommunityResponse>> selectCommunity(@PathVariable Long communityId, Authentication authentication, Pageable pageable) {
+    public Response<List<CommunityMemberResponse>> selectCommunity(@PathVariable Long communityId, Authentication authentication, Pageable pageable) {
         log.info("GET /api/v1/communities/{}", communityId);
-        List<LocalCommunityDTO> localCommunitiesDTO = communityService.selectCommunity(communityId, authentication,pageable);
-        List<LocalCommunityResponse> localCommunityResponses = localCommunitiesDTO.stream().map(LocalCommunityResponse::fromLocalCommunityDTO).collect(Collectors.toList());
-        return Response.success(localCommunityResponses);
+        List<CommunityMemberDTO> communityMemberDTOList = communityService.selectCommunity(communityId, authentication,pageable);
+        List<CommunityMemberResponse> CommunityMemberResponses = communityMemberDTOList.stream().map(CommunityMemberResponse::fromCommunityMemberDTO).collect(Collectors.toList());
+        return Response.success(CommunityMemberResponses);
     }
 
     //TODO: 커뮤니티 검색 (지역 Region , 관심사 interest )

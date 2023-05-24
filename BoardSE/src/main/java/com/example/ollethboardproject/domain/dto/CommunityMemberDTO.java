@@ -1,24 +1,20 @@
 package com.example.ollethboardproject.domain.dto;
 
-import com.example.ollethboardproject.domain.entity.Community;
-import com.example.ollethboardproject.domain.entity.LocalCommunity;
-import com.example.ollethboardproject.domain.entity.Member;
+import com.example.ollethboardproject.domain.entity.CommunityMember;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocalCommunityDTO {
+public class CommunityMemberDTO {
     private Long id;
     private CommunityDTO community;
     private MemberDTO member;
 
-    public static LocalCommunityDTO fromEntity(LocalCommunity localCommunity) {
-        return new LocalCommunityDTO(
+    public static CommunityMemberDTO fromEntity(CommunityMember localCommunity) {
+        return new CommunityMemberDTO(
                 localCommunity.getId(),
                 CommunityDTO.fromEntity(localCommunity.getCommunity()),
                 MemberDTO.fromEntity(localCommunity.getMember())

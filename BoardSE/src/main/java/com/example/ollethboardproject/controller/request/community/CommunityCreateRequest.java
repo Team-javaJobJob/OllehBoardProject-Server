@@ -12,4 +12,6 @@ public class CommunityCreateRequest {
     private String interest;
     private String info;
     private String communityName;
+    private String[] keywords;
+
 }
