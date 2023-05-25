@@ -37,7 +37,7 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    public Comment(String content, Post post, Member member) {
+    private Comment(String content, Post post, Member member) {
         this.id = null;
         this.content = content;
         this.post = post;
@@ -45,7 +45,13 @@ public class Comment {
         this.createdAt = LocalDateTime.now();
     }
 
+    public static Comment of(String content, Post post, Member member){
+        return new Comment(content,post,member);
+    }
     public List<Reply> getReplies() {
         return replies;
+    }
+    public void update(String content) {
+        this.content = content;
     }
 }
