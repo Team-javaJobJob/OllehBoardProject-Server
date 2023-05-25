@@ -28,14 +28,9 @@ public class Reply {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
-    protected Reply() {
-        this.content = null;
-        this.member = null;
-        this.post = null;
-        this.parentComment = null;
-    }
 
     private Reply(String content, Member member, Post post, Comment parentComment) {
+        this.id = null;
         this.content = content;
         this.member = member;
         this.post = post;
@@ -48,9 +43,5 @@ public class Reply {
 
     public Reply update(String content) {
         return new Reply(content, this.member, this.post, this.parentComment);
-    }
-
-    public Member getAuthor() {
-        return member;
     }
 }

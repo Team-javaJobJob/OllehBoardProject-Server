@@ -27,36 +27,36 @@ public class PostController {
     //TODO: LIST -> pageable 로 변환하기
     @GetMapping("")
     public ResponseEntity<List<PostDTO>> findAllPost() {
-        log.info("GET /api/v1/boards");
-        List<PostDTO> postDTOList = postService.findAllBoards();
+        log.info("GET /api/v1/post");
+        List<PostDTO> postDTOList = postService.findAllPost();
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostCountDTO> findPostById(@PathVariable Long id, Authentication authentication) {
-        log.info("GET /api/v1/boards/{}", id);
-        PostCountDTO postCountDTO = postService.findBoardById(id, authentication);
+        log.info("GET /api/v1/post/{}", id);
+        PostCountDTO postCountDTO = postService.findPostById(id, authentication);
         return new ResponseEntity<>(postCountDTO, HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity<PostDTO> createPost(@RequestBody PostCreateRequest postCreateRequest, Authentication authentication) {
-        log.info("POST /api/v1/boards");
-        PostDTO createdPostDTO = postService.createBoard(postCreateRequest, authentication);
+        log.info("POST /api/v1/post");
+        PostDTO createdPostDTO = postService.createPost(postCreateRequest, authentication);
         return new ResponseEntity<>(createdPostDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestBody PostUpdateRequest postUpdateRequest ,Authentication authentication) {
-        log.info("PUT /api/v1/boards/{}", id);
-        PostDTO updatedPostDTO = postService.updateBoard(id, postUpdateRequest, authentication);
+        log.info("PUT /api/v1/post/{}", id);
+        PostDTO updatedPostDTO = postService.updatePost(id, postUpdateRequest, authentication);
         return new ResponseEntity<>(updatedPostDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id, Authentication authentication) {
-        log.info("DELETE /api/v1/boards/{}", id);
-        postService.deleteBoard(id, authentication);
+        log.info("DELETE /api/v1/post/{}", id);
+        postService.deletePost(id, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
