@@ -158,19 +158,19 @@ public class CommunityService {
     //Olleh(좋아요)
 
     //userName 를 인자로 받아 member 를 조회하고 존재하지 않으면 OllehException 발생
-    private Member getMemberByMemberName(String userName){
+    private Member getMemberByMemberName(String userName) {
         return memberRepository.findByUserName(userName)
-                .orElseThrow(()-> new OllehException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new OllehException(ErrorCode.USER_NOT_FOUND));
     }
 
     //communityId, member 를 인자로 받아 조회하고 communityId 가 존재하지 않으면 OllehException 발생
-    private Community getCommunityId(Long communityId){
+    private Community getCommunityId(Long communityId) {
         return communityRepository.findById(communityId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMUNITY_DOES_NOT_EXIST));
     }
 
     @Transactional //하나의 트랜잭션으로 묶어서 하나라도 실패하면 모두 롤백
-    public boolean addOlleh(String userName, Long communityId){
+    public boolean addOlleh(String userName, Long communityId) {
         Member member = getMemberByMemberName(userName); //findByCommunityAndMember 메서드 호출하여 member 에 해당하는 member 를 가져옴
         Community community = getCommunityId(communityId); //findByIdAndMember 메서드 호출하여 communityId 에 해당하는 post 를 가져옴
 
@@ -182,7 +182,7 @@ public class CommunityService {
     }
 
     public boolean removeOlleh(Member member, Community community) {
-        if(ollehRepository.findByMemberAndCommunity(member, community).isPresent()){ //isPresent() 메소드로 Optional 객체에 값이 있는지 확인
+        if (ollehRepository.findByMemberAndCommunity(member, community).isPresent()) { //isPresent() 메소드로 Optional 객체에 값이 있는지 확인
             Olleh olleh = ollehRepository.findByMemberAndCommunity(member, community).get(); //값이 있다면 get()으로 가져옴
             ollehRepository.delete(olleh); //가져온 값을 <-ollehRepository.delete(olleh)메서드로 삭제
             return true; //그리고 true 반환 (삭제 성공시 true 반환)
@@ -196,12 +196,18 @@ public class CommunityService {
     }
 
     //최신순 정렬
-    public List<Community> getLatestCommunity(){
-        return communityRepository.findAllByOrderByCreatedAtDesc();
+    public List<CommunityDTO> getLatestCommunity() {
+        return communityRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(CommunityDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     //추천순 (올레순) 정렬
-    public List<Community> getTopOllehCommunity() {
-        return communityRepository.findAllByOrderByOllehDesc();
+    public List<CommunityDTO> getTopOllehCommunity() {
+        return communityRepository.findAllByOrderByOllehDesc()
+                .stream()
+                .map(CommunityDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }
