@@ -6,6 +6,7 @@ import com.example.ollethboardproject.controller.response.CommunityMemberRespons
 import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.CommunityMemberDTO;
+import com.example.ollethboardproject.domain.entity.Community;
 import com.example.ollethboardproject.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,4 +92,31 @@ public class CommunityController {
     //관심사&키워드 기반 커뮤니티 추천 기능
 
 
+    //좋아요(=올래)
+    @PostMapping("/{communityId}/olleh")
+    public Response<Void> olleh(@PathVariable Long communityId, Authentication authentication){
+        communityService.addOlleh(authentication.getName(), communityId);
+        return Response.success();
+    }
+
+    //좋아요수
+    @GetMapping("/{communityId}/olleh")
+    public Response<Integer> olleh(@PathVariable Long communityId){
+        Integer ollehCount = communityService.ollehCount(communityId); //communityService 의 ollehCount 메소드를 호출 communityId에 해당하는 community 객체의 Olleh 개수 가져옴
+        return Response.success(ollehCount); //ollehCount 값을 Response 객체에 담아서 반환
+    }
+
+    //최신순 정렬
+    @GetMapping("/latest")
+    public Response<List<Community>> getLatestCommunity() { //List<Community> 타입의 Response 반환
+        List<Community> latestCommunities = communityService.getLatestCommunity();
+        return Response.success(latestCommunities);
+    }
+
+    //추천순 (올레순) 정렬
+    @GetMapping("/topOlleh")
+    public Response<List<Community>> getTopOllehCommunity() {
+        List<Community> topOllehCommunities = communityService.getTopOllehCommunity();
+        return Response.success(topOllehCommunities);
+    }
 }

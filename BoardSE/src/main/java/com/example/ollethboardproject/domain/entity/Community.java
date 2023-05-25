@@ -2,17 +2,20 @@ package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.community.CommunityCreateRequest;
 import com.example.ollethboardproject.controller.request.community.CommunityUpdateRequest;
+import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Table(name = "community")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Community {
+public class Community extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,6 +35,9 @@ public class Community {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "community")
+    private List<Olleh> ollehsList = new ArrayList<>();
 
     private Community(String region, String interest, String info, String communityName, Member member) {
         this.region = region;
@@ -57,6 +63,4 @@ public class Community {
         this.communityName = communityUpdateRequest.getCommunityName();
         this.member = member;
     }
-
-
 }

@@ -1,8 +1,6 @@
 package com.example.ollethboardproject.domain.dto;
 
 import com.example.ollethboardproject.domain.entity.Community;
-import com.example.ollethboardproject.domain.entity.Member;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,6 +13,7 @@ public class CommunityDTO {
     private String info;
     private String communityName;
     private String memberNickName;
+    private int ollehCount;
 
     public static CommunityDTO fromEntity(Community community) {
         return new CommunityDTO(
@@ -23,7 +22,7 @@ public class CommunityDTO {
                 community.getInterest(),
                 community.getInfo(),
                 community.getCommunityName(),
-                community.getMember().getNickName());
+                community.getMember().getNickName(),
+                community.getOllehsList().size());
     }
-
 }
