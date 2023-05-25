@@ -27,13 +27,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostCountRepository postCountRepository;
 
-    public List<PostDTO> findAllBoards() {
+    public List<PostDTO> findAllPost() {
         //TODO: LIST -> pageable
         List<Post> posts = postRepository.findAll();
         return posts.stream().map(this::mapToPostDto).collect(Collectors.toList());
     }
 
-    public PostCountDTO findBoardById(Long postId, Authentication authentication) {
+    public PostCountDTO findPostById(Long postId, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         Post post = postRepository.findById(postId).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
         //조회수 누적 및 조회  (유저가 동일한 게시물을 조회한다면 해당 게시물의 조회수가 누적되지 않는다 )
@@ -43,14 +43,14 @@ public class PostService {
         return mapToPostCountDto(countByBoard, postCount);
     }
 
-    public PostDTO createBoard(PostCreateRequest postCreateRequest, Authentication authentication) {
+    public PostDTO createPost(PostCreateRequest postCreateRequest, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         Post post = Post.of(postCreateRequest, member);
         postRepository.save(post);
         return mapToPostDto(post);
     }
 
-    public PostDTO updateBoard(Long id, PostUpdateRequest postUpdateRequest, Authentication authentication) {
+    public PostDTO updatePost(Long id, PostUpdateRequest postUpdateRequest, Authentication authentication) {
         //게시물이 존재하지 않는다면 예외 발생
         Post post = postRepository.findById(id).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
@@ -64,7 +64,7 @@ public class PostService {
         return mapToPostDto(post);
     }
 
-    public void deleteBoard(Long id, Authentication authentication) {
+    public void deletePost(Long id, Authentication authentication) {
         Post post = postRepository.findById(id).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //게시물 작성자만 게시물을 삭제할 수 있다.
