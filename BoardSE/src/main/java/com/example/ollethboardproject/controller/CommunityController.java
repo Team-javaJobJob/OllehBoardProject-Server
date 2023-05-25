@@ -108,15 +108,15 @@ public class CommunityController {
 
     //최신순 정렬
     @GetMapping("/latest")
-    public Response<List<Community>> getLatestCommunity() { //List<Community> 타입의 Response 반환
-        List<Community> latestCommunities = communityService.getLatestCommunity();
+    public Response<List<CommunityDTO>> getLatestCommunity() { //List<Community> 타입의 Response 반환
+        List<CommunityDTO> latestCommunities = communityService.getLatestCommunity();
         return Response.success(latestCommunities);
     }
 
     //추천순 (올레순) 정렬
     @GetMapping("/topOlleh")
-    public Response<List<Community>> getTopOllehCommunity() {
-        List<Community> topOllehCommunities = communityService.getTopOllehCommunity();
+    public Response<List<CommunityDTO>> getTopOllehCommunity() {
+        List<CommunityDTO> topOllehCommunities = communityService.getTopOllehCommunity();
         return Response.success(topOllehCommunities);
     }
 }

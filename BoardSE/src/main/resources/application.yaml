@@ -1,7 +1,6 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-
     url: jdbc:mysql://localhost:3306/narae
     username: root
     password: 1226
@@ -30,13 +29,13 @@ spring:
 #    allowed-origins:
 #      - "http://localhost:3000"
 #>>>>>>> main
-jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
+  jpa:
       hibernate:
-        show_sql: true
-        format_sql: true
+        ddl-auto: create
+      properties:
+       hibernate:
+          show_sql: true
+          format_sql: true
 jwt:
   token:
     secret: "secretKey2G312A3E224A78H51R6dfvnjhgSf3asD3N5KE23Lq"
