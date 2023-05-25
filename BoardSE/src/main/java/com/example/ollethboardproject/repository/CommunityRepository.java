@@ -15,7 +15,7 @@ CommunityRepository extends JpaRepository<Community, Long> {
 
     //TODO: List 바꾸기
     Optional<Community> findByCommunityName(String communityName);
-    Optional<Community> findByIdAndMember(Long communityId,Member member);
+    
 
     //최신순 정렬
     @Query("SELECT c FROM Community c ORDER BY c.createdAt DESC") //모든 커뮤니티 조회 ->createdAt 필드를 기준으로 내림차순 정렬
