@@ -3,6 +3,7 @@ package com.example.ollethboardproject.service;
 
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.controller.request.member.MemberLoginRequest;
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
 import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.exception.ErrorCode;
@@ -10,11 +11,13 @@ import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.repository.OllehRepository;
+import com.example.ollethboardproject.utils.ClassUtil;
 import com.example.ollethboardproject.utils.JwtTokenUtil;
 import com.example.ollethboardproject.utils.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -48,15 +51,12 @@ public class MemberService implements UserDetailsService {
                     throw new OllehException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", memberJoinRequest.getUserName()));
                 });
         //TODO: 비밀번호 제약조건 설정 여부
-<<<<<<< HEAD
-        //member 비밀번호 암호화 후 엔티티 생성
-        Member member = Member.of(encodePassword(memberJoinRequest));
-=======
+
         //비밀번호 암호화
         memberJoinRequest.encode(encodePassword(memberJoinRequest.getPassword()));
         //비밀번호 암호화 후 member 타입으로 객체 생성
         Member member = Member.of(memberJoinRequest);
->>>>>>> main
+
         //member 엔티티 저장
         Member savedMember = memberRepository.save(member);
         log.info("saveMember : {}",savedMember);
@@ -81,13 +81,13 @@ public class MemberService implements UserDetailsService {
         return TokenInfo.generateTokens(accessToken, refreshToken);
     }
 
-<<<<<<< HEAD
+
     private MemberJoinRequest encodePassword(MemberJoinRequest memberJoinRequest) {
         //비밀번호 암호화
         String encodePassword = encoder.encode(memberJoinRequest.getPassword());
         memberJoinRequest.encode(encodePassword);
         return memberJoinRequest;
-=======
+    }
     private String encodePassword(String password) {
         //비밀번호 암호화
         return encoder.encode(password);
@@ -144,7 +144,6 @@ public class MemberService implements UserDetailsService {
             throw new OllehException(ErrorCode.DUPLICATED_USERNAME);
         });
 
->>>>>>> main
     }
 
     @Override

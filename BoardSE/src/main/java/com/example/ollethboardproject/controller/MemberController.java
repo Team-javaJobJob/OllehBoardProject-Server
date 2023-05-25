@@ -4,6 +4,7 @@ package com.example.ollethboardproject.controller;
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.controller.request.member.MemberLoginRequest;
 
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.controller.response.MemberJoinResponse;
 import com.example.ollethboardproject.controller.response.MemberLoginResponse;
 import com.example.ollethboardproject.controller.response.Response;
@@ -12,6 +13,9 @@ import com.example.ollethboardproject.service.MemberService;
 import com.example.ollethboardproject.utils.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,8 +42,7 @@ public class MemberController {
         TokenInfo tokens = memberService.login(memberLoginRequest);
         return Response.success(new MemberLoginResponse(tokens.getAccessToken(), tokens.getRefreshToken()));
     }
-<<<<<<< HEAD
-=======
+
 
     //회원 정보 조회
     @PostMapping("/myPage")
@@ -61,6 +64,5 @@ public class MemberController {
         memberService.deleteMember(requestPw, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
->>>>>>> main
 }
 

@@ -2,11 +2,9 @@
 package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
-<<<<<<< HEAD
-=======
+
 import com.example.ollethboardproject.controller.request.PwEncodeRequest;
 import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
->>>>>>> main
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
 
@@ -66,8 +64,7 @@ public class Member extends AuditEntity implements UserDetails {
                 memberJoinRequest.getPassword(),
                 memberJoinRequest.getNickName(),
                 memberJoinRequest.getGender()
-<<<<<<< HEAD
-=======
+
                 );
     }
 
@@ -77,8 +74,14 @@ public class Member extends AuditEntity implements UserDetails {
                 memberUpdateRequest.getPassword(),
                 memberUpdateRequest.getNickName(),
                 memberUpdateRequest.getGender()
->>>>>>> main
         );
+    }
+
+    public void update(Member memberUpdateRequest){
+        this.userName = memberUpdateRequest.getUsername();
+        this.password = memberUpdateRequest.getPassword();
+        this.nickName = memberUpdateRequest.getNickName();
+        this.gender = memberUpdateRequest.getGender();
     }
 
     @Override

@@ -73,5 +73,14 @@ public class PostController {
         Integer ollehCount = postService.ollehCount(postId); //postService 의 ollehCount 메소드를 호출 postId에 해당하는 Post 객체의 Olleh 개수 가져옴
         return Response.success(ollehCount); //ollehCount 값을 Response 객체에 담아서 반환
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostCountDTO> findPostById(@PathVariable Long id, Authentication authentication) {
+        log.info("GET /api/v1/post/{}", id);
+        PostCountDTO postCountDTO = postService.findBoardById(id, authentication);
+        return new ResponseEntity<>(postCountDTO, HttpStatus.OK);
+    }
+
+
 }
 
