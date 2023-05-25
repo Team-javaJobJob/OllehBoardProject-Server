@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -62,3 +63,54 @@ logging.level:
 
 #server:
 #  port: 8081
+=======
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/narae
+    username: root
+    password: 1226
+#=======
+#    url: jdbc:mysql://localhost:3306/olleh
+#    username: root
+#    password: zhtanf5246150!
+
+  #>>>>>>> Stashed changes
+#>>>>>>> Stashed changes:Board/src/main/resources/application.yaml
+
+#
+#>>>>>>> Stashed changes
+#    url: jdbc:mysql://localhost:3306/board
+#    username: root
+#    password: system
+#>>>>>>> main
+#
+#=======
+#    url: jdbc:mysql://localhost:3306/ollehboard
+#    username: root
+#    password: 0903
+
+#    password: system
+#  cors:
+#    allowed-origins:
+#      - "http://localhost:3000"
+#>>>>>>> main
+  jpa:
+      hibernate:
+        ddl-auto: create
+      properties:
+       hibernate:
+          show_sql: true
+          format_sql: true
+jwt:
+  token:
+    secret: "secretKey2G312A3E224A78H51R6dfvnjhgSf3asD3N5KE23Lq"
+  access-expired: 3600000    #3600000 1시간
+  refresh-expired: 86400000   # 1 day
+
+
+server:
+  port: 8081
+
+#  org.hibernate.type: trace
+>>>>>>> main

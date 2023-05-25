@@ -12,9 +12,8 @@ public class PostDTO {
     private String title;
     private String content;
     private Member member;
-    private int ollehCount;
 
     public static PostDTO fromEntity(Post post) {
-        return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getMember(), post.getOllehsList().size());
+        return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getMember());
     }
 }

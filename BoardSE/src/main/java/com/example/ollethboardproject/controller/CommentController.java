@@ -3,7 +3,6 @@ package com.example.ollethboardproject.controller;
 import com.example.ollethboardproject.controller.request.comment.CommentCreateRequest;
 import com.example.ollethboardproject.controller.request.comment.CommentUpdateRequest;
 import com.example.ollethboardproject.domain.dto.CommentDTO;
-import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.service.CommentService;
 import com.example.ollethboardproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -50,10 +49,9 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable("commentId") Long commentId, Authentication authentication) {
-        // 인증된 사용자 정보 가져오기
-        Member user = (Member) authentication.getPrincipal();
+
         // 댓글 삭제 메서드 호출
-        commentService.deleteComment(commentId, user);
+        commentService.deleteComment(commentId, authentication);
 
         return ResponseEntity.noContent().build();
     }

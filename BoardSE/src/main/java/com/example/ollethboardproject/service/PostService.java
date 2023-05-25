@@ -11,7 +11,6 @@ import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.domain.entity.Olleh;
 import com.example.ollethboardproject.repository.MemberRepository;
-import com.example.ollethboardproject.repository.OllehRepository;
 import com.example.ollethboardproject.repository.PostCountRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.utils.ClassUtil;
@@ -19,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,15 +28,19 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostCountRepository postCountRepository;
-    private final OllehRepository ollehRepository;
-    private final MemberRepository memberRepository;
 
+<<<<<<< HEAD
     public List<PostDTO> findAllBoards(Pageable pageable) {
         List<Post> posts = postRepository.findAll(pageable).getContent();
+=======
+    public List<PostDTO> findAllPost() {
+        //TODO: LIST -> pageable
+        List<Post> posts = postRepository.findAll();
+>>>>>>> main
         return posts.stream().map(this::mapToPostDto).collect(Collectors.toList());
     }
 
-    public PostCountDTO findBoardById(Long postId, Authentication authentication) {
+    public PostCountDTO findPostById(Long postId, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         Post post = postRepository.findById(postId).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
         //조회수 누적 및 조회  (유저가 동일한 게시물을 조회한다면 해당 게시물의 조회수가 누적되지 않는다 )
@@ -48,14 +50,14 @@ public class PostService {
         return mapToPostCountDto(countByBoard, postCount);
     }
 
-    public PostDTO createBoard(PostCreateRequest postCreateRequest, Authentication authentication) {
+    public PostDTO createPost(PostCreateRequest postCreateRequest, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         Post post = Post.of(postCreateRequest, member);
         postRepository.save(post);
         return mapToPostDto(post);
     }
 
-    public PostDTO updateBoard(Long id, PostUpdateRequest postUpdateRequest, Authentication authentication) {
+    public PostDTO updatePost(Long id, PostUpdateRequest postUpdateRequest, Authentication authentication) {
         //게시물이 존재하지 않는다면 예외 발생
         Post post = postRepository.findById(id).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
@@ -69,7 +71,7 @@ public class PostService {
         return mapToPostDto(post);
     }
 
-    public void deleteBoard(Long id, Authentication authentication) {
+    public void deletePost(Long id, Authentication authentication) {
         Post post = postRepository.findById(id).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //게시물 작성자만 게시물을 삭제할 수 있다.
@@ -101,6 +103,7 @@ public class PostService {
     private PostCountDTO mapToPostCountDto(Integer countByBoard, PostCount postCount) {
         return PostCountDTO.of(countByBoard, postCount);
     }
+<<<<<<< HEAD
 
     //Olleh(좋아요)
 
@@ -138,3 +141,6 @@ public class PostService {
         return ollehRepository.countByPost(post); //post 객체와 연관된 Olleh 객체의 개수 반환
     }
 }
+=======
+}
+>>>>>>> main

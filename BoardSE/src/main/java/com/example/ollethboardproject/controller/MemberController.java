@@ -18,6 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+<<<<<<< HEAD
+=======
+
+//@CrossOrigin(origins = "http://localhost:3000",allowCredentials = "true")
+@Slf4j
+>>>>>>> main
 @RestController
 @RequestMapping("/api/v1/members")
 

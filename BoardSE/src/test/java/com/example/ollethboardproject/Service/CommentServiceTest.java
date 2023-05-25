@@ -56,7 +56,7 @@ public class CommentServiceTest {
 
         member = new Member("이름", "비번", "닉네임", Gender.MALE);
         post = new Post("제목", "게시글", member);
-        comment = new Comment("댓글", post, member);
+        comment = new  eComment("댓글", post, member);
     }
 
     @Test

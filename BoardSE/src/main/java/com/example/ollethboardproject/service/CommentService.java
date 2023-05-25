@@ -6,12 +6,12 @@ import com.example.ollethboardproject.domain.dto.CommentDTO;
 import com.example.ollethboardproject.domain.entity.Comment;
 import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.domain.entity.Post;
-import com.example.ollethboardproject.domain.entity.Reply;
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.repository.CommentRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.repository.ReplyRepository;
+import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -30,17 +30,15 @@ public class CommentService {
 
     @Transactional
     public CommentDTO createComment(Long postId, CommentCreateRequest commentCreateRequest, Authentication authentication) {
-        Member member = (Member) authentication.getPrincipal();
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
 
-        Comment comment = new Comment(
-                commentCreateRequest.getContent(),
-                post,
-                member
-        );
+
+        Comment comment = Comment.of(commentCreateRequest.getContent(), post, member);
         commentRepository.save(comment);
+
 
         return CommentDTO.fromEntity(comment);
     }
@@ -57,24 +55,24 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
-
+        comment.update(commentUpdateRequest.getContent());
         return CommentDTO.fromEntity(comment);
     }
 
     @Transactional
-    public void deleteComment(Long commentId, Member user) {
+    public void deleteComment(Long commentId, Authentication authentication) {
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
-        // 댓글에 속한 답글들을 조회
-        List<Reply> replies = replyRepository.findByParentComment(comment);
-
-        // 답글들 삭제
-        for (Reply reply : replies) {
-            replyRepository.delete(reply);
+        if (comment.getMember() != member) {
+            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
         }
 
-        // 댓글 삭제
+        replyRepository.findByParentComment(comment).forEach(reply -> {
+            replyRepository.delete(reply);
+        });
+
         commentRepository.delete(comment);
     }
 
@@ -92,15 +90,4 @@ public class CommentService {
         return commentDTOs;
     }
 
-    @Transactional(readOnly = true)
-    public List<CommentDTO> getCommentByPost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
-
-        List<Comment> comments = commentRepository.findByPost(post);
-
-        return comments.stream()
-                .map(CommentDTO::fromEntity)
-                .collect(Collectors.toList());
-    }
 }
