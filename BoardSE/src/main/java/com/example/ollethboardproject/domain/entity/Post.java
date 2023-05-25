@@ -30,9 +30,6 @@ public class Post extends AuditEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "post")
-    private List<Olleh> ollehsList = new ArrayList<>();
-
     public Post(String title, String content, Member member) {
         this.title = title;
         this.content = content;
