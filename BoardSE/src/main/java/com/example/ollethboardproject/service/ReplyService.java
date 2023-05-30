@@ -12,7 +12,9 @@ import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.repository.CommentRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.repository.ReplyRepository;
+import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,12 +52,13 @@ public class ReplyService {
         return ReplyDTO.fromEntity(updatedReply);
     }
 
-    public void deleteReply(Long replyId, Member user) {
+    public void deleteReply(Long replyId, Authentication authentication) {
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         Optional<Reply> replyOptional = replyRepository.findById(replyId);
         Reply reply = replyOptional.orElseThrow(() -> new OllehException(ErrorCode.REPLY_DOES_NOT_EXIST));
 
         // 대댓글 작성자 삭제를 요청 사용자가 일치하는지 확인
-        if (!reply.getMember().equals(user)) {
+        if (!reply.getMember().equals(member)) {
             throw new OllehException(ErrorCode.PERMISSION_DENIED);
         }
 

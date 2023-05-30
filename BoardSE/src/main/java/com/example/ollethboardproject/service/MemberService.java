@@ -3,11 +3,13 @@ package com.example.ollethboardproject.service;
 import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.controller.request.member.MemberLoginRequest;
-import com.example.ollethboardproject.controller.request.PwEncodeRequest;
+import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
-import com.example.ollethboardproject.domain.entity.Member;
+import com.example.ollethboardproject.domain.dto.PostDTO;
+import com.example.ollethboardproject.domain.entity.*;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.exception.ErrorCode;
+import com.example.ollethboardproject.repository.CommunityMemberRepository;
 import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.repository.OllehRepository;
@@ -25,6 +27,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -34,7 +40,7 @@ public class MemberService implements UserDetailsService {
     private final PostRepository postRepository;
     private final BCryptPasswordEncoder encoder;
     private final OllehRepository ollehRepository;
-    private final PostService postService;
+    private final CommunityMemberRepository communityMemberRepository;
 
     @Value("${jwt.token.secret}")
     private String key;
@@ -85,7 +91,7 @@ public class MemberService implements UserDetailsService {
 
     public MemberDTO findMemberByPassword(String requestPw, Authentication authentication) {
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        Member member = getMemberWithAuthentication(authentication);
         //비밀번호가 일치하는 회원 정보를 조회할 수 있다.
         passwordMatches(member, requestPw);
         //entity -> DTO 로 변환후 return
@@ -94,7 +100,7 @@ public class MemberService implements UserDetailsService {
 
     public MemberDTO updateMember(MemberUpdateRequest memberUpdateRequest, Authentication authentication) {
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        Member member = getMemberWithAuthentication(authentication);
         //수정할 회원 정보 중복 검증
         duplicationMatches(memberUpdateRequest.getUserName());
         //비밀번호가 일치하는 회원만 회원 정보를 수정할 수 있다.
@@ -112,11 +118,44 @@ public class MemberService implements UserDetailsService {
 
     public void deleteMember(String requestPw, Authentication authentication) {
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        Member member = getMemberWithAuthentication(authentication);
         //비밀번호가 일치하는 회원만 회원 정보를 삭제할 수 있다.
         passwordMatches(member, requestPw);
         //회원 정보 삭제
         memberRepository.deleteById(member.getId());
+    }
+    @Transactional(readOnly = true)
+    public List<CommunityDTO> selectOllehLog(Authentication authentication) {
+        //member 조회
+        Member member = getMemberWithAuthentication(authentication);
+
+        return ollehRepository.findByMember(member).orElseThrow(
+                        () -> new OllehException(ErrorCode.USER_NOT_FOUND)).stream()    //멤버에 대한 올레 버튼이 존재하지 않는다면 에러 반환
+                .map(Olleh::getCommunity)   //커뮤니티 조회
+                .sorted(Comparator.comparing(Community::getCreatedBy))//날짜순으로 정렬
+                .map(CommunityDTO::fromEntity)  //DTO로 변환
+                .collect(Collectors.toList());  //List로 변환
+    }
+    @Transactional(readOnly = true)
+    public List<PostDTO> selectPostLog(Authentication authentication) {
+        Member member = getMemberWithAuthentication(authentication);
+
+        List<Post> posts = postRepository.findByMember(member).orElseThrow(() -> new OllehException(ErrorCode.USER_NOT_FOUND));
+        return posts.stream()//멤버가 작성한 게시물이 없다면 에러 반환
+                .sorted(Comparator.comparing(Post::getCreatedAt))
+                .map(PostDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+    @Transactional(readOnly = true)
+    public List<CommunityDTO> selectCommunityLog(Authentication authentication) {
+        Member member = getMemberWithAuthentication(authentication);
+        return communityMemberRepository.findByMember(member).orElseThrow(() -> new OllehException(ErrorCode.USER_NOT_FOUND)).stream()
+                .map(CommunityMember::getCommunity)
+                .sorted(Comparator.comparing(Community::getCreatedAt))
+                .map(CommunityDTO::fromEntity)      //TODO: CommunityDTO에 이미지 값도 넣어주기
+                .collect(Collectors.toList());
+
+
     }
 
     //비밀번호 일치 검증 메서드
@@ -129,8 +168,9 @@ public class MemberService implements UserDetailsService {
     }
 
     //수정된 회원 정보 중복 검증 메서드
+
     private void duplicationMatches(String updaterName) {
-        memberRepository.findByUserName(updaterName).ifPresent(name->{
+        memberRepository.findByUserName(updaterName).ifPresent(name -> {
             throw new OllehException(ErrorCode.DUPLICATED_USERNAME);
         });
 
@@ -142,4 +182,7 @@ public class MemberService implements UserDetailsService {
                 new OllehException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", username)));
     }
 
+    private static Member getMemberWithAuthentication(Authentication authentication) {
+        return ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+    }
 }

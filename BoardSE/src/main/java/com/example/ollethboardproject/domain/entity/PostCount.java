@@ -23,7 +23,6 @@ public class PostCount {
     @JoinColumn(name = "board_id")
     private Post post;
 
-
     private PostCount(Member member, Post post) {
         this.member = member;
         this.post = post;

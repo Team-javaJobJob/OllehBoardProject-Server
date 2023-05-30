@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,9 +47,11 @@ public class Comment {
     public static Comment of(String content, Post post, Member member){
         return new Comment(content,post,member);
     }
+
     public List<Reply> getReplies() {
         return replies;
     }
+
     public void update(String content) {
         this.content = content;
     }

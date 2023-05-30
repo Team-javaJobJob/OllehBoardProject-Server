@@ -52,11 +52,8 @@ public class ReplyController {
     public ResponseEntity<Void> deleteReply(
             @PathVariable("replyId") Long replyId, Authentication authentication) {
 
-        // 인증된 사용자 정보 가져오기
-        Member user = (Member) authentication.getPrincipal();
-
         // 대댓글 삭제 메서드 호출
-        replyService.deleteReply(replyId, user);
+        replyService.deleteReply(replyId, authentication);
         return ResponseEntity.noContent().build();
     }
 }
