@@ -5,12 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-<<<<<<< HEAD
 
 import javax.persistence .*;
-=======
 import javax.persistence.*;
->>>>>>> main
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +39,6 @@ import java.util.List;
         @Column(nullable = false)
         private LocalDateTime createdAt;
 
-<<<<<<< HEAD
         public Comment(String content, Post post, Member member) {
             this.id = null;
             this.content = content;
@@ -55,26 +51,15 @@ import java.util.List;
             return replies;
         }
 
-    }
-=======
-    private Comment(String content, Post post, Member member) {
-        this.id = null;
-        this.content = content;
-        this.post = post;
-        this.member = member;
-        this.createdAt = LocalDateTime.now();
-    }
+
+
 
     public static Comment of(String content, Post post, Member member){
         return new Comment(content,post,member);
     }
 
-    public List<Reply> getReplies() {
-        return replies;
-    }
 
     public void update(String content) {
         this.content = content;
     }
 }
->>>>>>> main

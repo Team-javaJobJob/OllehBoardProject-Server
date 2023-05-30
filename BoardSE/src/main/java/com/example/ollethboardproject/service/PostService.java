@@ -29,14 +29,9 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostCountRepository postCountRepository;
 
-<<<<<<< HEAD
-    public List<PostDTO> findAllBoards(Pageable pageable) {
-        List<Post> posts = postRepository.findAll(pageable).getContent();
-=======
     public List<PostDTO> findAllPost() {
         //TODO: LIST -> pageable
         List<Post> posts = postRepository.findAll();
->>>>>>> main
         return posts.stream().map(this::mapToPostDto).collect(Collectors.toList());
     }
 
@@ -103,44 +98,5 @@ public class PostService {
     private PostCountDTO mapToPostCountDto(Integer countByBoard, PostCount postCount) {
         return PostCountDTO.of(countByBoard, postCount);
     }
-<<<<<<< HEAD
-
-    //Olleh(좋아요)
-
-    private Member getMemberByMemberName(String userName) { //userName 을 인자로 받아 member 를 조회하고 존재하지 않으면 BoardException 발생
-        return memberRepository.findByUserName(userName).orElseThrow(() ->
-                new OllehException(ErrorCode.USER_NOT_FOUND));
-    }
-
-    private Post getPostById(Long postId) { //postId 을 인자로 받아 Post 를 조회하고 존재하지 않으면 BoardException 발생
-        return postRepository.findById(postId).orElseThrow(() ->
-                new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
-    }
-
-    @Transactional //하나의 트랜잭션으로 묶어서 하나라도 실패하면 모두 롤백
-    public void addOlleh(String userName, Long postId) {
-        Member member = getMemberByMemberName(userName); //getMemberByMemberName 메서드 호출하여 userName 에 해당하는 member 를 가져옴
-        Post post = getPostById(postId); //getPostById 메서드 호출하여 postI 에 해당하는 post 를 가져옴
-
-        if (removeOlleh(member, post)) return; //removeOlleh 호출-> member,post 인자로 받아서 Olleh 객체삭제 -> true 반환시 실행 중지
-
-        ollehRepository.save(Olleh.of(member, post));
-    }
-
-    public boolean removeOlleh(Member member, Post post) {
-        if (ollehRepository.findByMemberAndPost(member, post).isPresent()) { //isPresent() 메소드로 Optional 객체에 값이 있는지 확인
-            Olleh olleh = ollehRepository.findByMemberAndPost(member, post).get(); //값이 있다면 get()으로 가져옴
-            ollehRepository.delete(olleh); //가져온 값을 <-ollehRepository.delete(olleh)메서드로 삭제
-            return true; //그리고 true 반환 (삭제 성공시 true 반환)
-        }
-        return false; //삭제할 객체가 없으면 false 반환
-    }
-
-    public Integer ollehCount(Long postId) {
-        Post post = getPostById(postId); //postId 에 해당하는 post 객체를 가져옴
-        return ollehRepository.countByPost(post); //post 객체와 연관된 Olleh 객체의 개수 반환
-    }
 }
-=======
-}
->>>>>>> main
+

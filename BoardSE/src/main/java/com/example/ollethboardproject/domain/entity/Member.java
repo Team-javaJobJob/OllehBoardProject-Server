@@ -77,12 +77,8 @@ public class Member implements UserDetails {
                 memberJoinRequest.getPassword(),
                 memberJoinRequest.getNickName(),
                 memberJoinRequest.getGender()
-<<<<<<< HEAD
 
                 );
-=======
-        );
->>>>>>> main
     }
 
     public static Member toPw(MemberUpdateRequest memberUpdateRequest) {

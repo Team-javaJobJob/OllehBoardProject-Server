@@ -7,13 +7,16 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
+@CrossOrigin(origins = "/api/v1")
 public class ChatController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @MessageMapping("/message")
     @SendTo("/chatroom/public")
     public Message receiveMessage(@Payload Message message){
@@ -21,6 +24,7 @@ public class ChatController {
     }
 
     @MessageMapping("/private-message")
+    @CrossOrigin(origins = "http://localhost:3000")
     public Message recMessage(@Payload Message message){
         simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/private",message);
 //        System.out.println(message.toString());
