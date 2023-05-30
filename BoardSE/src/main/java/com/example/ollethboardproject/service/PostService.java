@@ -83,7 +83,7 @@ public class PostService {
         saveCount(member, post);
         return postCountRepository.countByPost(post);
     }
-
+    //해당 게시물을 이미 조회했다면 저장하지 않는다 (중복 조회 누적 x)
     private void saveCount(Member member, Post post) {
         if (postCountRepository.findByMemberAndPost(member, post).isEmpty()) {
             postCountRepository.save(PostCount.of(member, post));

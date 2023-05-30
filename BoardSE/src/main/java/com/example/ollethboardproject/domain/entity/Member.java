@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends AuditEntity implements UserDetails {
+public class Member implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,8 +51,20 @@ public class Member extends AuditEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role roles = Role.ROLE_USER;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @PostPersist
+    private void setCreatedAt() {
+        createdAt = LocalDateTime.now();
+    }
+    @PostUpdate
+    private void setUpdatedAt() {
+        updatedAt = LocalDateTime.now();
+    }
+
     //외부에서 new 생성자로 entity 객체 만들지않게 하기 위함
-    public Member(String userName, String password, String nickName, Gender gender) {
+    private Member(String userName, String password, String nickName, Gender gender) {
         this.userName = userName;
         this.password = password;
         this.nickName = nickName;
@@ -64,8 +77,12 @@ public class Member extends AuditEntity implements UserDetails {
                 memberJoinRequest.getPassword(),
                 memberJoinRequest.getNickName(),
                 memberJoinRequest.getGender()
+<<<<<<< HEAD
 
                 );
+=======
+        );
+>>>>>>> main
     }
 
     public static Member toPw(MemberUpdateRequest memberUpdateRequest) {

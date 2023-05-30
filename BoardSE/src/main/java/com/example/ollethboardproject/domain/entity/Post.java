@@ -35,7 +35,7 @@ public class Post extends AuditEntity {
     private Member member;
 >>>>>>> main
 
-    public Post(String title, String content, Member member) {
+    private Post(String title, String content, Member member) {
         this.title = title;
         this.content = content;
         this.member = member;

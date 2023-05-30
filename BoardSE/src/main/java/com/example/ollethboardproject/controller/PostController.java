@@ -90,7 +90,6 @@ package com.example.ollethboardproject.controller;
 
 import com.example.ollethboardproject.controller.request.post.PostCreateRequest;
 import com.example.ollethboardproject.controller.request.post.PostUpdateRequest;
-import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.PostCountDTO;
 import com.example.ollethboardproject.domain.dto.PostDTO;
 import com.example.ollethboardproject.service.PostService;

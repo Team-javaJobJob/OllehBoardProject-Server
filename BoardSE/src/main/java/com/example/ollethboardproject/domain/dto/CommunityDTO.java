@@ -4,6 +4,8 @@ import com.example.ollethboardproject.domain.entity.Community;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 public class CommunityDTO {
@@ -14,6 +16,7 @@ public class CommunityDTO {
     private String communityName;
     private String memberNickName;
     private int ollehCount;
+    private LocalDateTime createdAt;
 
     public static CommunityDTO fromEntity(Community community) {
         return new CommunityDTO(
@@ -23,6 +26,7 @@ public class CommunityDTO {
                 community.getInfo(),
                 community.getCommunityName(),
                 community.getMember().getNickName(),
-                community.getOllehsList().size());
+                community.getOllehsList().size(),
+                community.getCreatedAt());
     }
 }

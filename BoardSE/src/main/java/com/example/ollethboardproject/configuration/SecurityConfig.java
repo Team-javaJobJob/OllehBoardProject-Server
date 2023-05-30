@@ -140,27 +140,5 @@ public class SecurityConfig {
                 .and()
                 .build();
     }
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*")); // 허용할 도메인 설정
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE")); // 허용할 HTTP 메소드 설정
-//        configuration.setAllowedHeaders(Arrays.asList("*")); // 허용할 헤더 설정
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer(){
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry){
-//                registry.addMapping("/**")
-//                        .allowedOrigins("http://localhost:3000") // 허용할 Origin 지정
-//                        .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
-//                        .allowCredentials(true);
-//            }
-//        };
-//    }
 }
 >>>>>>> main

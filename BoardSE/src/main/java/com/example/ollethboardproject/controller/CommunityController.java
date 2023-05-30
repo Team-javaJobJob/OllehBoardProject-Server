@@ -86,8 +86,7 @@ public class CommunityController {
         List<CommunityMemberResponse> CommunityMemberResponses = communityMemberDTOList.stream().map(CommunityMemberResponse::fromCommunityMemberDTO).collect(Collectors.toList());
         return Response.success(CommunityMemberResponses);
     }
-
-    //TODO: 커뮤니티 검색 (지역 Region , 관심사 interest )
+    
 
     //관심사&키워드 기반 커뮤니티 추천 기능
 
@@ -99,7 +98,7 @@ public class CommunityController {
         return Response.success();
     }
 
-    //좋아요수
+    //좋아요수      //TODO: GET Mapping 삭제하고 , 좋아요 수를 커뮤니티에 노출 시키는 방향으로
     @GetMapping("/{communityId}/olleh")
     public Response<Integer> olleh(@PathVariable Long communityId){
         Integer ollehCount = communityService.ollehCount(communityId); //communityService 의 ollehCount 메소드를 호출 communityId에 해당하는 community 객체의 Olleh 개수 가져옴
