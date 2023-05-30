@@ -1,12 +1,16 @@
+
 package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
+
 import com.example.ollethboardproject.controller.request.PwEncodeRequest;
 import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
+
 import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +37,6 @@ public class Member implements UserDetails {
     @Column(name = "userName")
     private String userName;
 
-    @JsonIgnore
     @Column(name = "password")
     private String password;
 
@@ -74,7 +77,8 @@ public class Member implements UserDetails {
                 memberJoinRequest.getPassword(),
                 memberJoinRequest.getNickName(),
                 memberJoinRequest.getGender()
-        );
+
+                );
     }
 
     public static Member toPw(MemberUpdateRequest memberUpdateRequest) {
@@ -86,7 +90,7 @@ public class Member implements UserDetails {
         );
     }
 
-    public void update(Member memberUpdateRequest) {
+    public void update(Member memberUpdateRequest){
         this.userName = memberUpdateRequest.getUsername();
         this.password = memberUpdateRequest.getPassword();
         this.nickName = memberUpdateRequest.getNickName();
@@ -124,5 +128,4 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
-
 }

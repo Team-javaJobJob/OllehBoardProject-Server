@@ -1,9 +1,15 @@
 package com.example.ollethboardproject.controller.response;
 
+
+
 import com.example.ollethboardproject.domain.dto.CommunityMemberDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+
+
 
 @AllArgsConstructor
 @NoArgsConstructor

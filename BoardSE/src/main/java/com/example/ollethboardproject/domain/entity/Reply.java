@@ -1,3 +1,4 @@
+
 package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.reply.ReplyCreateRequest;

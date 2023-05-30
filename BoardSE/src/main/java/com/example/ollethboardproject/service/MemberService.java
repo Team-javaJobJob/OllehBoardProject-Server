@@ -1,8 +1,9 @@
+
 package com.example.ollethboardproject.service;
 
-import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.controller.request.member.MemberLoginRequest;
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
 import com.example.ollethboardproject.domain.dto.PostDTO;
@@ -11,8 +12,8 @@ import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.repository.CommunityMemberRepository;
 import com.example.ollethboardproject.repository.MemberRepository;
-import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.repository.OllehRepository;
+import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.utils.ClassUtil;
 import com.example.ollethboardproject.utils.JwtTokenUtil;
 import com.example.ollethboardproject.utils.TokenInfo;
@@ -56,16 +57,18 @@ public class MemberService implements UserDetailsService {
                     throw new OllehException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", memberJoinRequest.getUserName()));
                 });
         //TODO: 비밀번호 제약조건 설정 여부
+
         //비밀번호 암호화
         memberJoinRequest.encode(encodePassword(memberJoinRequest.getPassword()));
         //비밀번호 암호화 후 member 타입으로 객체 생성
         Member member = Member.of(memberJoinRequest);
+
         //member 엔티티 저장
         Member savedMember = memberRepository.save(member);
+        log.info("saveMember : {}",savedMember);
         //entity -> DTO 로 변환후 return
         return MemberDTO.fromEntity(savedMember);
     }
-
     @Transactional(readOnly = true)
     public TokenInfo login(MemberLoginRequest memberLoginRequest) {
         //아이디 체크
@@ -74,7 +77,7 @@ public class MemberService implements UserDetailsService {
 
         //패스워드 확인
         if (!encoder.matches(memberLoginRequest.getPassword(), member.getPassword())) {
-            throw new OllehException(ErrorCode.INVALID_PASSWORD, String.format("password is invalid"));
+            throw new OllehException(ErrorCode.INVALID_TOKEN, String.format("password is invalid"));
         }
 
         // 토큰 발급 (엑세스 , 리프레시)
@@ -84,6 +87,13 @@ public class MemberService implements UserDetailsService {
         return TokenInfo.generateTokens(accessToken, refreshToken);
     }
 
+
+    private MemberJoinRequest encodePassword(MemberJoinRequest memberJoinRequest) {
+        //비밀번호 암호화
+        String encodePassword = encoder.encode(memberJoinRequest.getPassword());
+        memberJoinRequest.encode(encodePassword);
+        return memberJoinRequest;
+    }
     private String encodePassword(String password) {
         //비밀번호 암호화
         return encoder.encode(password);
@@ -186,3 +196,4 @@ public class MemberService implements UserDetailsService {
         return ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
     }
 }
+

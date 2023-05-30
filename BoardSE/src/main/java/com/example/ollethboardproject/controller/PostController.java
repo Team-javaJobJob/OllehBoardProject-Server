@@ -1,18 +1,23 @@
+
 package com.example.ollethboardproject.controller;
 
 import com.example.ollethboardproject.controller.request.post.PostCreateRequest;
 import com.example.ollethboardproject.controller.request.post.PostUpdateRequest;
+import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.PostCountDTO;
 import com.example.ollethboardproject.domain.dto.PostDTO;
 import com.example.ollethboardproject.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @Slf4j
 @RestController

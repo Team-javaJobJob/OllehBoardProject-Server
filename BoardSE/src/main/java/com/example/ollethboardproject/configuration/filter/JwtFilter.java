@@ -10,6 +10,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
     public static final String BEARER = "Bearer ";
     private final MemberService memberService;
     private final String secretKey;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -62,8 +64,17 @@ public class JwtFilter extends OncePerRequestFilter {
             // userName 검증 후 User 객체 생성
             Member member = (Member) memberService.loadUserByUsername(userName);
 
+
+//            if (member == null) {
+//                log.error("Invalid User");
+//                filterChain.doFilter(request, response);
+//                return;
+//            }
+
             // Security Context 에 담을 authenticationToken 생성
-            saveAuthentication(request, member);
+
+            JwtFilter.saveAuthentication(request, member);
+
 
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT Token", e);
@@ -82,11 +93,16 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        // user 객체가 null 이 아닐 경우에만 요청 처리
+//        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+//            filterChain.doFilter(request, response);
+//        }
+
         filterChain.doFilter(request, response);
 
     }
 
-    private static void saveAuthentication(HttpServletRequest request, Member member) {
+    public static void saveAuthentication(HttpServletRequest request, Member member) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(member,
                 null, member.getAuthorities());
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

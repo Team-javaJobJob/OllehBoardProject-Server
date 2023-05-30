@@ -1,4 +1,4 @@
-package com.example.ollethboardproject.controller.response;
+package com.example.ollethboardproject.controller;
 
 import com.example.ollethboardproject.controller.request.comment.CommentCreateRequest;
 import com.example.ollethboardproject.controller.request.comment.CommentUpdateRequest;

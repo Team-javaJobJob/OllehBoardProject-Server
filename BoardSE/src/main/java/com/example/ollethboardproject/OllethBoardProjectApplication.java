@@ -10,4 +10,16 @@ public class OllethBoardProjectApplication {
         SpringApplication.run(OllethBoardProjectApplication.class, args);
     }
 
+//<<<<<<< Updated upstream
+//=======
+//    @Bean
+//    public WebMvcConfigurer corsConfigureer(){
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry corsRegistry){
+//                corsRegistry.addMapping("/**").allowedOrigins().allowedOriginPatterns();
+//            }
+//        };
+//    }
+
 }

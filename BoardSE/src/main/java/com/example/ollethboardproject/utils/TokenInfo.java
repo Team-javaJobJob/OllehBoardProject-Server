@@ -1,9 +1,9 @@
 package com.example.ollethboardproject.utils;
 
+import io.jsonwebtoken.Jwts;
 import lombok.Getter;
 
 @Getter
-
 public class TokenInfo {
     public String accessToken;
     public String refreshToken;

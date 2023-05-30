@@ -1,3 +1,4 @@
+
 package com.example.ollethboardproject.service;
 
 import com.example.ollethboardproject.controller.request.reply.ReplyCreateRequest;
@@ -71,4 +72,3 @@ public class ReplyService {
         return ReplyDTO.fromEntity(reply);
     }
 }
-

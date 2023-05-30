@@ -7,13 +7,15 @@ import com.example.ollethboardproject.domain.dto.PostDTO;
 import com.example.ollethboardproject.domain.entity.Post;
 import com.example.ollethboardproject.domain.entity.PostCount;
 import com.example.ollethboardproject.domain.entity.Member;
-import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.exception.ErrorCode;
+import com.example.ollethboardproject.exception.OllehException;
+import com.example.ollethboardproject.domain.entity.Olleh;
 import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.repository.PostCountRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -97,3 +99,4 @@ public class PostService {
         return PostCountDTO.of(countByBoard, postCount);
     }
 }
+
