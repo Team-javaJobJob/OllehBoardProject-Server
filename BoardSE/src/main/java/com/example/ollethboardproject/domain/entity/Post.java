@@ -30,7 +30,7 @@ public class Post extends AuditEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Post(String title, String content, Member member) {
+    private Post(String title, String content, Member member) {
         this.title = title;
         this.content = content;
         this.member = member;

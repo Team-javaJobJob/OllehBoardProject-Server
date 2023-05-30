@@ -51,7 +51,7 @@ public class CommunityService {
 
         return communityDTOList;
     }
-
+    //TODO: 해당 코드 리팩토링 필요
     @Transactional
     public CommunityDTO createCommunity(CommunityCreateRequest communityCreateRequest, Authentication authentication) {
         //커뮤니티 이름 중복 체크
@@ -62,7 +62,7 @@ public class CommunityService {
         //커뮤니티 생성
         Community community = Community.of(communityCreateRequest, member);
         communityRepository.save(community);
-        //로컬 커뮤니티 생성
+        //커뮤니티 멤버 생성
         CommunityMember communityMember = CommunityMember.of(community, member);
         communityMemberRepository.save(communityMember);
 
@@ -158,19 +158,19 @@ public class CommunityService {
     //Olleh(좋아요)
 
     //userName 를 인자로 받아 member 를 조회하고 존재하지 않으면 OllehException 발생
-    private Member getMemberByMemberName(String userName) {
+    public Member getMemberByMemberName(String userName) {
         return memberRepository.findByUserName(userName)
                 .orElseThrow(() -> new OllehException(ErrorCode.USER_NOT_FOUND));
     }
 
     //communityId, member 를 인자로 받아 조회하고 communityId 가 존재하지 않으면 OllehException 발생
-    private Community getCommunityId(Long communityId) {
+    public Community getCommunityId(Long communityId) {
         return communityRepository.findById(communityId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMUNITY_DOES_NOT_EXIST));
     }
 
     @Transactional //하나의 트랜잭션으로 묶어서 하나라도 실패하면 모두 롤백
-    public boolean addOlleh(String userName, Long communityId) {
+    public  boolean addOlleh(String userName, Long communityId) {
         Member member = getMemberByMemberName(userName); //findByCommunityAndMember 메서드 호출하여 member 에 해당하는 member 를 가져옴
         Community community = getCommunityId(communityId); //findByIdAndMember 메서드 호출하여 communityId 에 해당하는 post 를 가져옴
 
