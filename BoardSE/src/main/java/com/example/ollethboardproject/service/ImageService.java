@@ -1,5 +1,6 @@
 package com.example.ollethboardproject.service;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.ollethboardproject.domain.entity.Community;
 import com.example.ollethboardproject.domain.entity.Image;
 import com.example.ollethboardproject.repository.ImageRepository;
@@ -14,21 +15,30 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ImageService {
     private final ImageRepository imageRepository;
-    @Value("${upload.path}")
-    private String uploadPath;
+    private final AmazonS3 s3client;
 
-    public void saveImageToCreateCommunity(MultipartFile file, Community community) throws Exception {
-        //저장할 파일 경로 생성
-        Path filePath = Path.of(uploadPath, getUniqueFileName(file));
-        //파일 저장
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        //데이터베이스에 이미지 정보 저장
-        Image image = Image.of(getUniqueFileName(file), filePath.toString(), community);
+    @Value("${aws.s3.bucket}")
+    private String bucketName;
+
+    public void saveImage(MultipartFile file, Community community) throws Exception {
+        // Amazon S3에 파일 업로드
+        String uniqueFileName = getUniqueFileName(file);
+        // InputStream을 사용하여 MultipartFile을 File 객체로 변환할 필요없이 파일을 전송합니다.
+        PutObjectRequest request = new PutObjectRequest(bucketName, uniqueFileName, file.getInputStream(), new ObjectMetadata());
+        s3client.putObject(request);
+
+        // 데이터베이스에 이미지 정보 저장
+        // S3에 저장되어있는 파일URL로 변경하여 저장하도록 이미지 생성
+        String publicImageUrl = s3client.getUrl(bucketName, uniqueFileName).toString();
+        Image image = Image.of(uniqueFileName, publicImageUrl, community);
         imageRepository.save(image);
     }
 
@@ -36,22 +46,10 @@ public class ImageService {
         imageRepository.delete(imageRepository.findByCommunity(community));
     }
 
-    public void saveImageToUpdateCommunity(MultipartFile file, Community community) throws Exception {
-        //저장할 파일 경로 생성
-        Path filePath = Path.of(uploadPath, getUniqueFileName(file));
-        //파일 저장
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        //데이터베이스에 이미지 정보 저장
-        Image image = Image.of(getUniqueFileName(file), filePath.toString(), community);
-        imageRepository.save(image);
-
-    }
-
     //고유한 파일명 추출
     public String getUniqueFileName(MultipartFile file) {
         return UUID.randomUUID() + "_" + file.getOriginalFilename();
     }
-
 
 
 }

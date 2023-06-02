@@ -64,7 +64,7 @@ public class CommunityService {
         //키워드 저장
         keywordService.saveKeywordAndCommunity(communityCreateRequest, community);
         //이미지 저장
-        imageService.saveImageToCreateCommunity(file, community);
+        imageService.saveImage(file, community);
 
         return mapToCommunityDto(community);
     }
@@ -88,7 +88,7 @@ public class CommunityService {
         //수정 전 기존 이미지 삭제
         imageService.deleteImageByCommunity(community);
         //수정할 이미지 저장
-        imageService.saveImageToUpdateCommunity(file, community);
+        imageService.saveImage(file, community);
 
         return mapToCommunityDto(community);
     }
