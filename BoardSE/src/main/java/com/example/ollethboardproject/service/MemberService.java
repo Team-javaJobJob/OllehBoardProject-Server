@@ -108,6 +108,12 @@ public class MemberService implements UserDetailsService {
         return MemberDTO.fromEntity(member);
     }
 
+    @Transactional(readOnly = true)
+    public MemberDTO findMemberInfo(Authentication authentication) {
+        Member member = getMemberWithAuthentication(authentication);
+        return MemberDTO.fromEntity(member);
+    }
+
     public MemberDTO updateMember(MemberUpdateRequest memberUpdateRequest, Authentication authentication) {
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
         Member member = getMemberWithAuthentication(authentication);

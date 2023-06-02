@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
     Optional<List<Keyword>> findByKeyword(String keyword);
+    List<Keyword> findByCommunity(Community community);
 }

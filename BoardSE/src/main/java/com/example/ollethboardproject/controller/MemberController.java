@@ -9,13 +9,11 @@ import com.example.ollethboardproject.controller.response.MemberJoinResponse;
 import com.example.ollethboardproject.controller.response.MemberLoginResponse;
 import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.controller.response.*;
-import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
 import com.example.ollethboardproject.service.MemberService;
 import com.example.ollethboardproject.utils.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -56,9 +54,9 @@ public class MemberController {
 
 
     //회원 정보 조회
-    @PostMapping("/myPage")
-    public ResponseEntity<MemberDTO> findMemberByPw(@RequestBody String requestPw, Authentication authentication) {
-        MemberDTO memberDTO = memberService.findMemberByPassword(requestPw, authentication);
+    @GetMapping("/myPage")
+    public ResponseEntity<MemberDTO> findMemberByPw(Authentication authentication) {
+        MemberDTO memberDTO = memberService.findMemberInfo(authentication);
         return new ResponseEntity<>(memberDTO, HttpStatus.OK);
 
     }

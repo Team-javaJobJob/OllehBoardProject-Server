@@ -8,31 +8,28 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Table(name = "keyword")
+@Table(name = "image")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Keyword {
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "keyword")
-    private String keyword;
-
+    @Column(name = "image_name")
+    private String imageName;
+    @Column(name = "file_path")
+    private String filePath;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
     private Community community;
 
-    private Keyword(String keyword, Community community) {
-        this.keyword = keyword;
+    private Image(String imageName, String filePath, Community community) {
+        this.imageName = imageName;
+        this.filePath = filePath;
         this.community = community;
     }
 
-    public static Keyword of(String keyword, Community community) {
-        return new Keyword(keyword, community);
-    }
+    public static Image of(String imageName, String filePath, Community community) {
+        return new Image(imageName, filePath, community);
 
-    public void update(String keyword, Community community) {
-        this.keyword = keyword;
-        this.community = community;
     }
 }
