@@ -61,7 +61,7 @@
 📈 Usecase
 -----------
 
-<img >
+![usecase1](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/cada65a2-2f29-4ec1-a546-e8178cbf5f41)
 
 프로젝트 아키텍쳐 
 -------------
