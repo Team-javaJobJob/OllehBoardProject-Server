@@ -17,4 +17,6 @@ public interface OllehRepository extends JpaRepository<Olleh, Long> { //Olleh �
     Integer countByCommunity(Community community); //post 에 대한 olleh 수 반환
 
     Optional<List<Olleh>> findByMember(Member member);
+
+    Olleh findByCommunity(Community community);
 }
