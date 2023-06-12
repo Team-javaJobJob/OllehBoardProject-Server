@@ -3,6 +3,7 @@ package com.example.ollethboardproject.service;
 
 import com.example.ollethboardproject.controller.request.reply.ReplyCreateRequest;
 import com.example.ollethboardproject.controller.request.reply.ReplyUpdateRequest;
+import com.example.ollethboardproject.domain.dto.PostDTO;
 import com.example.ollethboardproject.domain.dto.ReplyDTO;
 import com.example.ollethboardproject.domain.entity.Comment;
 import com.example.ollethboardproject.domain.entity.Member;
@@ -70,5 +71,11 @@ public class ReplyService {
     public ReplyDTO getReply(Long replyId) {
         Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new OllehException(ErrorCode.REPLY_DOES_NOT_EXIST));
         return ReplyDTO.fromEntity(reply);
+    }
+
+    public void delete(PostDTO postDTO) {
+        replyRepository.findByPostId(postDTO.getId()).forEach(reply -> {
+            replyRepository.delete(reply);
+        });
     }
 }

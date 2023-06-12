@@ -3,6 +3,7 @@ package com.example.ollethboardproject.service;
 
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 import com.example.ollethboardproject.controller.request.member.MemberLoginRequest;
+import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
 import com.example.ollethboardproject.domain.dto.PostDTO;
@@ -11,8 +12,8 @@ import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.repository.CommunityMemberRepository;
 import com.example.ollethboardproject.repository.MemberRepository;
-import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.repository.OllehRepository;
+import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.utils.ClassUtil;
 import com.example.ollethboardproject.utils.JwtTokenUtil;
 import com.example.ollethboardproject.utils.TokenInfo;

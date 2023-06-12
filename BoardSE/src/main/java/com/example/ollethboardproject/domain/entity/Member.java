@@ -29,7 +29,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -77,12 +76,8 @@ public class Member implements UserDetails {
                 memberJoinRequest.getPassword(),
                 memberJoinRequest.getNickName(),
                 memberJoinRequest.getGender()
-<<<<<<< HEAD
 
                 );
-=======
-        );
->>>>>>> main
     }
 
     public static Member toPw(MemberUpdateRequest memberUpdateRequest) {

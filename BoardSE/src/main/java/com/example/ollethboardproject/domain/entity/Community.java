@@ -36,6 +36,10 @@ public class Community extends AuditEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
     @OneToMany(mappedBy = "community")
     private List<Olleh> ollehsList = new ArrayList<>();
 
@@ -62,5 +66,9 @@ public class Community extends AuditEntity {
         this.info = communityUpdateRequest.getInfo();
         this.communityName = communityUpdateRequest.getCommunityName();
         this.member = member;
+    }
+
+    public void updateImage(Image image) {
+        this.image = image;
     }
 }

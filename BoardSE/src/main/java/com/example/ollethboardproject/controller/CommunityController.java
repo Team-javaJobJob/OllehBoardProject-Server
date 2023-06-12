@@ -6,15 +6,19 @@ import com.example.ollethboardproject.controller.response.CommunityMemberRespons
 import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.CommunityMemberDTO;
-import com.example.ollethboardproject.domain.entity.Community;
 import com.example.ollethboardproject.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartResolver;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,28 +47,56 @@ public class CommunityController {
     }
 
     //커뮤니티 생성
-    @PostMapping("")
-    public ResponseEntity<CommunityDTO> createCommunity(@RequestBody CommunityCreateRequest communityCreateRequest, Authentication authentication) {
-        log.info("POST /api/v1/communities");
-        log.info("CommunityCreateRequest & authentication : {}, {}", communityCreateRequest, authentication);
-        CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, authentication);
-        log.info("createdCommunityDTO : {}", createdCommunityDTO);
+//    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public ResponseEntity<CommunityDTO> createCommunity(
+//            @RequestPart CommunityCreateRequest communityCreateRequest,
+//            @RequestPart MultipartFile file, Authentication authentication) throws Exception {
+//        log.info("POST /api/v1/communities - communityCreateRequest & authentication : {}, {}, {}", communityCreateRequest, file, authentication);
+//        CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
+//        return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
+//    }
+
+
+    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CommunityDTO> createCommunity(
+            @RequestPart(value = "communityCreateRequest", required = false) CommunityCreateRequest communityCreateRequest,
+            @RequestPart(value = "file", required = false) MultipartFile file, Authentication authentication) throws Exception {
+        log.info("POST /api/v1/communities - communityCreateRequest & authentication : {}, {}, {}", communityCreateRequest, file, authentication);
+        CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
         return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
     }
+
+    // 파일 업로드 처리
+//    @Bean
+//    public MultipartResolver multipartResolver() {
+//        org.springframework.web.multipart.commons.CommonsMultipartResolver multipartResolver = new org.springframework.web.multipart.commons.CommonsMultipartResolver();
+//        multipartResolver.setMaxUploadSize(10000000);
+//        return multipartResolver;
+//    }
+
+//    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+//    public ResponseEntity<?> createCommunity(
+//            @RequestPart CommunityCreateRequest communityCreateRequest,
+//            @RequestPart(value = "file") MultipartFile file, Authentication authentication) throws Exception {
+//        log.info("POST /api/v1/communities - communityCreateRequest & authentication : {}, {}, {}", communityCreateRequest, file, authentication);
+//        CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
+//        return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
+//    }
+
 
     //커뮤니티 정보 수정
     //TODO: LIST -> id 외 조회 기준 추가
     @PutMapping("{id}")
-    public ResponseEntity<CommunityDTO> updateCommunity(@PathVariable Long id, @RequestBody CommunityUpdateRequest communityUpdateRequest, Authentication authentication) {
+    public ResponseEntity<CommunityDTO> updateCommunity(@PathVariable Long id, @RequestPart CommunityUpdateRequest communityUpdateRequest, @RequestPart MultipartFile file, Authentication authentication) throws Exception {
         log.info("PUT /api/v1/communities/{}", id);
-        CommunityDTO updatedCommunityDTO = communityService.updateCommunity(id, communityUpdateRequest, authentication);
+        CommunityDTO updatedCommunityDTO = communityService.updateCommunity(id, communityUpdateRequest, file, authentication);
         return new ResponseEntity<>(updatedCommunityDTO, HttpStatus.OK);
     }
 
     //커뮤니티 삭제
     //TODO: LIST -> id 외 조회 기준 추가
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<Void> deleteCommunity(@PathVariable Long id, Authentication authentication) {
         log.info("DELETE /api/v1/communities/{}", id);
         communityService.deleteCommunity(id, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -86,7 +118,7 @@ public class CommunityController {
         List<CommunityMemberResponse> CommunityMemberResponses = communityMemberDTOList.stream().map(CommunityMemberResponse::fromCommunityMemberDTO).collect(Collectors.toList());
         return Response.success(CommunityMemberResponses);
     }
-    
+
 
     //관심사&키워드 기반 커뮤니티 추천 기능
 

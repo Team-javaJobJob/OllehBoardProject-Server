@@ -3,6 +3,7 @@ package com.example.ollethboardproject.service;
 import com.example.ollethboardproject.controller.request.comment.CommentCreateRequest;
 import com.example.ollethboardproject.controller.request.comment.CommentUpdateRequest;
 import com.example.ollethboardproject.domain.dto.CommentDTO;
+import com.example.ollethboardproject.domain.dto.PostDTO;
 import com.example.ollethboardproject.domain.entity.Comment;
 import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.domain.entity.Post;
@@ -90,4 +91,9 @@ public class CommentService {
         return commentDTOs;
     }
 
+    public void delete(PostDTO postDTO) {
+        commentRepository.findByPostId(postDTO.getId()).forEach(comment -> {
+            commentRepository.delete(comment);
+        });
+    }
 }

@@ -1,4 +1,3 @@
-
 package com.example.ollethboardproject.repository;
 
 import com.example.ollethboardproject.domain.entity.Comment;
@@ -10,6 +9,6 @@ import java.util.List;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
     List<Reply> findByParentComment(Comment parentComment);
-
+    List<Reply> findByPostId(Long replyId);
 
 }

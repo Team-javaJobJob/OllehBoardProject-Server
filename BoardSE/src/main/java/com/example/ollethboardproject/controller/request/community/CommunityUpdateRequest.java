@@ -10,4 +10,5 @@ public class CommunityUpdateRequest {
     private String interest;
     private String info;
     private String communityName;
+    private String[] keywords;
 }
