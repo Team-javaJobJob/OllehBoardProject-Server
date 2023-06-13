@@ -57,13 +57,14 @@
 - Git hub
 - Git Kraken
 - Slack
+- Notion
 
-📈 Usecase
+📈 Usecase 다이어그램
 -----------
 
 ![usecase3](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/8aa8caca-832a-4c9f-b458-f6b9311ce463)
 
-📈 UML 다이어그램 
+📈 클래스 다이어그램 
 -------------
 
 🛠 포트폴리오
