@@ -60,8 +60,8 @@
 
 📈 Usecase
 -----------
-![usecase2](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/4753eaba-a0a1-4c6b-9c21-765c8c2432b7)
 
+![usecase3](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/8aa8caca-832a-4c9f-b458-f6b9311ce463)
 
 프로젝트 아키텍쳐 
 -------------
