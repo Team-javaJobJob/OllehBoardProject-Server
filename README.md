@@ -1,4 +1,4 @@
-<h1 align="center">동네친구 매칭 플랫폼, 👨‍👩‍👧‍👦 동네로 올래?</h1>
+<h1 align="center">동네친구 매칭 플랫폼, 👨‍👩‍👧‍👦 우리 동네로 올래?</h1>
 
 <p align="center"><img src="https://user-images.githubusercontent.com/124491136/234168126-e831e158-8ff0-42e5-a1b5-98dd82da8ed2.png" alt="이미지 설명" width="570" height="480"></p>
 
@@ -60,8 +60,7 @@
 
 📈 Usecase
 -----------
-
-![usecase1](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/cada65a2-2f29-4ec1-a546-e8178cbf5f41)
+![usecase2](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/4753eaba-a0a1-4c6b-9c21-765c8c2432b7)
 
 프로젝트 아키텍쳐 
 -------------
