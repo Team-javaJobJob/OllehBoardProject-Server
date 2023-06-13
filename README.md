@@ -62,5 +62,6 @@
 -----------
 ![usecase2](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/4753eaba-a0a1-4c6b-9c21-765c8c2432b7)
 
+
 프로젝트 아키텍쳐 
 -------------
