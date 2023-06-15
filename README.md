@@ -64,9 +64,16 @@
 
 ![usecase3](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/8aa8caca-832a-4c9f-b458-f6b9311ce463)
 
-📈 클래스 다이어그램 
+📈 ER 다이어그램 
 -------------
+
+![ollehERD](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/6a7fba67-0034-44b7-a15d-9abe6847c4e0)
+
 
 🛠 포트폴리오
 -------------
 
+<details>
+  <summary>이미지로 확인하기</summary>
+  프론트가 완성되는대로 업로드 할 예정
+</details>
