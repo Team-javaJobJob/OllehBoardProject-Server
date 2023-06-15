@@ -42,7 +42,7 @@
 🙋‍♂️참여 팀원
 -------------
 - BackEnd : [조찬영](https://github.com/NinjaYoung98), [조동혁](https://github.com/donizz), [박지영](https://github.com/jiyoung10), [이나래](https://github.com/naraeeee)
-- FrontEnd : [박규현](https://github.com/henryKyuhyun), [강다예]()
+- FrontEnd : [박규현](https://github.com/henryKyuhyun), [강다예](https://github.com/dayaekang)
 
 <br></br>
 🔧 사용 기술 및 환경
