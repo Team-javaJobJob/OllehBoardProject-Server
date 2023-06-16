@@ -2,7 +2,6 @@ package com.example.ollethboardproject.controller.response;
 
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
-import com.example.ollethboardproject.domain.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

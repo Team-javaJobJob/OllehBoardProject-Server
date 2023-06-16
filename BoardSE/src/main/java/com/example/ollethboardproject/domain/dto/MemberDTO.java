@@ -2,14 +2,8 @@ package com.example.ollethboardproject.domain.dto;
 
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.entity.Member;
-import com.example.ollethboardproject.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 
 @Getter
 @AllArgsConstructor
@@ -29,5 +23,4 @@ public class MemberDTO {
                 member.getGender()
         );
     }
-
 }

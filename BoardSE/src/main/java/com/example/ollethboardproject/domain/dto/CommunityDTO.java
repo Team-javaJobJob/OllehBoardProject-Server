@@ -1,11 +1,9 @@
 package com.example.ollethboardproject.domain.dto;
 
 import com.example.ollethboardproject.domain.entity.Community;
-import com.example.ollethboardproject.domain.entity.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -17,7 +15,7 @@ public class CommunityDTO {
     private String communityName;
     private String memberNickName;
     private int ollehCount;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     private String image;
 

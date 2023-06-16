@@ -1,7 +1,6 @@
 package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.Status;
-import com.example.ollethboardproject.domain.entity.Community;
 import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import lombok.Getter;
 import lombok.Setter;

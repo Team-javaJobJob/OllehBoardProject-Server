@@ -9,7 +9,6 @@ import com.example.ollethboardproject.domain.dto.CommunityMemberDTO;
 import com.example.ollethboardproject.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,8 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartResolver;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,17 +44,6 @@ public class CommunityController {
         return new ResponseEntity<>(communityDTOList, HttpStatus.OK);
     }
 
-    //커뮤니티 생성
-//    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public ResponseEntity<CommunityDTO> createCommunity(
-//            @RequestPart CommunityCreateRequest communityCreateRequest,
-//            @RequestPart MultipartFile file, Authentication authentication) throws Exception {
-//        log.info("POST /api/v1/communities - communityCreateRequest & authentication : {}, {}, {}", communityCreateRequest, file, authentication);
-//        CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
-//        return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
-//    }
-
-
     @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommunityDTO> createCommunity(
             @RequestPart(value = "communityCreateRequest", required = false) CommunityCreateRequest communityCreateRequest,
@@ -65,24 +52,6 @@ public class CommunityController {
         CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
         return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
     }
-
-    // 파일 업로드 처리
-//    @Bean
-//    public MultipartResolver multipartResolver() {
-//        org.springframework.web.multipart.commons.CommonsMultipartResolver multipartResolver = new org.springframework.web.multipart.commons.CommonsMultipartResolver();
-//        multipartResolver.setMaxUploadSize(10000000);
-//        return multipartResolver;
-//    }
-
-//    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public ResponseEntity<?> createCommunity(
-//            @RequestPart CommunityCreateRequest communityCreateRequest,
-//            @RequestPart(value = "file") MultipartFile file, Authentication authentication) throws Exception {
-//        log.info("POST /api/v1/communities - communityCreateRequest & authentication : {}, {}, {}", communityCreateRequest, file, authentication);
-//        CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
-//        return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
-//    }
-
 
     //커뮤니티 정보 수정
     //TODO: LIST -> id 외 조회 기준 추가
@@ -114,7 +83,7 @@ public class CommunityController {
     @GetMapping("{communityId}")
     public Response<List<CommunityMemberResponse>> selectCommunity(@PathVariable Long communityId, Authentication authentication, Pageable pageable) {
         log.info("GET /api/v1/communities/{}", communityId);
-        List<CommunityMemberDTO> communityMemberDTOList = communityService.selectCommunity(communityId, authentication,pageable);
+        List<CommunityMemberDTO> communityMemberDTOList = communityService.selectCommunity(communityId, authentication, pageable);
         List<CommunityMemberResponse> CommunityMemberResponses = communityMemberDTOList.stream().map(CommunityMemberResponse::fromCommunityMemberDTO).collect(Collectors.toList());
         return Response.success(CommunityMemberResponses);
     }
@@ -125,14 +94,14 @@ public class CommunityController {
 
     //좋아요(=올래)
     @PostMapping("/{communityId}/olleh")
-    public Response<Void> olleh(@PathVariable Long communityId, Authentication authentication){
+    public Response<Void> olleh(@PathVariable Long communityId, Authentication authentication) {
         communityService.addOlleh(authentication.getName(), communityId);
         return Response.success();
     }
 
     //좋아요수      //TODO: GET Mapping 삭제하고 , 좋아요 수를 커뮤니티에 노출 시키는 방향으로
     @GetMapping("/{communityId}/olleh")
-    public Response<Integer> olleh(@PathVariable Long communityId){
+    public Response<Integer> olleh(@PathVariable Long communityId) {
         Integer ollehCount = communityService.ollehCount(communityId); //communityService 의 ollehCount 메소드를 호출 communityId에 해당하는 community 객체의 Olleh 개수 가져옴
         return Response.success(ollehCount); //ollehCount 값을 Response 객체에 담아서 반환
     }

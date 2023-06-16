@@ -1,7 +1,6 @@
 package com.example.ollethboardproject.domain.entity;
 
 
-import com.example.ollethboardproject.controller.request.community.CommunityCreateRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -9,7 +9,6 @@ import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

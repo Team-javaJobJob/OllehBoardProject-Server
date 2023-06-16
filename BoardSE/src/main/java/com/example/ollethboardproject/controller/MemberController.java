@@ -9,13 +9,11 @@ import com.example.ollethboardproject.controller.response.MemberJoinResponse;
 import com.example.ollethboardproject.controller.response.MemberLoginResponse;
 import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.controller.response.*;
-import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
 import com.example.ollethboardproject.service.MemberService;
 import com.example.ollethboardproject.utils.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -45,13 +43,12 @@ public class MemberController {
     }
 
 
-
     //로그인
     @PostMapping("/login")
     @CrossOrigin(origins = "http://localhost:3000")
     public Response<MemberLoginResponse> login(@RequestBody MemberLoginRequest memberLoginRequest) {
         TokenInfo tokens = memberService.login(memberLoginRequest);
-        return Response.success(new MemberLoginResponse(tokens.getAccessToken(), tokens.getRefreshToken()));
+        return Response.success(new MemberLoginResponse(tokens.getAccessToken()));
     }
 
 

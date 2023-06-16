@@ -9,14 +9,10 @@ import com.example.ollethboardproject.domain.entity.PostCount;
 import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.exception.OllehException;
-import com.example.ollethboardproject.domain.entity.Olleh;
-import com.example.ollethboardproject.repository.CommentRepository;
-import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.repository.PostCountRepository;
 import com.example.ollethboardproject.repository.PostRepository;
 import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +27,7 @@ public class PostService {
     private final PostCountRepository postCountRepository;
     private final CommentService commentService;
     private final ReplyService replyService;
+
     public List<PostDTO> findAllPost() {
         //TODO: LIST -> pageable
         List<Post> posts = postRepository.findAll();
@@ -86,6 +83,7 @@ public class PostService {
         saveCount(member, post);
         return postCountRepository.countByPost(post);
     }
+
     //해당 게시물을 이미 조회했다면 저장하지 않는다 (중복 조회 누적 x)
     private void saveCount(Member member, Post post) {
         if (postCountRepository.findByMemberAndPost(member, post).isEmpty()) {

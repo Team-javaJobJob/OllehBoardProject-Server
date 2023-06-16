@@ -3,14 +3,11 @@ package com.example.ollethboardproject.controller;
 
 import com.example.ollethboardproject.controller.request.post.PostCreateRequest;
 import com.example.ollethboardproject.controller.request.post.PostUpdateRequest;
-import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.PostCountDTO;
 import com.example.ollethboardproject.domain.dto.PostDTO;
 import com.example.ollethboardproject.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -52,7 +49,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestBody PostUpdateRequest postUpdateRequest ,Authentication authentication) {
+    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestBody PostUpdateRequest postUpdateRequest, Authentication authentication) {
         log.info("PUT /api/v1/post/{}", id);
         PostDTO updatedPostDTO = postService.updatePost(id, postUpdateRequest, authentication);
         return new ResponseEntity<>(updatedPostDTO, HttpStatus.OK);

@@ -7,9 +7,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -18,15 +16,14 @@ import java.time.LocalDateTime;
 public abstract class AuditEntity {
     @CreatedDate
     @Column( updatable = false)
-    protected LocalDateTime createdAt;
+    protected String createdAt;
 
     @CreatedBy
     @Column( updatable = false)
     protected String createdBy;
 
-
     @LastModifiedDate
-    protected LocalDateTime updatedAt;
+    protected String updatedAt;
 
     @LastModifiedBy
     protected String updatedBy;

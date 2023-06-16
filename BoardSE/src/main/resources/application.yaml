@@ -2,24 +2,25 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    url: jdbc:mysql://localhost:3306/olleh
+    url: jdbc:mysql://localhost:3306/ollehpost
     username: root
-    password: zhtanf5246150!
+    password: 0903
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
-        #        show_sql: true
+        show_sql: true
         format_sql: true
+  redis:
+    host: localhost
+    port: 6379
 jwt:
   token:
     secret: "secretKey2G312A3E224A78H51R6dfvnjhgSf3asD3N5KE23Lq"
-  access-expired: 3600000    #3600000 1시간
+  access-expired:  3600000 #1시간  #6000 5초
   refresh-expired: 86400000   # 1 day
-
-
 
 
 server:
@@ -29,7 +30,5 @@ server:
 logging.level:
   org.hibernate.SQL: debug
 
-
-
 upload:
-  path: /Users/kyuhyunpark/Desktop/TeamOllehRepository/OllehBoardFront/olleh/src/assets
+  path: C:\chanYoung\ollehImage

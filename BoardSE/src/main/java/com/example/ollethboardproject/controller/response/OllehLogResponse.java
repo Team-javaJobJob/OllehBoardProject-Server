@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 public class OllehLogResponse {
     private Long id;
     private String communityName;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     public static OllehLogResponse fromDTO(CommunityDTO communityDTO) {
         return new OllehLogResponse(

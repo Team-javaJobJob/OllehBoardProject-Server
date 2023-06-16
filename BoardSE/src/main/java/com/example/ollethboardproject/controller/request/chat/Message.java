@@ -3,7 +3,6 @@ package com.example.ollethboardproject.controller.request.chat;
 import com.example.ollethboardproject.controller.Status;
 import lombok.*;
 
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor

@@ -5,14 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostLogResponse {
     private String title;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private String nickName;
 
     public static PostLogResponse fromDTO(PostDTO postDTO) {

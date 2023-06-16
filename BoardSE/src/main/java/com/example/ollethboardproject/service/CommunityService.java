@@ -104,7 +104,6 @@ public class CommunityService {
         //수정할 이미지 저장
         imageService.saveImageToUpdateCommunity(file, community);
         //aws s3 수정할 이미지 저장
-//        imageService.saveImageToCreateCommunityTest(file, community);
 
         return mapToCommunityDto(community);
     }

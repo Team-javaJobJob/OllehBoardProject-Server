@@ -3,14 +3,13 @@ package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 
-import com.example.ollethboardproject.controller.request.PwEncodeRequest;
 import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
 
-import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,9 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Member implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,16 +51,17 @@ public class Member implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role roles = Role.ROLE_USER;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 
     @PostPersist
     private void setCreatedAt() {
-        createdAt = LocalDateTime.now();
+        createdAt = LocalDateTime.now().toString();
     }
+
     @PostUpdate
     private void setUpdatedAt() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now().toString();
     }
 
     //외부에서 new 생성자로 entity 객체 만들지않게 하기 위함
@@ -77,7 +79,7 @@ public class Member implements UserDetails {
                 memberJoinRequest.getNickName(),
                 memberJoinRequest.getGender()
 
-                );
+        );
     }
 
     public static Member toPw(MemberUpdateRequest memberUpdateRequest) {
@@ -89,7 +91,7 @@ public class Member implements UserDetails {
         );
     }
 
-    public void update(Member memberUpdateRequest){
+    public void update(Member memberUpdateRequest) {
         this.userName = memberUpdateRequest.getUsername();
         this.password = memberUpdateRequest.getPassword();
         this.nickName = memberUpdateRequest.getNickName();
@@ -97,6 +99,7 @@ public class Member implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(this.roles.toString()));
@@ -104,26 +107,31 @@ public class Member implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return userName;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return false;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return false;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return false;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return false;
     }

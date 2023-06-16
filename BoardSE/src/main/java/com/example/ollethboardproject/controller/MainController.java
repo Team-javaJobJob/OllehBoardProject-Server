@@ -1,7 +1,5 @@
 package com.example.ollethboardproject.controller;
 
-import com.example.ollethboardproject.controller.response.Response;
-import com.example.ollethboardproject.domain.dto.MemberDTO;
 import com.example.ollethboardproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

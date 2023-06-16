@@ -14,7 +14,6 @@ import java.util.Optional;
 public class AuditorAwareImpl implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
-     //   log.info("auditing! {}", SecurityContextHolder.getContext().getAuthentication().getName());
         return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
