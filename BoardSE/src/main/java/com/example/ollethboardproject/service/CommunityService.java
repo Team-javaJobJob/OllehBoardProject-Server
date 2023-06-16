@@ -11,12 +11,13 @@ import com.example.ollethboardproject.repository.*;
 import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,9 +27,12 @@ import java.util.stream.Collectors;
 public class CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityMemberRepository communityMemberRepository;
-    private final KeywordRepository keywordRepository;
     private final OllehRepository ollehRepository;
     private final MemberRepository memberRepository;
+    private final KeywordService keywordService;
+    private final ImageService imageService;
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @Transactional(readOnly = true)
     public List<CommunityDTO> findAllCommunities() {
@@ -41,43 +45,44 @@ public class CommunityService {
     public List<CommunityDTO> findCommunitiesByKeyword(String keyword) {
         log.info("keyword: {}", keyword);
 
-        List<Keyword> keywords = keywordRepository.findByKeyword(keyword).orElseThrow(
-                () -> new OllehException(ErrorCode.KEYWORD_DOES_NOT_EXIST));
-
-        List<CommunityDTO> communityDTOList = keywords.stream()
-                .map(Keyword::getCommunity)
-                .map(this::mapToCommunityDto)
-                .collect(Collectors.toList());
+        //키워드로 관계된 커뮤니티 모두 조회
+        List<CommunityDTO> communityDTOList = keywordService.findCommunitiesByKeyword(keyword);
 
         return communityDTOList;
     }
     //TODO: 해당 코드 리팩토링 필요
     @Transactional
-    public CommunityDTO createCommunity(CommunityCreateRequest communityCreateRequest, Authentication authentication) {
+    public CommunityDTO createCommunity(CommunityCreateRequest communityCreateRequest, MultipartFile file, Authentication authentication) throws Exception {
         //커뮤니티 이름 중복 체크
         if (communityRepository.findByCommunityName(communityCreateRequest.getCommunityName()).isPresent()) {
             throw new OllehException(ErrorCode.COMMUNITY_ALREADY_EXISTS);
         }
+        //authentication => 멤버 클래스 타입으로 변환
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
-        //커뮤니티 생성
+
+        //커뮤니티 생성 및 저장
         Community community = Community.of(communityCreateRequest, member);
         communityRepository.save(community);
-        //커뮤니티 멤버 생성
+        //커뮤니티 멤버 생성 및 저장
         CommunityMember communityMember = CommunityMember.of(community, member);
         communityMemberRepository.save(communityMember);
 
-        //request에서 keywords 추출
-        String[] keywords = communityCreateRequest.getKeywords();
         //키워드 저장
-        Arrays.stream(keywords).forEach(keyword -> {
-            keywordRepository.save(Keyword.of(keyword, community));
-        });
+        keywordService.saveKeywordAndCommunity(communityCreateRequest, community);
+        //로컬 이미지 저장 test
+        if (file != null) {
+            Image image = imageService.saveImageToCreateCommunity(file, community);
+            community.updateImage(image);
+            //communityRepository.save(community);
+        }
+        //aws s3 이미지 저장
+//        imageService.saveImageToCreateCommunityTest(file, community);
 
         return mapToCommunityDto(community);
     }
 
     @Transactional
-    public CommunityDTO updateCommunity(Long id, CommunityUpdateRequest communityUpdateRequest, Authentication authentication) {
+    public CommunityDTO updateCommunity(Long id, CommunityUpdateRequest communityUpdateRequest, MultipartFile file, Authentication authentication) throws Exception {
         //커뮤니티가 존재하지 않는다면 예외 발생
         Community community = getCommunityByIdOrException(id);
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
@@ -88,6 +93,19 @@ public class CommunityService {
         community.update(communityUpdateRequest, member);
         //게시물 저장
         communityRepository.save(community);
+
+        //수정 전 기존 키워드 삭제
+        keywordService.deleteKeywordByCommunity(community);
+        //수정할 키워드 저장
+        keywordService.saveKeywordToUpdateCommunity(communityUpdateRequest, community);
+
+        //수정 전 기존 이미지 삭제
+        imageService.deleteImageByCommunity(community);
+        //수정할 이미지 저장
+        imageService.saveImageToUpdateCommunity(file, community);
+        //aws s3 수정할 이미지 저장
+//        imageService.saveImageToCreateCommunityTest(file, community);
+
         return mapToCommunityDto(community);
     }
 
@@ -97,7 +115,12 @@ public class CommunityService {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //커뮤니티 생성자만 커뮤니티를 삭제할 수 있다.
         validateMatches(community, member);
+        //커뮤니티 삭제
         communityRepository.delete(community);
+        //키워드 삭제
+        keywordService.deleteKeywordByCommunity(community);
+        //이미지 삭제
+        imageService.deleteImageByCommunity(community);
     }
 
     @Transactional

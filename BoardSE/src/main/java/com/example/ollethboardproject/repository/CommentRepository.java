@@ -1,4 +1,3 @@
-
 package com.example.ollethboardproject.repository;
 
 import com.example.ollethboardproject.domain.entity.Comment;
@@ -11,5 +10,5 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByPost(Post post);
+    List<Comment> findByPostId(Long postId);
 }
-

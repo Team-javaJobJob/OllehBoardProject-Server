@@ -10,6 +10,7 @@ import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.domain.entity.Olleh;
+import com.example.ollethboardproject.repository.CommentRepository;
 import com.example.ollethboardproject.repository.MemberRepository;
 import com.example.ollethboardproject.repository.PostCountRepository;
 import com.example.ollethboardproject.repository.PostRepository;
@@ -28,7 +29,8 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostCountRepository postCountRepository;
-
+    private final CommentService commentService;
+    private final ReplyService replyService;
     public List<PostDTO> findAllPost() {
         //TODO: LIST -> pageable
         List<Post> posts = postRepository.findAll();
@@ -71,6 +73,12 @@ public class PostService {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //게시물 작성자만 게시물을 삭제할 수 있다.
         validateMatches(post, member);
+        deletePost(post);
+    }
+
+    private void deletePost(Post post) {
+        commentService.delete(PostDTO.fromEntity(post));
+        replyService.delete(PostDTO.fromEntity(post));
         postRepository.delete(post);
     }
 
@@ -99,4 +107,3 @@ public class PostService {
         return PostCountDTO.of(countByBoard, postCount);
     }
 }
-

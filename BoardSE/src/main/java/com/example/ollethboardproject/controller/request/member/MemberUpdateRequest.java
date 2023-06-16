@@ -4,9 +4,11 @@ import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class MemberUpdateRequest {
     private String requestPw;
     private String userName;

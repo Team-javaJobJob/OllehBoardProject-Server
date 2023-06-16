@@ -1,6 +1,7 @@
 package com.example.ollethboardproject.domain.dto;
 
 import com.example.ollethboardproject.domain.entity.Community;
+import com.example.ollethboardproject.domain.entity.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,6 +19,8 @@ public class CommunityDTO {
     private int ollehCount;
     private LocalDateTime createdAt;
 
+    private String image;
+
     public static CommunityDTO fromEntity(Community community) {
         return new CommunityDTO(
                 community.getId(),
@@ -27,6 +30,7 @@ public class CommunityDTO {
                 community.getCommunityName(),
                 community.getMember().getNickName(),
                 community.getOllehsList().size(),
-                community.getCreatedAt());
+                community.getCreatedAt(),
+                community.getImage() != null ? community.getImage().getImageName() : "");
     }
 }

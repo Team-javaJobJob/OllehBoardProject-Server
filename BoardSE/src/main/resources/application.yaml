@@ -8,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         #        show_sql: true
@@ -19,43 +19,17 @@ jwt:
   access-expired: 3600000    #3600000 1시간
   refresh-expired: 86400000   # 1 day
 
+
+
+
 server:
   port: 8080
 
-#=======
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-##<<<<<<< Updated upstream
-#
-#    url: jdbc:mysql://localhost:3306/olleh
-#    username: root
-#    password: zhtanf5246150!
-
-#=======
-#    url: jdbc:mysql://localhost:3306/ollehboard
-#    username: root
-#    password: 0903
-#>>>>>>> Stashed changes
-#  jpa:
-#    hibernate:
-#      ddl-auto: create
-#    properties:
-#      hibernate:
-#        #        show_sql: true
-#        format_sql: true
-##jwt:
-#  token:
-#    secret: "secretKey2G312A3E224A78H51R6dfvnjhgSf3asD3N5KE23Lq"
-#  access-expired: 3600000    #3600000 1시간
-#  refresh-expired: 86400000   # 1 day
 
 logging.level:
   org.hibernate.SQL: debug
 
-#>>>>>>> Stashed changes
 
-#  cors:
-#    allowed-origins:
-#      - "http://localhost:3000"
 
+upload:
+  path: /Users/kyuhyunpark/Desktop/TeamOllehRepository/OllehBoardFront/olleh/src/assets
