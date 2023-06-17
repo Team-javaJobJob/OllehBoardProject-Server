@@ -5,7 +5,6 @@
 
 📍프로젝트 소개
 -------------
-- 총 6인의 예비 백엔드 개발자 및 예비 프론트엔드 개발자가 협업하여 제작한 3개월간의 프로젝트입니다.
 - 프로젝트 컨셉 설계부터 기획, 서버 배포, 테스트까지 하나의 서비스 개발 플로우를 경험하였습니다.
 - Github, Notion, Slack 등 프로젝트 관리툴을 적극 활용하여 실무와 유사한 협업 프로세스를 사용하였습니다.
 - 프로젝트에 맞는 컨셉과 요구사항을 반영한 비지니스 로직 구현 Rest api 서버 개발 프로젝트입니다.
@@ -41,7 +40,7 @@
 
 🙋‍♂️참여 팀원
 -------------
-- BackEnd : [조찬영](https://github.com/NinjaYoung98), [조동혁](https://github.com/donizz), [박지영](https://github.com/jiyoung10),[이나래](https://github.com/naraeeee)
+- BackEnd : [조찬영](https://github.com/NinjaYoung98), [조동혁](https://github.com/donizz), [박지영](https://github.com/jiyoung10)
 - FrontEnd : [박규현](https://github.com/henryKyuhyun), [강다예](https://github.com/dayaekang)
 
 <br></br>
@@ -75,5 +74,5 @@
 
 <details>
   <summary>이미지로 확인하기</summary>
-  프론트가 완성되는대로 업로드 할 예정
+  프론트
 </details>
