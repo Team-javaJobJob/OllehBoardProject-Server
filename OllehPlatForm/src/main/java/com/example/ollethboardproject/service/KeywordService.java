@@ -20,22 +20,21 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class KeywordService {
-
     private final KeywordRepository keywordRepository;
 
     public void saveKeywordAndCommunity(CommunityCreateRequest communityCreateRequest, Community community) {
-        //저장할 키워드 추출
+        // 저장할 키워드 추출
         String[] keywords = communityCreateRequest.getKeywords();
-        //키워드 저장
+        // 키워드 저장
         Arrays.stream(keywords).forEach(keyword -> {
             keywordRepository.save(Keyword.of(keyword, community));
         });
     }
 
     public void saveKeywordToUpdateCommunity(CommunityUpdateRequest communityUpdateRequest, Community community) {
-        //키워드 추출
+        // 키워드 추출
         String[] keywords = communityUpdateRequest.getKeywords();
-        //수정할 키워드 저장
+        // 수정할 키워드 저장
         Arrays.stream(keywords).forEach(optKeyword -> {
             keywordRepository.save(Keyword.of(optKeyword, community));
         });
@@ -58,8 +57,8 @@ public class KeywordService {
         return CommunityDTO.fromEntity(community);
     }
 
-    public void deleteKeywordByCommunity(Community community) {
-        keywordRepository.findByCommunity(community).forEach(keyword -> {
+    public void delete(CommunityDTO communityDTO) {
+        keywordRepository.findByCommunityId(communityDTO.getId()).forEach(keyword -> {
             keywordRepository.delete(keyword);
         });
     }

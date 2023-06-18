@@ -36,7 +36,7 @@ public class CommunityController {
         return new ResponseEntity<>(communityDTOList, HttpStatus.OK);
     }
 
-    //해시태그 검색을 통한 커뮤니티 조회
+    // 해시태그 검색을 통한 커뮤니티 조회
     @GetMapping("/keyword/{keyword}")
     public ResponseEntity<List<CommunityDTO>> findCommunitiesByKeyword(@PathVariable String keyword) {
         log.info("GET /api/v1/communities/keyword/{}", keyword);
@@ -53,33 +53,31 @@ public class CommunityController {
         return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
     }
 
-    //커뮤니티 정보 수정
-    //TODO: LIST -> id 외 조회 기준 추가
-    @PutMapping("{id}")
-    public ResponseEntity<CommunityDTO> updateCommunity(@PathVariable Long id, @RequestPart CommunityUpdateRequest communityUpdateRequest, @RequestPart MultipartFile file, Authentication authentication) throws Exception {
-        log.info("PUT /api/v1/communities/{}", id);
-        CommunityDTO updatedCommunityDTO = communityService.updateCommunity(id, communityUpdateRequest, file, authentication);
+    // 커뮤니티 정보 수정
+    @PutMapping("/{communityId}")
+    public ResponseEntity<CommunityDTO> updateCommunity(@PathVariable Long communityId, @RequestPart CommunityUpdateRequest communityUpdateRequest, @RequestPart MultipartFile file, Authentication authentication) throws Exception {
+        log.info("PUT /api/v1/communities/{}", communityId);
+        CommunityDTO updatedCommunityDTO = communityService.updateCommunity(communityId, communityUpdateRequest, file, authentication);
         return new ResponseEntity<>(updatedCommunityDTO, HttpStatus.OK);
     }
 
-    //커뮤니티 삭제
-    //TODO: LIST -> id 외 조회 기준 추가
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteCommunity(@PathVariable Long id, Authentication authentication) {
-        log.info("DELETE /api/v1/communities/{}", id);
-        communityService.deleteCommunity(id, authentication);
+    // 커뮤니티 삭제
+    @DeleteMapping("/{communityId}")
+    public ResponseEntity<Void> deleteCommunity(@PathVariable Long communityId, Authentication authentication) {
+        log.info("DELETE /api/v1/communities/{}", communityId);
+        communityService.deleteCommunity(communityId, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //커뮤니티 가입
-    @PostMapping("{communityId}")
+    // 커뮤니티 가입
+    @PostMapping("/{communityId}")
     public Response<Void> joinCommunity(@PathVariable Long communityId, Authentication authentication) {
         log.info("POST /api/v1/communities/{}", communityId);
         communityService.joinCommunity(communityId, authentication);
         return Response.success();
     }
 
-    //가입된 멤버만 멤버들을 조회할 수 있다.
+    // 가입된 멤버만 커뮤니티 멤버 조회 가능
     @GetMapping("{communityId}")
     public Response<List<CommunityMemberResponse>> selectCommunity(@PathVariable Long communityId, Authentication authentication, Pageable pageable) {
         log.info("GET /api/v1/communities/{}", communityId);
@@ -88,35 +86,25 @@ public class CommunityController {
         return Response.success(CommunityMemberResponses);
     }
 
-
-    //관심사&키워드 기반 커뮤니티 추천 기능
-
-
-    //좋아요(=올래)
+    // 좋아요(=올래)
     @PostMapping("/{communityId}/olleh")
     public Response<Void> olleh(@PathVariable Long communityId, Authentication authentication) {
         communityService.addOlleh(authentication.getName(), communityId);
         return Response.success();
     }
 
-    //좋아요수      //TODO: GET Mapping 삭제하고 , 좋아요 수를 커뮤니티에 노출 시키는 방향으로
+    // 좋아요 수
     @GetMapping("/{communityId}/olleh")
     public Response<Integer> olleh(@PathVariable Long communityId) {
-        Integer ollehCount = communityService.ollehCount(communityId); //communityService 의 ollehCount 메소드를 호출 communityId에 해당하는 community 객체의 Olleh 개수 가져옴
-        return Response.success(ollehCount); //ollehCount 값을 Response 객체에 담아서 반환
+        Integer ollehCount = communityService.ollehCount(communityId);
+        return Response.success(ollehCount);
     }
 
-    //최신순 정렬
+    // 최신순 정렬
     @GetMapping("/latest")
-    public Response<List<CommunityDTO>> getLatestCommunity() { //List<Community> 타입의 Response 반환
+    public Response<List<CommunityDTO>> getLatestCommunity() {
         List<CommunityDTO> latestCommunities = communityService.getLatestCommunity();
         return Response.success(latestCommunities);
     }
 
-    //추천순 (올레순) 정렬
-    @GetMapping("/topOlleh")
-    public Response<List<CommunityDTO>> getTopOllehCommunity() {
-        List<CommunityDTO> topOllehCommunities = communityService.getTopOllehCommunity();
-        return Response.success(topOllehCommunities);
-    }
 }

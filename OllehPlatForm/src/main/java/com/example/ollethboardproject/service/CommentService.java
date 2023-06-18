@@ -11,8 +11,6 @@ import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.repository.CommentRepository;
 import com.example.ollethboardproject.repository.PostRepository;
-import com.example.ollethboardproject.repository.ReplyRepository;
-import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -24,21 +22,20 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-
     private final CommentRepository commentRepository;
+    private final MemberService memberService;
     private final PostRepository postRepository;
-    private final ReplyRepository replyRepository;
+    private final ReplyService replyService;
 
     @Transactional
     public CommentDTO createComment(Long postId, CommentCreateRequest commentCreateRequest, Authentication authentication) {
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        Member member = memberService.loadUserByUsername(authentication.getName());
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
         Comment comment = Comment.of(commentCreateRequest.getContent(), post, member);
+
         commentRepository.save(comment);
-
-
         return CommentDTO.fromEntity(comment);
     }
 
@@ -50,29 +47,28 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDTO updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest) {
+    public CommentDTO updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, Authentication authentication) {
+        Member member = memberService.loadUserByUsername(authentication.getName());
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
+        // 댓글 작성자만 댓글 수정 가능
+        validateMatches(comment, member);
         comment.update(commentUpdateRequest.getContent());
+        commentRepository.save(comment);
         return CommentDTO.fromEntity(comment);
     }
 
     @Transactional
     public void deleteComment(Long commentId, Authentication authentication) {
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        Member member = memberService.loadUserByUsername(authentication.getName());
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
-        if (comment.getMember() != member) {
-            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
-        }
-
-        replyRepository.findByParentComment(comment).forEach(reply -> {
-            replyRepository.delete(reply);
-        });
-
-        commentRepository.delete(comment);
+        // 댓글 작성자만 댓글 삭제 가능
+        validateMatches(comment, member);
+        deleteByComment(comment);
     }
 
     @Transactional(readOnly = true)
@@ -85,13 +81,23 @@ public class CommentService {
         List<CommentDTO> commentDTOs = comments.stream()
                 .map(CommentDTO::fromEntity)
                 .collect(Collectors.toList());
-
         return commentDTOs;
     }
 
-    public void delete(PostDTO postDTO) {
+    private void deleteByComment(Comment comment) {
+        replyService.deleteByCommentDTO(CommentDTO.fromEntity(comment));
+        commentRepository.delete(comment);
+    }
+
+    public void deleteByPostDTO(PostDTO postDTO) {
         commentRepository.findByPostId(postDTO.getId()).forEach(comment -> {
             commentRepository.delete(comment);
         });
+    }
+
+    private void validateMatches(Comment comment, Member member) {
+        if (!comment.getMember().getId().equals(member.getId())) {
+            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
+        }
     }
 }

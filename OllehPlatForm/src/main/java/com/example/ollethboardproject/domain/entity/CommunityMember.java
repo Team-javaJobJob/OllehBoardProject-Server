@@ -31,6 +31,8 @@ public class CommunityMember {
     }
 
     public static CommunityMember of(Community community, Member member) {
-        return new CommunityMember(community, member);
+        return new CommunityMember(
+                community,
+                member);
     }
 }

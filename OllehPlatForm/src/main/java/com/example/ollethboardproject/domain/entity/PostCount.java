@@ -29,6 +29,9 @@ public class PostCount {
     }
 
     public static PostCount of(Member member, Post post) {
-        return new PostCount(member, post);
+        return new PostCount(
+                member,
+                post
+        );
     }
 }

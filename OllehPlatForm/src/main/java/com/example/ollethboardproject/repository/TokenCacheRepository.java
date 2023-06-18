@@ -13,7 +13,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TokenCacheRepository {
     private final RedisTemplate<String, String> tokenRedisTemplate;
-
     private final static Duration Token_CACHE_TTL = Duration.ofDays(1);
 
     public void setToken(String accessToken, String refreshToken) {

@@ -4,7 +4,6 @@ import com.example.ollethboardproject.controller.request.comment.CommentCreateRe
 import com.example.ollethboardproject.controller.request.comment.CommentUpdateRequest;
 import com.example.ollethboardproject.domain.dto.CommentDTO;
 import com.example.ollethboardproject.service.CommentService;
-import com.example.ollethboardproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
@@ -18,9 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
-
     private final CommentService commentService;
-    private final MemberService memberService;
 
     @GetMapping("/{commentId}")
     public ResponseEntity<CommentDTO> getComment(@PathVariable("commentId") Long commentId) {
@@ -41,19 +38,15 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentDTO> updateComment(@PathVariable("commentId") Long commentId,
-                                                    @RequestBody CommentUpdateRequest updateRequest) {
-        CommentDTO updatedComment = commentService.updateComment(commentId, updateRequest);
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentUpdateRequest updateRequest, Authentication authentication) {
+        CommentDTO updatedComment = commentService.updateComment(commentId, updateRequest, authentication);
         return ResponseEntity.ok(updatedComment);
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(
-            @PathVariable("commentId") Long commentId, Authentication authentication) {
-
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Long commentId, Authentication authentication) {
         // 댓글 삭제 메서드 호출
         commentService.deleteComment(commentId, authentication);
-
         return ResponseEntity.noContent().build();
     }
 }

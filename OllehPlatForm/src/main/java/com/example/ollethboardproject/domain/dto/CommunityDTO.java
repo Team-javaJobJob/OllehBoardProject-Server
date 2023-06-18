@@ -14,9 +14,7 @@ public class CommunityDTO {
     private String info;
     private String communityName;
     private String memberNickName;
-    private int ollehCount;
     private String createdAt;
-
     private String image;
 
     public static CommunityDTO fromEntity(Community community) {
@@ -27,7 +25,6 @@ public class CommunityDTO {
                 community.getInfo(),
                 community.getCommunityName(),
                 community.getMember().getNickName(),
-                community.getOllehsList().size(),
                 community.getCreatedAt(),
                 community.getImage() != null ? community.getImage().getImageName() : "");
     }

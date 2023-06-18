@@ -19,7 +19,9 @@ public class ReplyDTO {
 
     public static ReplyDTO fromEntity(Reply reply) {
         String nickname = MemberDTO.fromEntity(reply.getMember()).getNickName();
-        return new ReplyDTO(reply.getId(), reply.getContent(), nickname);
+        return new ReplyDTO(reply.getId(),
+                reply.getContent(),
+                nickname);
     }
 
     public static List<ReplyDTO> fromEntityList(List<Reply> replies) {

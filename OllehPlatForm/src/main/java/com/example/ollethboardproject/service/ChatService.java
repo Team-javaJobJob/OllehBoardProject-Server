@@ -17,11 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChatService {
-
     private final ChatMessageRepository chatMessageRepository;
-    private final MemberService memberService;
-    private final CommunityService communityService;
-
 
     // 채팅내용저장
     public Message saveChatMessage(Message message) {
@@ -63,6 +59,7 @@ public class ChatService {
     }
 
 
-//    TODO : Authorization user for join the room but should consider with communitie
+
+//    TODO : Authorization user for join the room but should consider with communities
 
 }

@@ -22,16 +22,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class ChatController {
-
     private final SimpMessagingTemplate simpMessagingTemplate;
-
     private final ChatService chatService;
-
 
     @MessageMapping("/message")
     @SendTo("/chatroom/public")
     public Message receiveMessage(@Payload Message message) {
-//        채팅 내용 저장
+        // 채팅 내용 저장
         chatService.saveChatMessage(message);
 
         return message;
@@ -40,7 +37,7 @@ public class ChatController {
 
     @MessageMapping("/private-message")
     public Message recMessage(@Payload Message message) {
-        //        채팅 내용 저장
+        // 채팅 내용 저장
         chatService.saveChatMessage(message);
 
         simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(), "/private", message);

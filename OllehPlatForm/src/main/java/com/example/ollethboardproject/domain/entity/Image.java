@@ -30,7 +30,10 @@ public class Image {
     }
 
     public static Image of(String imageName, String filePath, Community community) {
-        return new Image(imageName, filePath, community);
-
+        return new Image(
+                imageName,
+                filePath,
+                community
+        );
     }
 }

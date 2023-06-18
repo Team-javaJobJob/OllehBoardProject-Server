@@ -1,5 +1,6 @@
 package com.example.ollethboardproject.service;
 
+import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.entity.Community;
 import com.example.ollethboardproject.domain.entity.CommunityMember;
 import com.example.ollethboardproject.repository.CommunityMemberRepository;
@@ -16,5 +17,11 @@ public class CommunityMemberService {
     public void deleteCommunityMemberByCommunity(Community community) {
         CommunityMember communityMember = communityMemberRepository.findCommunityMemberByCommunity(community);
         communityMemberRepository.delete(communityMember);
+    }
+
+    public void delete(CommunityDTO communityDTO) {
+        communityMemberRepository.findByCommunityId(communityDTO.getId()).forEach(communityMember -> {
+            communityMemberRepository.delete(communityMember);
+        });
     }
 }

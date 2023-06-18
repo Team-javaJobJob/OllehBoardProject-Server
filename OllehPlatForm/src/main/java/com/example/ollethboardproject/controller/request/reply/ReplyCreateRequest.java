@@ -6,7 +6,6 @@ public class ReplyCreateRequest {
     private Long postId;
     private Long commentId;
     private String content;
-    private Member author;
 
 
     public Long getPostId() {
@@ -21,8 +20,5 @@ public class ReplyCreateRequest {
         return content;
     }
 
-    public Member getAuthor() {
-        return author;
-    }
 
 }
