@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Setter
 @Table(name = "chat")
 public class Chat extends AuditEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

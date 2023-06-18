@@ -28,6 +28,9 @@ public class Keyword {
     }
 
     public static Keyword of(String keyword, Community community) {
-        return new Keyword(keyword, community);
+        return new Keyword(
+                keyword,
+                community
+        );
     }
 }

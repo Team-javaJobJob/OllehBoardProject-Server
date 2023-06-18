@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -36,12 +34,9 @@ public class Community extends AuditEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     private Image image;
-
-    @OneToMany(mappedBy = "community")
-    private List<Olleh> ollehsList = new ArrayList<>();
 
     private Community(String region, String interest, String info, String communityName, Member member) {
         this.region = region;

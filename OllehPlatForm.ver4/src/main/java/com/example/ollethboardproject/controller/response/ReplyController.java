@@ -3,8 +3,10 @@ package com.example.ollethboardproject.controller.response;
 import com.example.ollethboardproject.controller.request.reply.ReplyCreateRequest;
 import com.example.ollethboardproject.controller.request.reply.ReplyUpdateRequest;
 import com.example.ollethboardproject.domain.dto.ReplyDTO;
+import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.service.ReplyService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.common.reflection.XMember;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,17 +34,14 @@ public class ReplyController {
     }
 
     @PostMapping
-    public ResponseEntity<ReplyDTO> createReply(@RequestBody ReplyCreateRequest createRequest) {
-        ReplyDTO createdReply = replyService.createReply(createRequest.getPostId(), createRequest.getCommentId(), createRequest);
+    public ResponseEntity<ReplyDTO> createReply(@RequestBody ReplyCreateRequest createRequest, Authentication authentication) {
+        ReplyDTO createdReply = replyService.createReply(createRequest, authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReply);
     }
 
     @PutMapping("/{replyId}")
-    public ResponseEntity<ReplyDTO> updateReply(
-            @PathVariable("replyId") Long replyId,
-            @RequestBody ReplyUpdateRequest updateRequest
-    ) {
-        ReplyDTO updatedReply = replyService.updateReply(replyId, updateRequest);
+    public ResponseEntity<ReplyDTO> updateReply(@PathVariable("replyId") Long replyId, @RequestBody ReplyUpdateRequest updateRequest, Authentication authentication){
+        ReplyDTO updatedReply = replyService.updateReply(replyId, updateRequest, authentication);
         return ResponseEntity.ok(updatedReply);
     }
 

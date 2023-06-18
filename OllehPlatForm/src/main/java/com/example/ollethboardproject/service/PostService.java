@@ -11,71 +11,75 @@ import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.repository.PostCountRepository;
 import com.example.ollethboardproject.repository.PostRepository;
-import com.example.ollethboardproject.utils.ClassUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
-
     private final PostRepository postRepository;
     private final PostCountRepository postCountRepository;
     private final CommentService commentService;
     private final ReplyService replyService;
+    private final MemberService memberService;
 
     public List<PostDTO> findAllPost() {
-        //TODO: LIST -> pageable
         List<Post> posts = postRepository.findAll();
         return posts.stream().map(this::mapToPostDto).collect(Collectors.toList());
     }
 
     public PostCountDTO findPostById(Long postId, Authentication authentication) {
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
-        Post post = postRepository.findById(postId).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
-        //조회수 누적 및 조회  (유저가 동일한 게시물을 조회한다면 해당 게시물의 조회수가 누적되지 않는다 )
+        Member member = memberService.loadUserByUsername(authentication.getName());
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
+
+        // 조회수 누적 및 조회  (유저가 동일한 게시물을 조회한다면 해당 게시물의 조회수가 누적되지 않는다 )
         Integer countByBoard = getPostCount(member, post);
-        //위의 getBoardCount에서 해당 컬럼이 존재하지않는다면 그 값을 저장했으므로 바로 엔티티를  extract 시킴
+        // 위의 getBoardCount에서 해당 컬럼이 존재하지않는다면 그 값을 저장했으므로 바로 엔티티를  extract 시킴
         PostCount postCount = postCountRepository.findByMemberAndPost(member, post).get();
         return mapToPostCountDto(countByBoard, postCount);
     }
 
     public PostDTO createPost(PostCreateRequest postCreateRequest, Authentication authentication) {
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        Member member = memberService.loadUserByUsername(authentication.getName());
         Post post = Post.of(postCreateRequest, member);
         postRepository.save(post);
         return mapToPostDto(post);
     }
 
-    public PostDTO updatePost(Long id, PostUpdateRequest postUpdateRequest, Authentication authentication) {
-        //게시물이 존재하지 않는다면 예외 발생
-        Post post = postRepository.findById(id).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
-        //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
-        //게시물 작성자만 게시물을 수정할 수 있다.
+    public PostDTO updatePost(Long postId, PostUpdateRequest postUpdateRequest, Authentication authentication) {
+        // 게시물이 존재하지 않는다면 예외 발생
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
+
+        Member member = memberService.loadUserByUsername(authentication.getName());
+        // 게시물 작성자만 게시물 수정 가능
         validateMatches(post, member);
-        //게시물 수정 (Setter 를 사용하지 않기 위함)
+        // 게시물 수정 (Setter 를 사용하지 않기 위함)
         post.update(postUpdateRequest, member);
-        //게시물 저장
+        // 게시물 저장
         postRepository.save(post);
         return mapToPostDto(post);
     }
 
-    public void deletePost(Long id, Authentication authentication) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
-        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
-        //게시물 작성자만 게시물을 삭제할 수 있다.
+    public void deletePost(Long postId, Authentication authentication) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
+        Member member = memberService.loadUserByUsername(authentication.getName());
+        // 게시물 작성자만 게시물 삭제 가능
         validateMatches(post, member);
-        deletePost(post);
+        deleteByPost(post);
     }
 
-    private void deletePost(Post post) {
-        commentService.delete(PostDTO.fromEntity(post));
-        replyService.delete(PostDTO.fromEntity(post));
+    private void deleteByPost(Post post) {
+        commentService.deleteByPostDTO(PostDTO.fromEntity(post));
+        replyService.deleteByPostDTO(PostDTO.fromEntity(post));
         postRepository.delete(post);
     }
 
@@ -84,7 +88,7 @@ public class PostService {
         return postCountRepository.countByPost(post);
     }
 
-    //해당 게시물을 이미 조회했다면 저장하지 않는다 (중복 조회 누적 x)
+    // 해당 게시물을 이미 조회했다면 저장하지 않음 (중복 조회 누적 x)
     private void saveCount(Member member, Post post) {
         if (postCountRepository.findByMemberAndPost(member, post).isEmpty()) {
             postCountRepository.save(PostCount.of(member, post));
@@ -92,7 +96,7 @@ public class PostService {
     }
 
     private void validateMatches(Post post, Member member) {
-        if (post.getMember().getId() != member.getId()) {
+        if (!post.getMember().getId().equals(member.getId())) {
             throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
         }
     }

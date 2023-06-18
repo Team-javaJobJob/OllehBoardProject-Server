@@ -25,8 +25,7 @@ public class PostController {
 
     private final PostService postService;
 
-    //보드 전체 조회
-    //TODO: LIST -> pageable 로 변환하기
+    // 보드 전체 조회
     @GetMapping("")
     public ResponseEntity<List<PostDTO>> findAllPost() {
         log.info("GET /api/v1/post");
@@ -34,10 +33,10 @@ public class PostController {
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PostCountDTO> findPostById(@PathVariable Long id, Authentication authentication) {
-        log.info("GET /api/v1/post/{}", id);
-        PostCountDTO postCountDTO = postService.findPostById(id, authentication);
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostCountDTO> findPostById(@PathVariable Long postId, Authentication authentication) {
+        log.info("GET /api/v1/post/{}", postId);
+        PostCountDTO postCountDTO = postService.findPostById(postId, authentication);
         return new ResponseEntity<>(postCountDTO, HttpStatus.OK);
     }
 
@@ -48,17 +47,17 @@ public class PostController {
         return new ResponseEntity<>(createdPostDTO, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@PathVariable Long id, @RequestBody PostUpdateRequest postUpdateRequest, Authentication authentication) {
-        log.info("PUT /api/v1/post/{}", id);
-        PostDTO updatedPostDTO = postService.updatePost(id, postUpdateRequest, authentication);
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostDTO> updatePost(@PathVariable Long postId, @RequestBody PostUpdateRequest postUpdateRequest, Authentication authentication) {
+        log.info("PUT /api/v1/post/{}", postId);
+        PostDTO updatedPostDTO = postService.updatePost(postId, postUpdateRequest, authentication);
         return new ResponseEntity<>(updatedPostDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id, Authentication authentication) {
-        log.info("DELETE /api/v1/post/{}", id);
-        postService.deletePost(id, authentication);
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, Authentication authentication) {
+        log.info("DELETE /api/v1/post/{}", postId);
+        postService.deletePost(postId, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

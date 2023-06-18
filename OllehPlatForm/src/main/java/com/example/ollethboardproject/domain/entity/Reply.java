@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reply {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,10 +41,20 @@ public class Reply {
     }
 
     public static Reply of(ReplyCreateRequest request, Member member, Post post, Comment parentComment) {
-        return new Reply(request.getContent(), member, post, parentComment);
+        return new Reply(
+                request.getContent(),
+                member,
+                post,
+                parentComment
+        );
     }
 
     public Reply update(String content) {
-        return new Reply(content, this.member, this.post, this.parentComment);
+        return new Reply(
+                content,
+                this.member,
+                this.post,
+                this.parentComment
+        );
     }
 }

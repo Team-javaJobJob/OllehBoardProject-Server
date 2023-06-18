@@ -16,6 +16,11 @@ public class PostDTO {
     private String createdAt;
 
     public static PostDTO fromEntity(Post post) {
-        return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getMember(), post.getCreatedAt());
+        return new PostDTO(post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getMember(),
+                post.getCreatedAt()
+        );
     }
 }

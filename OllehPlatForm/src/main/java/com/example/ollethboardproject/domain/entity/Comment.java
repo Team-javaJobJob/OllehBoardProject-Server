@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,11 +48,13 @@ public class Comment {
         return replies;
     }
 
-
     public static Comment of(String content, Post post, Member member) {
-        return new Comment(content, post, member);
+        return new Comment(
+                content,
+                post,
+                member
+        );
     }
-
 
     public void update(String content) {
         this.content = content;
