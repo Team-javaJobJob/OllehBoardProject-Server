@@ -1,43 +1,65 @@
 package com.example.ollethboardproject.domain.entity;
 
-import com.example.ollethboardproject.controller.request.CommunityCreateRequest;
-import com.example.ollethboardproject.controller.request.CommunityUpdateRequest;
+import com.example.ollethboardproject.controller.request.community.CommunityCreateRequest;
+import com.example.ollethboardproject.controller.request.community.CommunityUpdateRequest;
+import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Table(name = "community")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Community {
+@Setter
+@NoArgsConstructor
+public class Community extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "community_name")
-    private String communityName;
     @Column(name = "region")
     private String region;
 
     @Column(name = "interest")
     private String interest;
 
+    @Column(name = "community_name")
+    private String communityName;
+
     @Column(name = "info", columnDefinition = "text")
     private String info;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
+
+    @OneToOne(mappedBy = "community", cascade = CascadeType.ALL)
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "keyword_id")
+//    private Keyword keyword;
+
+    @OneToMany(mappedBy = "community")
+    private List<Olleh> ollehsList = new ArrayList<>();
 
     private Community(String region, String interest, String info, String communityName, Member member) {
         this.region = region;
         this.interest = interest;
         this.info = info;
-        this.member = member;
         this.communityName = communityName;
+        this.member = member;
     }
 
     public static Community of(CommunityCreateRequest communityCreateRequest, Member member) {
@@ -57,4 +79,17 @@ public class Community {
         this.member = member;
     }
 
+
+    public void updateImage(Image image) {
+        this.image = image;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom){
+
+        if(this.chatRoom != null){
+            this.chatRoom.setCommunity(null);
+        }
+        this.chatRoom= chatRoom;
+        chatRoom.setCommunity(this);
+    }
 }

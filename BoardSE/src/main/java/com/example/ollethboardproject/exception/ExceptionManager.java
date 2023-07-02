@@ -1,3 +1,4 @@
+
 package com.example.ollethboardproject.exception;
 
 import org.springframework.http.HttpStatus;
@@ -13,8 +14,8 @@ public class ExceptionManager {
                 .body(e.getMessage());
     }
 
-    @ExceptionHandler(BoardException.class)
-    public ResponseEntity<?> appExceptionHandler(BoardException e) {
+    @ExceptionHandler(OllehException.class)
+    public ResponseEntity<?> appExceptionHandler(OllehException e) {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                 .body(e.getMessage());
     }

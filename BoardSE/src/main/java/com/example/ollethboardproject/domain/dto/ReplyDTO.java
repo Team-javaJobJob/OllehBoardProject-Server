@@ -1,33 +1,26 @@
+
 package com.example.ollethboardproject.domain.dto;
 
 import com.example.ollethboardproject.domain.entity.Reply;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ReplyDTO {
     private Long id;
     private String content;
+    private String nickname;
 
     public static ReplyDTO fromEntity(Reply reply) {
-        ReplyDTO replyDTO = new ReplyDTO();
-        replyDTO.setId(reply.getId());
-        replyDTO.setContent(reply.getContent());
-        return replyDTO;
-    }
-
-    public static List<ReplyDTO> toList(List<Reply> replies) {
-        List<ReplyDTO> replyDTOs = new ArrayList<>();
-        for (Reply reply : replies) {
-            replyDTOs.add(fromEntity(reply));
-        }
-        return replyDTOs;
+        String nickname = MemberDTO.fromEntity(reply.getMember()).getNickName();
+        return new ReplyDTO(reply.getId(), reply.getContent(), nickname);
     }
 
     public static List<ReplyDTO> fromEntityList(List<Reply> replies) {
