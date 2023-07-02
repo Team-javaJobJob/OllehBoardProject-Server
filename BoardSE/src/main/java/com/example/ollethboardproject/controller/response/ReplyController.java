@@ -34,17 +34,14 @@ public class ReplyController {
     }
 
     @PostMapping
-    public ResponseEntity<ReplyDTO> createReply(@RequestBody ReplyCreateRequest createRequest) {
-        ReplyDTO createdReply = replyService.createReply(createRequest.getPostId(), createRequest.getCommentId(), createRequest);
+    public ResponseEntity<ReplyDTO> createReply(@RequestBody ReplyCreateRequest createRequest, Authentication authentication) {
+        ReplyDTO createdReply = replyService.createReply(createRequest, authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReply);
     }
 
     @PutMapping("/{replyId}")
-    public ResponseEntity<ReplyDTO> updateReply(
-            @PathVariable("replyId") Long replyId,
-            @RequestBody ReplyUpdateRequest updateRequest
-    ) {
-        ReplyDTO updatedReply = replyService.updateReply(replyId, updateRequest);
+    public ResponseEntity<ReplyDTO> updateReply(@PathVariable("replyId") Long replyId, @RequestBody ReplyUpdateRequest updateRequest, Authentication authentication){
+        ReplyDTO updatedReply = replyService.updateReply(replyId, updateRequest, authentication);
         return ResponseEntity.ok(updatedReply);
     }
 

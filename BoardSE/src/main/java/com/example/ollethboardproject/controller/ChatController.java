@@ -1,7 +1,6 @@
 package com.example.ollethboardproject.controller;
 
 import com.example.ollethboardproject.controller.request.chat.Message;
-
 import com.example.ollethboardproject.domain.dto.ChatMessageDetailDTO;
 import com.example.ollethboardproject.repository.ChatMessageRepository;
 import com.example.ollethboardproject.service.ChatService;
@@ -22,7 +21,6 @@ import java.util.List;
 @Controller
 @CrossOrigin(origins = "http://localhost:3000")
 public class ChatController {
-
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -38,26 +36,62 @@ public class ChatController {
         this.chatService = chatService;
     }
 
+    // message 경로로 메시지 받고 처리, sendTo 어노테이션으로 해당 메시지를 chatroom/public 으로 보내줌
     @MessageMapping("/message")
     @SendTo("/chatroom/public")
-    public Message receiveMessage(@Payload Message message)
+    @ExceptionHandler
+    public Message receiveMessage(@Payload Message message,String communityName, String roomName)
     {
 //        채팅 내용 저장
-        chatService.saveChatMessage(message);
+        chatService.saveChatMessage(message, communityName, roomName);
+        return message;
+    }
 
+    @MessageMapping("/list")
+    @SendTo("/chatroom/list")
+    @ExceptionHandler
+    public Message selectMemberList(@Payload Message message)
+    {
+        String memberList = chatService.selectMemberList(message);
+        message.setMessage(memberList);
         return message;
     }
 
 
+
+    // private-message 경로로 개인메시지 받고 처리, 받은메시지를 db에 저장하고 SimpMessageingTemplate 의 ConvertAndSendToUser 로 특정 사용자에게 메시지 전송
     @MessageMapping("/private-message")
-    public Message recMessage(@Payload Message message){
+    @ExceptionHandler
+    public Message recMessage(@Payload Message message, String communityName, String roomName){
         //        채팅 내용 저장
-        chatService.saveChatMessage(message);
+        chatService.saveChatMessage(message, communityName, roomName);
 
         simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/private",message);
-//        System.out.println(message.toString());
         return message;
     }
+
+    @PostMapping("/sendMessage")
+    public ResponseEntity<String> sendMessage(@RequestBody Message message,String communityName, String roomName) {
+        // 클라이언트에서 보낸 message를 사용하여 필요한 로직을 구현합니다.
+        // 예를 들어, 채팅 내용을 데이터베이스에 저장하고, 변경 내용을 클라이언트에게 전송할 수 있습니다.
+        chatService.saveChatMessage(message, communityName, roomName);
+
+        // 응답 코드와 메시지를 함께 리턴합니다.
+        return new ResponseEntity<>("Message sent successfully", HttpStatus.OK);
+    }
+
+    //
+    @MessageMapping("/message/{communityId}")
+    @SendTo("/chatroom/{communityId}/public")
+    @ExceptionHandler
+    public Message receiveMessage2(@Payload Message message,String communityName, String roomName)  {
+// 채팅 내용 저장
+        chatService.saveChatMessage(message, communityName, roomName);
+// 아래코드가 계속 user must not be null 에러를 발생시킴 뭔가 authentication 처리를 안해서 그런거같은데 우선 이건 제외
+//        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/chatroom/{communityId}/public",message);
+        return message;
+    }
+
 
 
 
@@ -65,46 +99,14 @@ public class ChatController {
     @ResponseBody
 //    public List<Chat> searchChatMessage(@RequestParam("keyword") String keyword){
     public ResponseEntity<List<ChatMessageDetailDTO>> searchChatMessage(@PathVariable String keyword){
-
         if (keyword == null || keyword.isEmpty()) {
             // 검색어가 비어있는 경우 빈 결과를 반환하거나 에러 처리를 진행할 수 있습니다.
 //            return Collections.emptyList(); // 빈 결과 반환 예시
             log.info("keyword null");
         }
-
         // 검색 로직을 구현하여 키워드에 해당하는 채팅 내용을 조회합니다.
         List<ChatMessageDetailDTO> searchResult = chatService.searchChatMessage(keyword);
 
         return new ResponseEntity<>(searchResult, HttpStatus.OK);
     }
 }
-
-
-/*
-페이로드(Payload)란
-페이로드(payload)는 전송되는 데이터를 의미한다.
-데이터를 전송할 때, 헤더와 메타 데이터, 에러 체크 비트 등과 같은 다양한 요소들을 함께 보내어,
-데이터 전송의 효율과 안정성을 높이게 된다.
-이 때, 보내고자 하는 데이터 자체를 의미하는 것이 바로 페이로드이다.
-우리가 택배 배송을 보내고 받을 때, 택배 물건이 페이로드이고, 송장이나 박스,
-뽁뽁이와 같은 완충재 등은 부가적인 것이기 때문에 페이로드가 아니다.
-*/
-
-/*
-SimpMessagingTemplate는 Spring Framework의 클래스로,
-웹소켓(WebSocket)을 통해 클라이언트와 서버 간에 실시간으로 메시지를 교환하는 데 사용됩니다.
-
-위의 코드에서 SimpMessagingTemplate는 @MessageMapping 어노테이션이 지정된 메서드들에서 WebSocket을 통해 메시지를 보내는 역할을 합니다.
-
-simpMessagingTemplate.convertAndSendToUser() 메서드는 특정 사용자에게 개인적인 메시지를 보낼 때 사용됩니다.
-이 메서드의 첫 번째 인자로는
-메시지를 받을 사용자의 식별자(일반적으로는 사용자 이름)를 전달하고, 두 번째 인자로는 메시지를 보낼 대상의 주소를 지정합니다. 이 경우 "/private" 주소에 메시지를 보내게 됩니다.
-
-SimpMessagingTemplate를 사용하면 서버 측에서 클라이언트로 메시지를 보낼 수 있으며, 클라이언트 측에서도 서버로 메시지를 보낼 수 있습니다.
-이를 통해 실시간 채팅이나 알림 기능 등을 구현할 수 있습니다.
-
-
-
-
-
-*/

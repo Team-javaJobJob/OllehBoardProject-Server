@@ -6,6 +6,7 @@ import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,7 +15,8 @@ import java.util.List;
 @Entity
 @Getter
 @Table(name = "community")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
 public class Community extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +41,15 @@ public class Community extends AuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private Image image;
+
+
+    @OneToOne(mappedBy = "community", cascade = CascadeType.ALL)
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "keyword_id")
+//    private Keyword keyword;
 
     @OneToMany(mappedBy = "community")
     private List<Olleh> ollehsList = new ArrayList<>();
@@ -68,7 +79,17 @@ public class Community extends AuditEntity {
         this.member = member;
     }
 
+
     public void updateImage(Image image) {
         this.image = image;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom){
+
+        if(this.chatRoom != null){
+            this.chatRoom.setCommunity(null);
+        }
+        this.chatRoom= chatRoom;
+        chatRoom.setCommunity(this);
     }
 }

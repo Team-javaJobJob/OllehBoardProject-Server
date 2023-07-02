@@ -60,7 +60,7 @@ public class KeywordService {
     }
 
     public void deleteKeywordByCommunity(Community community) {
-        keywordRepository.findByCommunity(community).forEach(keyword -> {
+        keywordRepository.findByCommunityId(community.getId()).forEach(keyword -> {
             keywordRepository.delete(keyword);
         });
     }

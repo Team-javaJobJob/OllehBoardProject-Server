@@ -19,14 +19,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        //        Client에서 Send 요청처리
-//        Spring docs 에서는 /topic, /queue로 나오나 편의상 /app , /user 변경
+        // 어플리케이션에서 사용할 목적지 접두사 섲렁, 이렇게 해서 어플리케이션 내부에서 메시지 처리할 떄 주소를 구분가능
         registry.setApplicationDestinationPrefixes("/app");
-        //        해당 경로로 SimpleBroker 를 등록
-//        SimpleBroker 는 해당하는 경로를 subscribe 하는 client 에게 메시지를 전달하는 간단한 작업 수행
-        //        enableStompBrokerRelay
-//        SimpleBroker 의 기능과 외부 Message Broker(RabbitMQ, ActiveMQ 등)에 메시지 전달하는 기능
-        registry.enableSimpleBroker("/chatroom","/user");
+        // 구독을 위한 토픽 접두사임
+        registry.enableSimpleBroker("/chatroom","/user","/chatroom/{communityId}");
+        // 유저별로 메시지 보낼 떄 사용할 접두사 설정 이를 통해 다른 사용자에게 전달되는 메시지를 쉽게 구분 가능
         registry.setUserDestinationPrefix("/user");
     }
 

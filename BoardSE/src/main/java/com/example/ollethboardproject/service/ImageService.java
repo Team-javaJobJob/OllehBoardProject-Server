@@ -41,17 +41,21 @@ public class ImageService {
 //    }
 
     //local 절대 경로 이미지 저장 test
-    public Image saveImageToCreateCommunity(MultipartFile file, Community community) throws Exception {
+    public Image save(MultipartFile file, Community community) throws Exception {
         //저장할 파일 경로 생성
         // 오리지날 네임 저장할지 여부
         String fileName = getUniqueFileName(file);
         // getUniqueFileName 함수를 호출할때마다 파일명을 새로 생성하기 때문에 한번만 호출해야함.
 //      Path filePath = Path.of(uploadPath, getUniqueFileName(file));
+
         Path filePath = Path.of(uploadPath, fileName);
+
         //파일 저장
         // 59a990c5-3238-4367-bc04-d63c38f0eae7.png
         // 6d3c30b9-b4ae-4a8f-a21b-da80317d8967.png
+
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
 //        Files.copy(file.getInputStream(), filePath);
         //데이터베이스에 이미지 정보 저장
         Image image = Image.of(fileName, filePath.toString(), community);
@@ -61,7 +65,7 @@ public class ImageService {
     }
 
     public void deleteImageByCommunity(Community community) {
-        imageRepository.delete(imageRepository.findByCommunity(community));
+        imageRepository.delete(imageRepository.findByCommunityId(community.getId()));
     }
 
     public void saveImageToUpdateCommunity(MultipartFile file, Community community) throws Exception {

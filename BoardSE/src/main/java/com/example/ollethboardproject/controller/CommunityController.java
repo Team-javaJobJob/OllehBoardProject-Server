@@ -6,19 +6,23 @@ import com.example.ollethboardproject.controller.response.CommunityMemberRespons
 import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.CommunityMemberDTO;
+import com.example.ollethboardproject.domain.entity.ChatRoom;
+import com.example.ollethboardproject.service.ChatService;
 import com.example.ollethboardproject.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +33,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/communities")
 public class CommunityController {
     private final CommunityService communityService;
+
+    private final ChatService chatService;
 
     // 커뮤니티 전체 조회
     @GetMapping("")
@@ -46,17 +52,6 @@ public class CommunityController {
         return new ResponseEntity<>(communityDTOList, HttpStatus.OK);
     }
 
-    //커뮤니티 생성
-//    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public ResponseEntity<CommunityDTO> createCommunity(
-//            @RequestPart CommunityCreateRequest communityCreateRequest,
-//            @RequestPart MultipartFile file, Authentication authentication) throws Exception {
-//        log.info("POST /api/v1/communities - communityCreateRequest & authentication : {}, {}, {}", communityCreateRequest, file, authentication);
-//        CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
-//        return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
-//    }
-
-
     @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<CommunityDTO> createCommunity(
             @RequestPart(value = "communityCreateRequest", required = false) CommunityCreateRequest communityCreateRequest,
@@ -66,22 +61,7 @@ public class CommunityController {
         return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
     }
 
-    // 파일 업로드 처리
-//    @Bean
-//    public MultipartResolver multipartResolver() {
-//        org.springframework.web.multipart.commons.CommonsMultipartResolver multipartResolver = new org.springframework.web.multipart.commons.CommonsMultipartResolver();
-//        multipartResolver.setMaxUploadSize(10000000);
-//        return multipartResolver;
-//    }
 
-//    @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-//    public ResponseEntity<?> createCommunity(
-//            @RequestPart CommunityCreateRequest communityCreateRequest,
-//            @RequestPart(value = "file") MultipartFile file, Authentication authentication) throws Exception {
-//        log.info("POST /api/v1/communities - communityCreateRequest & authentication : {}, {}, {}", communityCreateRequest, file, authentication);
-//        CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
-//        return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
-//    }
 
 
     //커뮤니티 정보 수정
@@ -118,9 +98,6 @@ public class CommunityController {
         List<CommunityMemberResponse> CommunityMemberResponses = communityMemberDTOList.stream().map(CommunityMemberResponse::fromCommunityMemberDTO).collect(Collectors.toList());
         return Response.success(CommunityMemberResponses);
     }
-
-
-    //관심사&키워드 기반 커뮤니티 추천 기능
 
 
     //좋아요(=올래)

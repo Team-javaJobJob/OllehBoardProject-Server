@@ -20,7 +20,6 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-    private final MemberService memberService;
 
     @GetMapping("/{commentId}")
     public ResponseEntity<CommentDTO> getComment(@PathVariable("commentId") Long commentId) {
@@ -34,16 +33,15 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<CommentDTO> createComment(@RequestBody CommentCreateRequest createRequest, Authentication authentication) {
-        CommentDTO createdComment = commentService.createComment(createRequest.getPostId(), createRequest, authentication);
+        CommentDTO createdComment = commentService.createComment(createRequest, authentication);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentDTO> updateComment(@PathVariable("commentId") Long commentId,
-                                                    @RequestBody CommentUpdateRequest updateRequest) {
-        CommentDTO updatedComment = commentService.updateComment(commentId, updateRequest);
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentUpdateRequest updateRequest, Authentication authentication) {
+        CommentDTO updatedComment = commentService.updateComment(commentId, updateRequest, authentication);
         return ResponseEntity.ok(updatedComment);
     }
 

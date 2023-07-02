@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
-    Image findByCommunity(Community community);
+
+    Image findByCommunityId(Long communityId);
 }

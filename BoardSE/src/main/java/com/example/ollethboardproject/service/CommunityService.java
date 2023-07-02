@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,10 +28,12 @@ import java.util.stream.Collectors;
 public class CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityMemberRepository communityMemberRepository;
+    private final CommunityMemberService communityMemberService;
     private final OllehRepository ollehRepository;
     private final MemberRepository memberRepository;
     private final KeywordService keywordService;
     private final ImageService imageService;
+    private final ChatRoomRepository chatRoomRepository;
     @Value("${upload.path}")
     private String uploadPath;
 
@@ -65,13 +68,24 @@ public class CommunityService {
         communityRepository.save(community);
         //커뮤니티 멤버 생성 및 저장
         CommunityMember communityMember = CommunityMember.of(community, member);
+
+        // 채팅방
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setRoomName(UUID.randomUUID().toString());
+        chatRoomRepository.save(chatRoom);
+
+        //커뮤니티, 채팅방 관계설정
+        community.setChatRoom(chatRoom);
+        // 커뮤니티 저장.
+        communityRepository.save(community);
+
         communityMemberRepository.save(communityMember);
 
         //키워드 저장
         keywordService.saveKeywordAndCommunity(communityCreateRequest, community);
         //로컬 이미지 저장 test
         if (file != null) {
-            Image image = imageService.saveImageToCreateCommunity(file, community);
+            Image image = imageService.save(file, community);
             community.updateImage(image);
             //communityRepository.save(community);
         }
@@ -81,13 +95,42 @@ public class CommunityService {
         return mapToCommunityDto(community);
     }
 
+    //19/06
+//    @Transactional
+//    public CommunityDTO updateCommunity(Long id, CommunityUpdateRequest communityUpdateRequest, MultipartFile file, Authentication authentication) throws Exception {
+//        //커뮤니티가 존재하지 않는다면 예외 발생
+//        Community community = getCommunityByIdOrException(id);
+//        //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
+//        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+//        //커뮤니티 생성자만 커뮤니티 정보를 수정할 수 있다.
+//        validateMatches(community, member);
+//        //게시물 수정 (Setter 를 사용하지 않기 위함)
+//        community.update(communityUpdateRequest, member);
+//        //게시물 저장
+//        communityRepository.save(community);
+//
+//        //수정 전 기존 키워드 삭제
+//        keywordService.deleteKeywordByCommunity(community);
+//        //수정할 키워드 저장
+//        keywordService.saveKeywordToUpdateCommunity(communityUpdateRequest, community);
+//
+//        //수정 전 기존 이미지 삭제
+//        imageService.deleteImageByCommunity(community);
+//        //수정할 이미지 저장
+//        imageService.saveImageToUpdateCommunity(file, community);
+//        //aws s3 수정할 이미지 저장
+////        imageService.saveImageToCreateCommunityTest(file, community);
+//
+//        return mapToCommunityDto(community);
+//    }
+
     @Transactional
     public CommunityDTO updateCommunity(Long id, CommunityUpdateRequest communityUpdateRequest, MultipartFile file, Authentication authentication) throws Exception {
         //커뮤니티가 존재하지 않는다면 예외 발생
         Community community = getCommunityByIdOrException(id);
         //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
-        //커뮤니티 생성자만 커뮤니티 정보를 수정할 수 있다.
+        //커뮤니티 생성자만 커뮤니티 정보 수정 가능
         validateMatches(community, member);
         //게시물 수정 (Setter 를 사용하지 않기 위함)
         community.update(communityUpdateRequest, member);
@@ -102,10 +145,7 @@ public class CommunityService {
         //수정 전 기존 이미지 삭제
         imageService.deleteImageByCommunity(community);
         //수정할 이미지 저장
-        imageService.saveImageToUpdateCommunity(file, community);
-        //aws s3 수정할 이미지 저장
-//        imageService.saveImageToCreateCommunityTest(file, community);
-
+        imageService.save(file, community);
         return mapToCommunityDto(community);
     }
 
@@ -115,12 +155,14 @@ public class CommunityService {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
         //커뮤니티 생성자만 커뮤니티를 삭제할 수 있다.
         validateMatches(community, member);
-        //커뮤니티 삭제
-        communityRepository.delete(community);
-        //키워드 삭제
+        deleteByCommunity(community);
+    }
+
+    private void deleteByCommunity(Community community) {
+        communityMemberService.deleteCommunityMemberByCommunity(community);
         keywordService.deleteKeywordByCommunity(community);
-        //이미지 삭제
         imageService.deleteImageByCommunity(community);
+        communityRepository.delete(community);
     }
 
     @Transactional

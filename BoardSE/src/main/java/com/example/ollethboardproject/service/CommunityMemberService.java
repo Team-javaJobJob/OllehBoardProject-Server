@@ -14,7 +14,7 @@ public class CommunityMemberService {
     private final CommunityMemberRepository communityMemberRepository;
 
     public void deleteCommunityMemberByCommunity(Community community) {
-        CommunityMember communityMember = communityMemberRepository.findCommunityMemberByCommunity(community);
+        CommunityMember communityMember = communityMemberRepository.findCommunityMemberByCommunityId(community.getId());
         communityMemberRepository.delete(communityMember);
     }
 }

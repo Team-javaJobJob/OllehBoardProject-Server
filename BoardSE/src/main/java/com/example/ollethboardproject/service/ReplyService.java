@@ -3,6 +3,7 @@ package com.example.ollethboardproject.service;
 
 import com.example.ollethboardproject.controller.request.reply.ReplyCreateRequest;
 import com.example.ollethboardproject.controller.request.reply.ReplyUpdateRequest;
+import com.example.ollethboardproject.domain.dto.CommentDTO;
 import com.example.ollethboardproject.domain.dto.PostDTO;
 import com.example.ollethboardproject.domain.dto.ReplyDTO;
 import com.example.ollethboardproject.domain.entity.Comment;
@@ -25,7 +26,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ReplyService {
-
     private final ReplyRepository replyRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
@@ -37,33 +37,43 @@ public class ReplyService {
         return ReplyDTO.fromEntityList(replies);
     }
 
-    public ReplyDTO createReply(Long postId, Long commentId, ReplyCreateRequest createRequest) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
-        Member author = createRequest.getAuthor();
-        Reply reply = Reply.of(createRequest, author, post, comment);
-        Reply savedReply = replyRepository.save(reply);
-        return ReplyDTO.fromEntity(savedReply);
+    public ReplyDTO createReply(ReplyCreateRequest createRequest, Authentication authentication) {
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+
+        Post post = postRepository.findById(createRequest.getPostId()).orElseThrow(
+                () -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
+
+        Comment comment = commentRepository.findById(createRequest.getCommentId()).orElseThrow(
+                () -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
+
+        Reply reply = Reply.of(createRequest, member, post, comment);
+        replyRepository.save(reply);
+        return ReplyDTO.fromEntity(reply);
     }
 
-    public ReplyDTO updateReply(Long replyId, ReplyUpdateRequest updateRequest) {
-        Optional<Reply> replyOptional = replyRepository.findById(replyId);
-        Reply reply = replyOptional.orElseThrow(() -> new OllehException(ErrorCode.REPLY_DOES_NOT_EXIST));
+
+
+    public ReplyDTO updateReply(Long replyId, ReplyUpdateRequest updateRequest, Authentication authentication) {
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+
+        Reply reply = replyRepository.findById(replyId).orElseThrow(
+                () -> new OllehException(ErrorCode.REPLY_DOES_NOT_EXIST));
+
+        // 대댓글 작성자만 게시물 수정 가능
+        validateMatches(reply, member);
         reply.update(updateRequest.getContent());
-        Reply updatedReply = replyRepository.save(reply);
-        return ReplyDTO.fromEntity(updatedReply);
+        replyRepository.save(reply);
+        return ReplyDTO.fromEntity(reply);
     }
 
     public void deleteReply(Long replyId, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
-        Optional<Reply> replyOptional = replyRepository.findById(replyId);
-        Reply reply = replyOptional.orElseThrow(() -> new OllehException(ErrorCode.REPLY_DOES_NOT_EXIST));
 
-        // 대댓글 작성자 삭제를 요청 사용자가 일치하는지 확인
-        if (!reply.getMember().equals(member)) {
-            throw new OllehException(ErrorCode.PERMISSION_DENIED);
-        }
+        Reply reply = replyRepository.findById(replyId).orElseThrow(
+                () -> new OllehException(ErrorCode.REPLY_DOES_NOT_EXIST));
 
+        // 대댓글 작성자만 게시물 삭제 가능
+        validateMatches(reply, member);
         replyRepository.delete(reply);
     }
 
@@ -73,9 +83,21 @@ public class ReplyService {
         return ReplyDTO.fromEntity(reply);
     }
 
-    public void delete(PostDTO postDTO) {
+    public void deleteByPostDTO(PostDTO postDTO) {
         replyRepository.findByPostId(postDTO.getId()).forEach(reply -> {
             replyRepository.delete(reply);
         });
+    }
+
+    public void deleteByCommentDTO(CommentDTO commentDTO) {
+        replyRepository.findByParentCommentId(commentDTO.getId()).forEach(reply -> {
+            replyRepository.delete(reply);
+        });
+    }
+
+    private void validateMatches(Reply reply, Member member) {
+        if (!reply.getMember().getId().equals(member.getId())) {
+            throw new OllehException(ErrorCode.PERMISSION_DENIED);
+        }
     }
 }

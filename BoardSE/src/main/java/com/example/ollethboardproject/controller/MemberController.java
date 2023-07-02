@@ -11,7 +11,9 @@ import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.controller.response.*;
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.MemberDTO;
+import com.example.ollethboardproject.domain.entity.Member;
 import com.example.ollethboardproject.service.MemberService;
+import com.example.ollethboardproject.utils.ClassUtil;
 import com.example.ollethboardproject.utils.TokenInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,5 +106,14 @@ public class MemberController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(communityLogResponses, HttpStatus.OK);
     }
+
+    //코드추가(챗용)
+    @GetMapping("/myInfo")
+    @ResponseBody
+    public ResponseEntity<Member> getMyInfo(Authentication authentication) {
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+        return new ResponseEntity<>(member, HttpStatus.OK);
+    }
+
 }
 

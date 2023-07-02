@@ -19,5 +19,5 @@ public interface CommunityMemberRepository extends JpaRepository<CommunityMember
 
     Optional<List<CommunityMember>> findByMember(Member member);
 
-    CommunityMember findCommunityMemberByCommunity(Community community);
+    CommunityMember findCommunityMemberByCommunityId(Long communityId);
 }

@@ -22,6 +22,7 @@ public class Keyword {
     @JoinColumn(name = "community_id")
     private Community community;
 
+
     private Keyword(String keyword, Community community) {
         this.keyword = keyword;
         this.community = community;

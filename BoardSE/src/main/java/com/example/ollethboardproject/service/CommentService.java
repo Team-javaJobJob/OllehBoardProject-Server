@@ -30,17 +30,17 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final ReplyRepository replyRepository;
+    private final ReplyService replyService;
 
     @Transactional
-    public CommentDTO createComment(Long postId, CommentCreateRequest commentCreateRequest, Authentication authentication) {
+    public CommentDTO createComment(CommentCreateRequest commentCreateRequest, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
 
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findById(commentCreateRequest.getPostId())
                 .orElseThrow(() -> new OllehException(ErrorCode.POST_DOES_NOT_EXIST));
         Comment comment = Comment.of(commentCreateRequest.getContent(), post, member);
+
         commentRepository.save(comment);
-
-
         return CommentDTO.fromEntity(comment);
     }
 
@@ -52,11 +52,16 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDTO updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest) {
+    public CommentDTO updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, Authentication authentication) {
+        Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
+        // 댓글 작성자만 댓글 수정 가능
+        validateMatches(comment, member);
         comment.update(commentUpdateRequest.getContent());
+        commentRepository.save(comment);
         return CommentDTO.fromEntity(comment);
     }
 
@@ -66,14 +71,12 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
 
-        if (comment.getMember() != member) {
-            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
-        }
+        validateMatches(comment, member);
+        deleteByComment(comment);
+    }
 
-        replyRepository.findByParentComment(comment).forEach(reply -> {
-            replyRepository.delete(reply);
-        });
-
+    private void deleteByComment(Comment comment) {
+        replyService.deleteByCommentDTO(CommentDTO.fromEntity(comment));
         commentRepository.delete(comment);
     }
 
@@ -91,9 +94,15 @@ public class CommentService {
         return commentDTOs;
     }
 
-    public void delete(PostDTO postDTO) {
+    public void deleteByPostDTO(PostDTO postDTO) {
         commentRepository.findByPostId(postDTO.getId()).forEach(comment -> {
             commentRepository.delete(comment);
         });
+    }
+
+    private void validateMatches(Comment comment, Member member) {
+        if (!comment.getMember().getId().equals(member.getId())) {
+            throw new OllehException(ErrorCode.HAS_NOT_PERMISSION_TO_ACCESS);
+        }
     }
 }

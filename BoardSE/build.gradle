@@ -49,6 +49,15 @@ dependencies {
 
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //java 8 날짜 및 시간 타입인 localdataTime은 기본적으로 jackson에 의해 지왼되지 않음 그래서 아래꺼해야함
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.5'
+
+
+    //redis
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    runtimeOnly 'io.lettuce:lettuce-core'
 }
 
 tasks.named('test') {

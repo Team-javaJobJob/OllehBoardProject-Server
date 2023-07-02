@@ -33,4 +33,6 @@ public class CommunityDTO {
                 community.getCreatedAt(),
                 community.getImage() != null ? community.getImage().getImageName() : "");
     }
+
+
 }
