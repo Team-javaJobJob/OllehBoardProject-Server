@@ -1,64 +1,95 @@
-👨‍👩‍👧‍👦동네로 올래?
-=============
-동네 친구 매칭 플랫폼
+<h1 align="center">취미공유 플랫폼, 👨‍👩‍👧‍👦 여기로 Olleh?</h1>
 
-<img src="https://user-images.githubusercontent.com/124491136/234168126-e831e158-8ff0-42e5-a1b5-98dd82da8ed2.png" alt="이미지 설명" width="570" height="480">
 
-서비스 및 프로젝트 소개
+<p align="center">
+  <img src="https://i.imgur.com/5thBiwU.png" alt="이미지 설명" width="600" height="300" />
+</p>
+
+
+🙋‍ 참여 팀원
 -------------
-"동네로 올래"는 지역 커뮤니티를 만들어 관심사에 따라 모임을 만들 수 있는 플랫폼입니다. 
-사용자는 자신이 관심 있는 분야, 취미, 문화, 스포츠 등을 설정하고, 해당 분야에 관심 있는 다른 사용자와 모임을 만들거나 참여할 수 있습니다.
-프로젝트 컨셉에 맞는 기획과 요구사항을 반영한 비즈니스 로직 구현 Rest api 서버 개발 프로젝트입니다.
-또한 프론트엔드와의 협업 및 서버 배포를 통해 실제 서비스를 운영해나가며 확장해나가는 프로젝트입니다.
+- BackEnd : [조찬영](https://github.com/NinjaYoung98), [조동혁](https://github.com/donizz), [박지영](https://github.com/jiyoung10), [이나래](http://github.com/naraeeee)
+- FrontEnd : [박규현](https://github.com/henryKyuhyun), [강다예](https://github.com/dayaekang)
 
 
-🚀 프로젝트 개발
+📍 프로젝트 소개
+-------------
+- Olleh 는 서로의 취미를 공유할 수 있는 커뮤니티 서비스 플랫폼 입니다.
+- 프로젝트 컨셉 설계부터 기획, 서비스 개발 플로우를 경험하였습니다.
+- Front-end 와의 협업을 통해 소통의 중요성과 API 사용에 신중해야한다는 점을 경험하였습니다.
+- Github, Notion, Slack, Discord 등 프로젝트 관리툴을 적극 활용하여 실무와 유사한 협업 프로세스를 사용하였습니다.
+- 프로젝트에 맞는 컨셉과 요구사항을 반영한 비지니스 로직 구현 Rest api서버 개발 프로젝트 입니다.
+
+
+🚀 서비스 기능
+-------------
+- 사용자는 자신이 관심 있는 취미를 공유하기 위해 커뮤니티를 생성하고, 채팅을 통해 서로의 취미에 대해 공유할 수 있습니다.
+- 자유 게시판을 통해 사용자의 의견들을 자유롭게 공유할 수 있습니다.
+- 마이 페이지를 통하여 본인이 작성한 게시물을 한눈에 볼 수 있습니다.
+- 네이버맵API 기반의 직관적인 커뮤니티 위치를 파악할 수 있습니다.
+
+
+🎯 프로젝트 기간
+------------
+2023.03.07 ~ 2023.06.15 (3m)
+
+
+🔧 Stacks
+-------------
+<div> 
+  <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
+  <br>
+  
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> 
+  <img src="https://img.shields.io/badge/jquery-0769AD?style=for-the-badge&logo=jquery&logoColor=white">
+  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
+  <img src="https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=black">
+  <br>
+  
+  <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
+  <br>
+  
+  <img src="https://img.shields.io/badge/reids-DC382D?style=for-the-badge&logo=redis&logoColor=black">
+  <img src="https://img.shields.io/badge/json web tokens-036CB5?style=for-the-badge&logo=json web tokens&logoColor=black">
+  <img src="https://img.shields.io/badge/webstorm-036CB5?style=for-the-badge&logo=webstorm&logoColor=black">
+
+
+  
+  <br>
+  
+  <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+  <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
+  <img src="https://img.shields.io/badge/spring security-6DB33F?style=for-the-badge&logo=spring security&logoColor=white">
+
+  <br>
+
+  <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
+  <br>
+  
+  <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+  <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
+  <img src="https://img.shields.io/badge/slack-4A154B?style=for-the-badge&logo=slack&logoColor=white">
+  <img src="https://img.shields.io/badge/gitkraken-179287?style=for-the-badge&logo=gitkraken&logoColor=white">
+  <br>
+</div>
+
+
+📈 Usecase 다이어그램
+-----------
+
+![usecase4](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/93c45238-b8d2-49f2-b5a4-1d3caa1848e6)
+
+📈 ER 다이어그램 
 -------------
 
-**1.유연하고 확장성 높은 코드 개발**
+![ollehERD4](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/cea51928-d372-4328-a5db-af4018e84d06)
 
-- 유연하고 확정성 높은 코드로 유지보수성을 높이기위해 객체지향 SOLID 원칙을 준수합니다. 
-- 중복되는 코드는 하나의 메서드로 모듈화 시키거나 AOP등을 활용하여 불필요한 코드의 반복을 줄여나갑니다.
-- 반복되는 쿼리문으로 생기는 DB부하 및 성능저하를 줄이기 위해 (JPA N+1)  FetchJoin , BatchSize 활용을 고려합니다.
 
-**2.캡슐화 및 보안성 높은 코드**
-
-- 스프링 시큐리티와 JWT 토큰을 활용하여 인증,인가를 활용합니다.
-- 민감한 정보인 사용자의 패스워드는 bcryptpasswordencoder 를 통해 암호화 시킵니다.
-- 외부에서 쉽게 객체에 대한 정보를 바꿀 수 없도록 팩토리 메서드 패턴 지향 Setter 사용 지양 합니다.
-
-**3.테스트 코드를 활용한 리팩토링**
-
-- 개발자의 의도대로 코드가 흘러가는지 테스트하기 위해 테스트 코드 라이브러리인 Junit5와 Mockito Framework를 활용합니다
-- 테스트 코드를 통하여서 실제 서버가 운영되는 환경에서도 안정적인 리팩토링 환경을 구축할 수 있습니다.
-
-**4.Git을 통한 협업 커뮤니케이션**
-
-- GtiHub를 통해 팀원간의 코드를 공유 및 병합하였습니다.
-- 더 효율적인 깃 헙 사용을 위해 외부 툴인 Git Kraken을 활용하여 브랜치 관리를 합니다.
-
-<br></br>
-
-🔧 사용 기술 및 환경
+🛠 포트폴리오
 -------------
 
-
-
-<img width="620" alt="스크린샷 2023-04-27 123612" src="https://user-images.githubusercontent.com/124491136/234753405-9cf41f54-ef99-400c-a7d9-f3b1be231f8c.png">
-
-
-🔧 TOOL
--------------
-
-- IntelliJ
-- Git hub
-- Git Kraken
-- Slack
-
-
-프로젝트 목표
--------------
-
-
-프로젝트 아키텍쳐 
--------------
+<details>
+  <summary>이미지로 확인하기</summary>
+  프론트
+</details>
