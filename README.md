@@ -78,12 +78,12 @@
 📈 Usecase 다이어그램
 -----------
 
-![usecase4](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/93c45238-b8d2-49f2-b5a4-1d3caa1848e6)
+![usecase_최종](https://github.com/Team-javaJobJob/OllehBoardProject-Server/assets/126131788/046e6b0c-9e36-4512-9b84-874003a73e35)
 
 📈 ER 다이어그램 
 -------------
 
-![ollehERD4](https://github.com/Team-javaJobJob/OllehBoardProject/assets/126131788/cea51928-d372-4328-a5db-af4018e84d06)
+![erd_최종](https://github.com/Team-javaJobJob/OllehBoardProject-Server/assets/126131788/49f4d0b7-05ee-499f-823c-6c3271b6731c)
 
 
 🛠 포트폴리오
