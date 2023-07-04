@@ -10,19 +10,16 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommunityMember {
-    //커뮤니티 참여자를 관리하기 위한 엔티티 클래스
+    // 커뮤니티 참여자를 관리하기 위한 엔티티 클래스
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
     private Community community;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
     private boolean isApprove = false;
 
     private CommunityMember(Community community, Member member) {

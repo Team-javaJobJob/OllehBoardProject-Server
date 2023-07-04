@@ -3,7 +3,6 @@ package com.example.ollethboardproject.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
@@ -19,10 +18,7 @@ public class JwtTokenUtil {
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
-                // TODO: deprecated - signWith 원인 해결
                 .signWith(SignatureAlgorithm.HS256, key)
-//                .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)   이렇게하면 connnection 에러발생 // 박규현
-
                 .compact();
 
     }
@@ -34,7 +30,6 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
-                // TODO: deprecated - signWith 원인 해결
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
@@ -49,6 +44,10 @@ public class JwtTokenUtil {
 
     private static Claims extractClaim(String token, String secretKey) {
         // TODO: deprecated - setSigningKey 원인 해결
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

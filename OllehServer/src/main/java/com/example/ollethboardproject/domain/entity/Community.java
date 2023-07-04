@@ -3,7 +3,6 @@ package com.example.ollethboardproject.domain.entity;
 import com.example.ollethboardproject.controller.request.community.CommunityCreateRequest;
 import com.example.ollethboardproject.controller.request.community.CommunityUpdateRequest;
 import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,36 +20,23 @@ public class Community extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "region")
     private String region;
-
     @Column(name = "interest")
     private String interest;
-
     @Column(name = "community_name")
     private String communityName;
-
     @Column(name = "info", columnDefinition = "text")
     private String info;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private Image image;
-
-
     @OneToOne(mappedBy = "community", cascade = CascadeType.ALL)
     @JoinColumn(name = "chatroom_id")
     private ChatRoom chatRoom;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "keyword_id")
-//    private Keyword keyword;
-
     @OneToMany(mappedBy = "community")
     private List<Olleh> ollehsList = new ArrayList<>();
 
@@ -79,17 +65,16 @@ public class Community extends AuditEntity {
         this.member = member;
     }
 
-
     public void updateImage(Image image) {
         this.image = image;
     }
 
-    public void setChatRoom(ChatRoom chatRoom){
+    public void setChatRoom(ChatRoom chatRoom) {
 
-        if(this.chatRoom != null){
+        if (this.chatRoom != null) {
             this.chatRoom.setCommunity(null);
         }
-        this.chatRoom= chatRoom;
+        this.chatRoom = chatRoom;
         chatRoom.setCommunity(this);
     }
 }

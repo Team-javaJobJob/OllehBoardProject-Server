@@ -56,32 +56,30 @@ public class MemberService implements UserDetailsService {
                 .ifPresent(member -> {
                     throw new OllehException(ErrorCode.DUPLICATED_USERNAME, String.format("%s is duplicated", memberJoinRequest.getUserName()));
                 });
-        //TODO: 비밀번호 제약조건 설정 여부
 
-        //비밀번호 암호화
+        // 비밀번호 암호화
         memberJoinRequest.encode(encodePassword(memberJoinRequest.getPassword()));
-        //비밀번호 암호화 후 member 타입으로 객체 생성
+        // 비밀번호 암호화 후 member 타입으로 객체 생성
         Member member = Member.of(memberJoinRequest);
 
-        //member 엔티티 저장
+        // member 엔티티 저장
         Member savedMember = memberRepository.save(member);
         log.info("saveMember : {}",savedMember);
-        //entity -> DTO 로 변환후 return
+        // entity -> DTO 로 변환후 return
         return MemberDTO.fromEntity(savedMember);
     }
     @Transactional(readOnly = true)
     public TokenInfo login(MemberLoginRequest memberLoginRequest) {
-        //아이디 체크
+        // 아이디 체크
         Member member = memberRepository.findByUserName(memberLoginRequest.getUserName())
                 .orElseThrow(() -> new OllehException(ErrorCode.USER_NOT_FOUND, String.format("%s is not found", memberLoginRequest.getUserName())));
 
-        //패스워드 확인
+        // 패스워드 확인
         if (!encoder.matches(memberLoginRequest.getPassword(), member.getPassword())) {
             throw new OllehException(ErrorCode.INVALID_TOKEN, String.format("password is invalid"));
         }
 
         // 토큰 발급 (엑세스 , 리프레시)
-        //TODO: 각 토큰들에 대한 세부 설정
         String accessToken = JwtTokenUtil.createAccessToken(member.getUsername(), key, accessExpiredTimeMs);
         String refreshToken = JwtTokenUtil.createRefreshToken(member.getUsername(), key, refreshExpiredTimeMs);
         return TokenInfo.generateTokens(accessToken, refreshToken);
@@ -89,73 +87,75 @@ public class MemberService implements UserDetailsService {
 
 
     private MemberJoinRequest encodePassword(MemberJoinRequest memberJoinRequest) {
-        //비밀번호 암호화
+        // 비밀번호 암호화
         String encodePassword = encoder.encode(memberJoinRequest.getPassword());
         memberJoinRequest.encode(encodePassword);
         return memberJoinRequest;
     }
     private String encodePassword(String password) {
-        //비밀번호 암호화
+        // 비밀번호 암호화
         return encoder.encode(password);
     }
 
     public MemberDTO findMemberByPassword(String requestPw, Authentication authentication) {
-        //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
+        // 캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
         Member member = getMemberWithAuthentication(authentication);
-        //비밀번호가 일치하는 회원 정보를 조회할 수 있다.
+        // 비밀번호가 일치하는 회원 정보를 조회할 수 있다.
         passwordMatches(member, requestPw);
-        //entity -> DTO 로 변환후 return
+        // entity -> DTO 로 변환후 return
         return MemberDTO.fromEntity(member);
     }
 
     public MemberDTO updateMember(MemberUpdateRequest memberUpdateRequest, Authentication authentication) {
-        //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
+        // 캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
         Member member = getMemberWithAuthentication(authentication);
-        //수정할 회원 정보 중복 검증
+        // 수정할 회원 정보 중복 검증
         duplicationMatches(memberUpdateRequest.getUserName());
-        //비밀번호가 일치하는 회원만 회원 정보를 수정할 수 있다.
+        // 비밀번호가 일치하는 회원만 회원 정보를 수정할 수 있다.
         passwordMatches(member, memberUpdateRequest.getRequestPw());
-        //수정할 비밀번호 암호화
+        // 수정할 비밀번호 암호화
         memberUpdateRequest.encode(encodePassword(memberUpdateRequest.getPassword()));
-        //비밀번호 암호화 후 member 타입으로 객체 생성
+        // 비밀번호 암호화 후 member 타입으로 객체 생성
         Member updatedMember = Member.toPw(memberUpdateRequest);
-        //회원 정보 수정 (Setter 를 사용하지 않기 위함)
+        // 회원 정보 수정 (Setter 를 사용하지 않기 위함)
         member.update(updatedMember);
-        //수정된 회원 정보 저장
+        // 수정된 회원 정보 저장
         memberRepository.save(member);
         return MemberDTO.fromEntity(updatedMember);
     }
 
     public void deleteMember(String requestPw, Authentication authentication) {
-        //캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
+        // 캐스팅에 의한 에러가 나지 않도록 ClassUtil 메서드 사용
         Member member = getMemberWithAuthentication(authentication);
-        //비밀번호가 일치하는 회원만 회원 정보를 삭제할 수 있다.
+        // 비밀번호가 일치하는 회원만 회원 정보를 삭제할 수 있다.
         passwordMatches(member, requestPw);
-        //회원 정보 삭제
+        // 회원 정보 삭제
         memberRepository.deleteById(member.getId());
     }
+
     @Transactional(readOnly = true)
     public List<CommunityDTO> selectOllehLog(Authentication authentication) {
-        //member 조회
+        // member 조회
         Member member = getMemberWithAuthentication(authentication);
 
         return ollehRepository.findByMember(member).orElseThrow(
-                        () -> new OllehException(ErrorCode.USER_NOT_FOUND)).stream()    //멤버에 대한 올레 버튼이 존재하지 않는다면 에러 반환
-                .map(Olleh::getCommunity)   //커뮤니티 조회
-                .sorted(Comparator.comparing(Community::getCreatedBy))//날짜순으로 정렬
-                .map(CommunityDTO::fromEntity)  //DTO로 변환
-                .collect(Collectors.toList());  //List로 변환
+                        () -> new OllehException(ErrorCode.USER_NOT_FOUND)).stream() // 멤버에 대한 올레 버튼이 존재하지 않는다면 에러 반환
+                .map(Olleh::getCommunity)   // 커뮤니티 조회
+                .sorted(Comparator.comparing(Community::getCreatedBy))// 날짜순으로 정렬
+                .map(CommunityDTO::fromEntity)  // DTO로 변환
+                .collect(Collectors.toList());  // List로 변환
     }
     @Transactional(readOnly = true)
     public List<PostDTO> selectPostLog(Authentication authentication) {
         Member member = getMemberWithAuthentication(authentication);
 
         List<Post> posts = postRepository.findByMember(member).orElseThrow(() -> new OllehException(ErrorCode.USER_NOT_FOUND));
-        return posts.stream()//멤버가 작성한 게시물이 없다면 에러 반환
+        return posts.stream() // 멤버가 작성한 게시물이 없다면 에러 반환
                 .sorted(Comparator.comparing(Post::getCreatedAt))
                 .map(PostDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
     public List<CommunityDTO> selectCommunityLog(Authentication authentication) {
         Member member = getMemberWithAuthentication(authentication);
@@ -168,7 +168,7 @@ public class MemberService implements UserDetailsService {
 
     }
 
-    //비밀번호 일치 검증 메서드
+    // 비밀번호 일치 검증 메서드
     private void passwordMatches(Member member, String password) {
         //비교할 password 암호화
         String encodePassword = encoder.encode(password);
@@ -177,8 +177,7 @@ public class MemberService implements UserDetailsService {
         }
     }
 
-    //수정된 회원 정보 중복 검증 메서드
-
+    // 수정된 회원 정보 중복 검증 메서드
     private void duplicationMatches(String updaterName) {
         memberRepository.findByUserName(updaterName).ifPresent(name -> {
             throw new OllehException(ErrorCode.DUPLICATED_USERNAME);

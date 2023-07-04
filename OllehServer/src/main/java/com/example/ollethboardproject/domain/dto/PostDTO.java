@@ -17,6 +17,12 @@ public class PostDTO {
     private LocalDateTime createdAt;
 
     public static PostDTO fromEntity(Post post) {
-        return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getMember(),post.getCreatedAt());
+        return new PostDTO(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getMember(),
+                post.getCreatedAt()
+        );
     }
 }

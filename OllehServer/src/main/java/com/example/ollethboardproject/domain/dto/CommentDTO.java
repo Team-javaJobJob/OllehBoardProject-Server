@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +14,6 @@ public class CommentDTO {
     private String content;
     private Long postId;
     private String memberName;
-
 
     public static CommentDTO fromEntity(Comment comment) {
         return new CommentDTO(

@@ -14,10 +14,7 @@ import java.util.Optional;
 @Repository
 public interface CommunityMemberRepository extends JpaRepository<CommunityMember, Long> {
     Optional<CommunityMember> findByCommunityAndMember(Community community, Member member);
-
     Page<CommunityMember> findByCommunity(Community community, Pageable pageable);
-
     Optional<List<CommunityMember>> findByMember(Member member);
-
     CommunityMember findCommunityMemberByCommunityId(Long communityId);
 }

@@ -15,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.Filter;
 
 
 @Configuration
@@ -47,7 +46,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean       // 박규현
+    @Bean
     public JwtFilter jwtFilter(){
         return new JwtFilter(memberService, secretKey);
     }

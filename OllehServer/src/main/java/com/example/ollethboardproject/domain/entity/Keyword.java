@@ -14,14 +14,11 @@ public class Keyword {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "keyword")
     private String keyword;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
     private Community community;
-
 
     private Keyword(String keyword, Community community) {
         this.keyword = keyword;
@@ -29,6 +26,9 @@ public class Keyword {
     }
 
     public static Keyword of(String keyword, Community community) {
-        return new Keyword(keyword, community);
+        return new Keyword(
+                keyword,
+                community
+        );
     }
 }

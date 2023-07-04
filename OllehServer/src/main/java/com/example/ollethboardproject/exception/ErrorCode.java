@@ -22,7 +22,7 @@ public enum ErrorCode {
     COMMUNITY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "community already exists"),
     ALREADY_REGISTER(HttpStatus.CONFLICT, "has already registered"),
     PERMISSION_DENIED(HttpStatus.FORBIDDEN, "permission denied"),
-    KEYWORD_DOES_NOT_EXIST(HttpStatus.NOT_FOUND,"keyword does not exist");
+    KEYWORD_DOES_NOT_EXIST(HttpStatus.NOT_FOUND, "keyword does not exist");
 
     private final HttpStatus httpStatus;
     private final String message;

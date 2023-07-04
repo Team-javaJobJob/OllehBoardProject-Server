@@ -15,19 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatRoomDTO {
-
-
     private Long id;
-
     private String roomName;
     private Community community;
-
     private List<Chat> chatDetails;
 
-
-
-    // chatroom entitiy -> dto로 변환
-    public static ChatRoomDTO fromEntity(ChatRoom chatRoom){
+    // chatroom entity -> dto로 변환
+    public static ChatRoomDTO fromEntity(ChatRoom chatRoom) {
         return new ChatRoomDTO(
                 chatRoom.getId(),
                 chatRoom.getRoomName(),

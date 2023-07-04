@@ -18,7 +18,6 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -26,16 +25,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChatService {
-
     private final ChatMessageRepository chatMessageRepository;
     private final RedisTemplate<String, Chat> redisTemplate;
-
     private final CommunityRepository communityRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRepository chatRepository;
 
-
-    // 채팅내용저장
+    // 채팅 내용 저장
     public Message saveChatMessage(Message message, String communityName, String roomName){
         Chat chat = new Chat();
 
@@ -51,7 +47,7 @@ public class ChatService {
         chat.setChatRoom(chatRoom);
         chat.setCommunity(community);
 
-        // 가입은 한번만 기록한다.
+        // 가입은 한번만 기록
         if (message.getStatus() == Status.JOIN) {
             List<Chat> allBySenderNameAndStatus = chatMessageRepository.findAllBySenderNameAndStatusAndChatRoomId(message.getSenderName(), message.getStatus(), message.getCommunityId());
             if (allBySenderNameAndStatus.size() > 0) {
@@ -65,10 +61,6 @@ public class ChatService {
         message.setMessage(saveChat.getMessage());
         message.setStatus(saveChat.getStatus());
 
-        //Redis 에 저장
-//        ValueOperations<String,Chat> valueOps = redisTemplate.opsForValue();
-//        valueOps.set(chat.getMessage(),chat);
-
         // Message 객체 변환
         return message;
     }
@@ -81,43 +73,6 @@ public class ChatService {
                 .collect(Collectors.joining(","));
         return sendersName;
     }
-
-//
-//    public Message saveChatMessage(Message message, Long communityId, Long chatRoomId){
-//        Chat chat = new Chat();
-//
-//        Optional<Community> optionalCommunity = communityRepository.findById(communityId);
-//        Community community = optionalCommunity.orElse(null);
-//
-//        Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findById(chatRoomId);
-//        ChatRoom chatRoom;
-//        if(optionalChatRoom.isPresent()) {
-//            chatRoom = optionalChatRoom.get();
-//        } else {
-//            chatRoom = chatRoomRepository.findById(1L).orElseThrow(
-//                    ()-> new RuntimeException("1번 챗룸이 존재하지 않습니다."));
-//        }
-//
-//        chat.setSenderName(message.getSenderName());
-//        chat.setReceiverName(message.getReceiverName());
-//        chat.setMessage(message.getMessage());
-//        chat.setStatus(message.getStatus());
-//        //chat Entity 저장
-//        chat.setChatRoom(chatRoom);
-//        chat.setCommunity(community);
-//
-//        Chat saveChat = chatMessageRepository.save(chat);
-//        // 저장된 ChatEntity ID Value 를 message 객체에 설정
-//        message.setMessage(saveChat.getMessage());
-//        message.setStatus(saveChat.getStatus());
-//
-//        //Redis 에 저장
-//        ValueOperations<String,Chat> valueOps = redisTemplate.opsForValue();
-//        valueOps.set(chat.getMessage(),chat);
-//
-//        // Message 객체 변환
-//        return message;
-//    }
 
     public List<ChatMessageDetailDTO> searchChatMessage(String keyword) {
         String regex = "(?i).*" + Pattern.quote(keyword) + ".*";
@@ -142,11 +97,6 @@ public class ChatService {
                 .map(ChatMessageDetailDTO::fromEntity)
                 .collect(Collectors.toList());
 
-    }
-
-    // entity -> dto 변환 메서드
-    private ChatMessageDetailDTO mapToChatMessageDetailDTO(Chat chat) {
-        return ChatMessageDetailDTO.fromEntity(chat);
     }
 
 }

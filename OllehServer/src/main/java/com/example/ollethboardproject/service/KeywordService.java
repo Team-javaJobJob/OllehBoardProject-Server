@@ -9,7 +9,6 @@ import com.example.ollethboardproject.exception.ErrorCode;
 import com.example.ollethboardproject.exception.OllehException;
 import com.example.ollethboardproject.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,22 +20,21 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class KeywordService {
-
     private final KeywordRepository keywordRepository;
 
     public void saveKeywordAndCommunity(CommunityCreateRequest communityCreateRequest, Community community) {
-        //저장할 키워드 추출
+        // 저장할 키워드 추출
         String[] keywords = communityCreateRequest.getKeywords();
-        //키워드 저장
+        // 키워드 저장
         Arrays.stream(keywords).forEach(keyword -> {
             keywordRepository.save(Keyword.of(keyword, community));
         });
     }
 
     public void saveKeywordToUpdateCommunity(CommunityUpdateRequest communityUpdateRequest, Community community) {
-        //키워드 추출
+        // 키워드 추출
         String[] keywords = communityUpdateRequest.getKeywords();
-        //수정할 키워드 저장
+        // 수정할 키워드 저장
         Arrays.stream(keywords).forEach(optKeyword -> {
             keywordRepository.save(Keyword.of(optKeyword, community));
         });

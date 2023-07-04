@@ -21,8 +21,4 @@ public class ReplyCreateRequest {
         return content;
     }
 
-    public Member getAuthor() {
-        return author;
-    }
-
 }

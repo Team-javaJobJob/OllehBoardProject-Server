@@ -19,18 +19,13 @@ public abstract class AuditEntity {
     @CreatedDate
     @Column( updatable = false)
     protected LocalDateTime createdAt;
-
     @CreatedBy
     @Column( updatable = false)
     protected String createdBy;
-
-
     @LastModifiedDate
     protected LocalDateTime updatedAt;
-
     @LastModifiedBy
     protected String updatedBy;
-
     @Column(name = "deleted_at")
     protected LocalDateTime deletedAt;
 

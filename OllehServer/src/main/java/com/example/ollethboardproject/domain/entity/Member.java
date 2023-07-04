@@ -1,15 +1,10 @@
-
 package com.example.ollethboardproject.domain.entity;
 
 import com.example.ollethboardproject.controller.request.member.MemberJoinRequest;
 
-import com.example.ollethboardproject.controller.request.PwEncodeRequest;
 import com.example.ollethboardproject.controller.request.member.MemberUpdateRequest;
 import com.example.ollethboardproject.domain.Gender;
 import com.example.ollethboardproject.domain.Role;
-
-import com.example.ollethboardproject.domain.entity.audit.AuditEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,24 +27,18 @@ public class Member implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "userName")
     private String userName;
-
     @Column(name = "password")
     private String password;
-
     @Column(name = "nickName")
     private String nickName;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private Gender gender;
-
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role roles = Role.ROLE_USER;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -57,12 +46,13 @@ public class Member implements UserDetails {
     private void setCreatedAt() {
         createdAt = LocalDateTime.now();
     }
+
     @PostUpdate
     private void setUpdatedAt() {
         updatedAt = LocalDateTime.now();
     }
 
-    //외부에서 new 생성자로 entity 객체 만들지않게 하기 위함
+    // 외부에서 new 생성자로 entity 객체 만들지않게 하기 위함
     private Member(String userName, String password, String nickName, Gender gender) {
         this.userName = userName;
         this.password = password;
@@ -77,7 +67,7 @@ public class Member implements UserDetails {
                 memberJoinRequest.getNickName(),
                 memberJoinRequest.getGender()
 
-                );
+        );
     }
 
     public static Member toPw(MemberUpdateRequest memberUpdateRequest) {
@@ -89,7 +79,7 @@ public class Member implements UserDetails {
         );
     }
 
-    public void update(Member memberUpdateRequest){
+    public void update(Member memberUpdateRequest) {
         this.userName = memberUpdateRequest.getUsername();
         this.password = memberUpdateRequest.getPassword();
         this.nickName = memberUpdateRequest.getNickName();

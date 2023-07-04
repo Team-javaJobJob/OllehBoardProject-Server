@@ -1,7 +1,5 @@
 package com.example.ollethboardproject.controller;
 
-import com.example.ollethboardproject.controller.response.Response;
-import com.example.ollethboardproject.domain.dto.MemberDTO;
 import com.example.ollethboardproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -14,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class MainController {
-
-    private final MemberService memberService;
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/api/v1/main")

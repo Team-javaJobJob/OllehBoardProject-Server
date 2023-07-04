@@ -1,6 +1,5 @@
 package com.example.ollethboardproject.utils;
 
-import io.jsonwebtoken.Jwts;
 import lombok.Getter;
 
 @Getter
@@ -14,6 +13,9 @@ public class TokenInfo {
     }
 
     public static TokenInfo generateTokens(String accessToken, String refreshToken) {
-        return new TokenInfo(accessToken, refreshToken);
+        return new TokenInfo(
+                accessToken,
+                refreshToken
+        );
     }
 }

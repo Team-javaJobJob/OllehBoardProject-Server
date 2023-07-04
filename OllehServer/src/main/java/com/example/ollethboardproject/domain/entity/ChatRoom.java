@@ -15,13 +15,10 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String roomName;
-
     @OneToOne
     @JoinColumn(name="community_id")
     private Community community;
-
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<Chat> chatDetails;
 }

@@ -12,6 +12,10 @@ public class PostCountDTO {
     private String content;
 
     public static PostCountDTO of(Integer countByBoard, PostCount postCount) {
-        return new PostCountDTO(countByBoard, postCount.getPost().getTitle(), postCount.getPost().getContent());
+        return new PostCountDTO(
+                countByBoard,
+                postCount.getPost().getTitle(),
+                postCount.getPost().getContent()
+        );
     }
 }

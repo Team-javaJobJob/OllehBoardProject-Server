@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -19,17 +17,13 @@ public class Post extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "title")
     private String title;
-
     @Column(name = "content", columnDefinition = "text")
     private String content;
-
-    //TODO: 회의를 통해 ManyToOne 에 대한 fetch 타입 지정 (JPA N+1 문제)
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member;     // 단방향 매핑 ( 양방향 매핑에 대한 근거부족으로 인한 )
+    private Member member;
 
     private Post(String title, String content, Member member) {
         this.title = title;
@@ -38,7 +32,11 @@ public class Post extends AuditEntity {
     }
 
     public static Post of(PostCreateRequest postCreateRequest, Member member) {
-        return new Post(postCreateRequest.getTitle(), postCreateRequest.getContent(), member);
+        return new Post(
+                postCreateRequest.getTitle(),
+                postCreateRequest.getContent(),
+                member
+        );
     }
 
     public void update(PostUpdateRequest postUpdateRequest, Member member) {

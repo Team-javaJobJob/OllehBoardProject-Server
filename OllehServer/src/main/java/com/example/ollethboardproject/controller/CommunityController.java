@@ -6,22 +6,16 @@ import com.example.ollethboardproject.controller.response.CommunityMemberRespons
 import com.example.ollethboardproject.controller.response.Response;
 import com.example.ollethboardproject.domain.dto.CommunityDTO;
 import com.example.ollethboardproject.domain.dto.CommunityMemberDTO;
-import com.example.ollethboardproject.domain.entity.ChatRoom;
 import com.example.ollethboardproject.service.ChatService;
 import com.example.ollethboardproject.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 import java.util.List;
@@ -33,8 +27,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/communities")
 public class CommunityController {
     private final CommunityService communityService;
-
-    private final ChatService chatService;
 
     // 커뮤니티 전체 조회
     @GetMapping("")
@@ -52,29 +44,26 @@ public class CommunityController {
         return new ResponseEntity<>(communityDTOList, HttpStatus.OK);
     }
 
+    //커뮤니티 생성
     @PostMapping(value = "", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommunityDTO> createCommunity(
-            @RequestPart(value = "communityCreateRequest", required = false) CommunityCreateRequest communityCreateRequest,
-            @RequestPart(value = "file", required = false) MultipartFile file, Authentication authentication) throws Exception {
+    public ResponseEntity<CommunityDTO> createCommunity(@RequestPart(value = "communityCreateRequest", required = false) CommunityCreateRequest communityCreateRequest,
+                                                        @RequestPart(value = "file", required = false) MultipartFile file, Authentication authentication) throws Exception {
         log.info("POST /api/v1/communities - communityCreateRequest & authentication : {}, {}, {}", communityCreateRequest, file, authentication);
         CommunityDTO createdCommunityDTO = communityService.createCommunity(communityCreateRequest, file, authentication);
         return new ResponseEntity<>(createdCommunityDTO, HttpStatus.CREATED);
     }
 
-
-
-
     //커뮤니티 정보 수정
-    //TODO: LIST -> id 외 조회 기준 추가
     @PutMapping("{id}")
-    public ResponseEntity<CommunityDTO> updateCommunity(@PathVariable Long id, @RequestPart CommunityUpdateRequest communityUpdateRequest, @RequestPart MultipartFile file, Authentication authentication) throws Exception {
+    public ResponseEntity<CommunityDTO> updateCommunity(@PathVariable Long id,
+                                                        @RequestPart CommunityUpdateRequest communityUpdateRequest,
+                                                        @RequestPart MultipartFile file, Authentication authentication) throws Exception {
         log.info("PUT /api/v1/communities/{}", id);
         CommunityDTO updatedCommunityDTO = communityService.updateCommunity(id, communityUpdateRequest, file, authentication);
         return new ResponseEntity<>(updatedCommunityDTO, HttpStatus.OK);
     }
 
     //커뮤니티 삭제
-    //TODO: LIST -> id 외 조회 기준 추가
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteCommunity(@PathVariable Long id, Authentication authentication) {
         log.info("DELETE /api/v1/communities/{}", id);
@@ -90,38 +79,38 @@ public class CommunityController {
         return Response.success();
     }
 
-    //가입된 멤버만 멤버들을 조회할 수 있다.
+    // 가입된 멤버만 멤버들을 조회 가능
     @GetMapping("{communityId}")
     public Response<List<CommunityMemberResponse>> selectCommunity(@PathVariable Long communityId, Authentication authentication, Pageable pageable) {
         log.info("GET /api/v1/communities/{}", communityId);
-        List<CommunityMemberDTO> communityMemberDTOList = communityService.selectCommunity(communityId, authentication,pageable);
+        List<CommunityMemberDTO> communityMemberDTOList = communityService.selectCommunity(communityId, authentication, pageable);
         List<CommunityMemberResponse> CommunityMemberResponses = communityMemberDTOList.stream().map(CommunityMemberResponse::fromCommunityMemberDTO).collect(Collectors.toList());
         return Response.success(CommunityMemberResponses);
     }
 
 
-    //좋아요(=올래)
+    // 좋아요
     @PostMapping("/{communityId}/olleh")
-    public Response<Void> olleh(@PathVariable Long communityId, Authentication authentication){
+    public Response<Void> olleh(@PathVariable Long communityId, Authentication authentication) {
         communityService.addOlleh(authentication.getName(), communityId);
         return Response.success();
     }
 
-    //좋아요수      //TODO: GET Mapping 삭제하고 , 좋아요 수를 커뮤니티에 노출 시키는 방향으로
+    // 좋아요 수
     @GetMapping("/{communityId}/olleh")
-    public Response<Integer> olleh(@PathVariable Long communityId){
+    public Response<Integer> olleh(@PathVariable Long communityId) {
         Integer ollehCount = communityService.ollehCount(communityId); //communityService 의 ollehCount 메소드를 호출 communityId에 해당하는 community 객체의 Olleh 개수 가져옴
         return Response.success(ollehCount); //ollehCount 값을 Response 객체에 담아서 반환
     }
 
-    //최신순 정렬
+    // 최신순 정렬
     @GetMapping("/latest")
     public Response<List<CommunityDTO>> getLatestCommunity() { //List<Community> 타입의 Response 반환
         List<CommunityDTO> latestCommunities = communityService.getLatestCommunity();
         return Response.success(latestCommunities);
     }
 
-    //추천순 (올레순) 정렬
+    // 좋아요순 정렬
     @GetMapping("/topOlleh")
     public Response<List<CommunityDTO>> getTopOllehCommunity() {
         List<CommunityDTO> topOllehCommunities = communityService.getTopOllehCommunity();

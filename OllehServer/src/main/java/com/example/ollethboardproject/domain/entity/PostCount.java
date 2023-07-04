@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 import javax.persistence.*;
 
 
@@ -15,11 +14,9 @@ public class PostCount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Post post;
@@ -30,6 +27,9 @@ public class PostCount {
     }
 
     public static PostCount of(Member member, Post post) {
-        return new PostCount(member, post);
+        return new PostCount(
+                member,
+                post
+        );
     }
 }

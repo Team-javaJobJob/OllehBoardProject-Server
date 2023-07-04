@@ -20,7 +20,6 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        #        show_sql: true
         format_sql: true
 jwt:
   token:
@@ -28,14 +27,11 @@ jwt:
   access-expired: 3600000    #3600000 1시간
   refresh-expired: 86400000   # 1 day
 
-
 server:
   port: 8080
 
-
 logging.level:
   org.hibernate.SQL: debug
-
 
 upload:
   path: /Users/kyuhyunpark/Desktop/TeamOllehRepository/OllehBoardFront/olleh/src/assets

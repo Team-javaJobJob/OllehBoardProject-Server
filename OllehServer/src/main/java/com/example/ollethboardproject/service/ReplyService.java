@@ -1,4 +1,3 @@
-
 package com.example.ollethboardproject.service;
 
 import com.example.ollethboardproject.controller.request.reply.ReplyCreateRequest;
@@ -21,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +31,6 @@ public class ReplyService {
     public List<ReplyDTO> getRepliesByComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new OllehException(ErrorCode.COMMENT_DOES_NOT_EXIST));
         List<Reply> replies = comment.getReplies();
-        //TODO List 값 넣기
         return ReplyDTO.fromEntityList(replies);
     }
 
@@ -50,8 +47,6 @@ public class ReplyService {
         replyRepository.save(reply);
         return ReplyDTO.fromEntity(reply);
     }
-
-
 
     public ReplyDTO updateReply(Long replyId, ReplyUpdateRequest updateRequest, Authentication authentication) {
         Member member = ClassUtil.castingInstance(authentication.getPrincipal(), Member.class).get();
