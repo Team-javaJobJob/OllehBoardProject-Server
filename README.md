@@ -51,7 +51,7 @@
 <div>
   <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
   <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
-  <img src="https://img.shields.io/badge/reids-DC382D?style=for-the-badge&logo=redis&logoColor=black">
+  <img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=black">
   <img src="https://img.shields.io/badge/json web tokens-036CB5?style=for-the-badge&logo=json web tokens&logoColor=black">
   <img src="https://img.shields.io/badge/webstorm-036CB5?style=for-the-badge&logo=webstorm&logoColor=black">
   <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
@@ -80,7 +80,7 @@
 
 ![usecase_최종](https://github.com/Team-javaJobJob/OllehBoardProject-Server/assets/126131788/046e6b0c-9e36-4512-9b84-874003a73e35)
 
-📈 ER 다이어그램 
+📈 ERD 다이어그램 
 -------------
 
 ![erd_최종](https://github.com/Team-javaJobJob/OllehBoardProject-Server/assets/126131788/49f4d0b7-05ee-499f-823c-6c3271b6731c)
